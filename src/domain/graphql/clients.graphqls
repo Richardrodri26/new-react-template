@@ -1,0 +1,58 @@
+query Clients($orderBy: [FindClientOrderBy!], $where: FindClientWhere, $pagination: Pagination) {
+  clients(orderBy: $orderBy, where: $where, pagination: $pagination) {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    name
+    numberDocument
+    email
+    telefono
+    address
+    type
+    vertical
+    celular
+    city {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      code
+      name
+    }
+    department {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      code
+      name
+    }
+    country {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      code
+      name
+    }
+  }
+  clientsCount(orderBy: $orderBy, where: $where, pagination: $pagination) {
+    totalItems
+    itemsPerPage
+    totalPages
+    currentPage
+  }
+}
+
+mutation CreateClient($createInput: CreateClientInput!) {
+  createClient(createInput: $createInput) {
+    id
+  }
+}
+
+mutation RemoveClient($removeClientId: ID!) {
+  removeClient(id: $removeClientId) {
+    id
+  }
+}

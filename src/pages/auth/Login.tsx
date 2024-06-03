@@ -13,7 +13,7 @@ export function LoginPage() {
     const resLogin = await login(data);
 
     if(resLogin) {
-      navigate("/home")
+      navigate("/dashboard")
     }
 
   }

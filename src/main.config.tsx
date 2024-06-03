@@ -14,18 +14,17 @@ export const httpLink = new HttpLink({
 
 const authLink = setContext((_, { headers }) => {
     // get the authentication token from local storage if it exists
-    // const token = sessionStorage.getItem(import.meta.env.VITE_APP_KEY_STORAGE);
-    // const cookie = Cookies.get(import.meta.env.VITE_APP_KEY_COOKIE_SESSION)
+    const cookie = Cookies.get(import.meta.env.VITE_APP_KEY_COOKIE_SESSION)
     // let captCookie = Cookies.get(import.meta.env.VITE_APP_JWT_COOKIE_CAPTCHA) ?? ""
 
     // return the headers to the context so httpLink can read them
-    // return {
-    //     headers: {
-    //         ...headers,
-    //         Authorization: cookie ? `Bearer ${cookie}` : "",
-    //         "recaptcha": captCookie
-    //     }
-    // }
+    return {
+        headers: {
+            ...headers,
+            Authorization: cookie ? `Bearer ${cookie}` : "",
+            // "recaptcha": captCookie
+        }
+    }
 
     return {
       headers

@@ -13,7 +13,7 @@ interface IAlertContent {
     title?: string | JSX.Element;
     description?: string | JSX.Element;
     onCancel?: () => void;
-    onConfirm: () => void;
+    onConfirm?: () => void;
     showCancelButton?: boolean;
     showConfirmButton?: boolean;
     cancelButtonText?: string;

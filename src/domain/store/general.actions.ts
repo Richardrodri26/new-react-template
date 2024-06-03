@@ -3,6 +3,7 @@ import { produce } from "immer"
 import { homeEndpoints } from '../generalApi'
 import { IGeneral, setter } from './general.store'
 import { loginSchemaType } from '@/pages/auth/controller/schemas'
+import { ToastyErrorGraph } from '@/lib/utils'
 
 /**
  * Login action and set user's data and its token
@@ -28,7 +29,7 @@ export const login = async(data: loginSchemaType) => {
 
     return true
   } catch (error) {
-
+    ToastyErrorGraph(error as any)
     return false
   }
 }

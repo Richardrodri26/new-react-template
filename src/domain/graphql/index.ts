@@ -46,6 +46,7 @@ export type City = {
 
 export type Client = {
   __typename?: 'Client';
+  address?: Maybe<Scalars['String']>;
   celular: Scalars['String'];
   city?: Maybe<City>;
   country?: Maybe<Country>;
@@ -57,8 +58,10 @@ export type Client = {
   name: Scalars['String'];
   numberDocument: Scalars['String'];
   telefono?: Maybe<Scalars['String']>;
+  type?: Maybe<TypeClientEnum>;
   updatedAt: Scalars['DateTime'];
   user?: Maybe<User>;
+  vertical?: Maybe<Scalars['String']>;
 };
 
 export type ClientContact = {
@@ -112,6 +115,7 @@ export type CreateClientContactInput = {
 };
 
 export type CreateClientInput = {
+  address?: InputMaybe<Scalars['String']>;
   celular: Scalars['String'];
   cityId?: InputMaybe<Scalars['String']>;
   countryId?: InputMaybe<Scalars['String']>;
@@ -120,6 +124,8 @@ export type CreateClientInput = {
   name: Scalars['String'];
   numberDocument: Scalars['String'];
   telefono?: InputMaybe<Scalars['String']>;
+  type: TypeClientEnum;
+  vertical?: InputMaybe<Scalars['String']>;
 };
 
 export type CreateDocumentTypeInput = {
@@ -259,7 +265,14 @@ export type CreateVisitInput = {
   isProyect: Scalars['Boolean'];
   location?: InputMaybe<Scalars['String']>;
   status: StatusVisitEnum;
+  typeId: Scalars['String'];
   userId: Scalars['String'];
+};
+
+export type CreateVisitTypeInput = {
+  description: Scalars['String'];
+  name: Scalars['String'];
+  status: VisitTypeStatusEnum;
 };
 
 export type DateFilter = {
@@ -480,6 +493,18 @@ export type FindVisitOrderBy = {
   dateVisit?: InputMaybe<OrderTypes>;
 };
 
+export type FindVisitTypeOrderBy = {
+  createdAt?: InputMaybe<OrderTypes>;
+};
+
+export type FindVisitTypeWhere = {
+  _and?: InputMaybe<Array<FindVisitTypeWhere>>;
+  _or?: InputMaybe<Array<FindVisitTypeWhere>>;
+  description?: InputMaybe<StringFilter>;
+  name?: InputMaybe<StringFilter>;
+  status?: InputMaybe<StringFilter>;
+};
+
 export type FindVisitWhere = {
   _and?: InputMaybe<Array<FindVisitWhere>>;
   _or?: InputMaybe<Array<FindVisitWhere>>;
@@ -570,6 +595,7 @@ export type Mutation = {
   createUser: User;
   createVisit: Visit;
   createVisitComent: VisitComent;
+  createVisitType: VisitType;
   enableAndDisableDoubleVerification: Scalars['String'];
   i18nTest: Scalars['String'];
   recoverPassword: Scalars['String'];
@@ -592,6 +618,7 @@ export type Mutation = {
   removeUserRole: User;
   removeVisit: Visit;
   removeVisitComent: VisitComent;
+  removeVisitType: VisitType;
   replaceAllRolesFx: Array<RoleFx>;
   resetSuperAdmin: User;
   sendCodeDoubleVerification: Scalars['String'];
@@ -619,6 +646,7 @@ export type Mutation = {
   updateUserPassword: User;
   updateVisit: Visit;
   updateVisitComent: VisitComent;
+  updateVisitType: VisitType;
 };
 
 
@@ -727,6 +755,11 @@ export type MutationCreateVisitComentArgs = {
 };
 
 
+export type MutationCreateVisitTypeArgs = {
+  createInput: CreateVisitTypeInput;
+};
+
+
 export type MutationEnableAndDisableDoubleVerificationArgs = {
   doubleVerificationInput: DoubleVerificationInput;
 };
@@ -828,6 +861,11 @@ export type MutationRemoveVisitArgs = {
 
 
 export type MutationRemoveVisitComentArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationRemoveVisitTypeArgs = {
   id: Scalars['ID'];
 };
 
@@ -959,6 +997,11 @@ export type MutationUpdateVisitArgs = {
 
 export type MutationUpdateVisitComentArgs = {
   updateInput: UpdateVisitComentInput;
+};
+
+
+export type MutationUpdateVisitTypeArgs = {
+  updateInput: UpdateVisitTypeInput;
 };
 
 export type Notification = {
@@ -1135,6 +1178,7 @@ export type Query = {
   dummy: Dummy;
   file: FileInfo;
   findAll: Array<UserKey>;
+  findAllVisitDashboard: VisitDashboardModel;
   findOne: UserKey;
   functionalities: FunctionalityModel;
   group: Group;
@@ -1176,6 +1220,9 @@ export type Query = {
   visitComent: VisitComent;
   visitComents: Array<VisitComent>;
   visitComentsCount: MetadataPagination;
+  visitType: VisitType;
+  visitTypes: Array<VisitType>;
+  visitTypesCount: MetadataPagination;
   visits: Array<Visit>;
   visitsCount: MetadataPagination;
 };
@@ -1534,6 +1581,25 @@ export type QueryVisitComentsCountArgs = {
 };
 
 
+export type QueryVisitTypeArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryVisitTypesArgs = {
+  orderBy?: InputMaybe<Array<FindVisitTypeOrderBy>>;
+  pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindVisitTypeWhere>;
+};
+
+
+export type QueryVisitTypesCountArgs = {
+  orderBy?: InputMaybe<Array<FindVisitTypeOrderBy>>;
+  pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindVisitTypeWhere>;
+};
+
+
 export type QueryVisitsArgs = {
   orderBy?: InputMaybe<Array<FindVisitOrderBy>>;
   pagination?: InputMaybe<Pagination>;
@@ -1689,6 +1755,13 @@ export type StringFilter = {
   _startswith?: InputMaybe<Scalars['String']>;
 };
 
+export enum TypeClientEnum {
+  ClienteFinal = 'CLIENTE_FINAL',
+  Distribuidor = 'DISTRIBUIDOR',
+  Instalador = 'INSTALADOR',
+  Integrador = 'INTEGRADOR'
+}
+
 export enum TypeNotification {
   Email = 'Email',
   Push = 'Push',
@@ -1720,6 +1793,7 @@ export type UpdateClientContactInput = {
 };
 
 export type UpdateClientInput = {
+  address?: InputMaybe<Scalars['String']>;
   celular?: InputMaybe<Scalars['String']>;
   cityId?: InputMaybe<Scalars['String']>;
   countryId?: InputMaybe<Scalars['String']>;
@@ -1729,6 +1803,8 @@ export type UpdateClientInput = {
   name?: InputMaybe<Scalars['String']>;
   numberDocument?: InputMaybe<Scalars['String']>;
   telefono?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<TypeClientEnum>;
+  vertical?: InputMaybe<Scalars['String']>;
 };
 
 export type UpdateDocumentTypeInput = {
@@ -1894,7 +1970,15 @@ export type UpdateVisitInput = {
   isProyect?: InputMaybe<Scalars['Boolean']>;
   location?: InputMaybe<Scalars['String']>;
   status?: InputMaybe<StatusVisitEnum>;
+  typeId?: InputMaybe<Scalars['String']>;
   userId?: InputMaybe<Scalars['String']>;
+};
+
+export type UpdateVisitTypeInput = {
+  description?: InputMaybe<Scalars['String']>;
+  id: Scalars['ID'];
+  name?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<VisitTypeStatusEnum>;
 };
 
 export type User = {
@@ -1987,6 +2071,7 @@ export type Visit = {
   isProyect: Scalars['Boolean'];
   location?: Maybe<Scalars['String']>;
   status: StatusVisitEnum;
+  type: VisitType;
   updatedAt: Scalars['DateTime'];
   user: User;
 };
@@ -2008,6 +2093,28 @@ export enum VisitComentTypeEnum {
   Results = 'RESULTS'
 }
 
+export type VisitDashboardModel = {
+  __typename?: 'VisitDashboardModel';
+  earrings: Array<Visit>;
+  realized: Array<Visit>;
+};
+
+export type VisitType = {
+  __typename?: 'VisitType';
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  description: Scalars['String'];
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  status: VisitTypeStatusEnum;
+  updatedAt: Scalars['DateTime'];
+};
+
+export enum VisitTypeStatusEnum {
+  Active = 'ACTIVE',
+  Inactive = 'INACTIVE'
+}
+
 export type WssRecipient = {
   document?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
@@ -2023,6 +2130,61 @@ export type SigninMutationVariables = Exact<{
 export type SigninMutation = { __typename?: 'Mutation', signin: { __typename?: 'AuthResponse', token: string, user: { __typename?: 'User', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name?: string | null, middleName?: string | null, lastName?: string | null, secondSurname?: string | null, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, dateIssue?: any | null, legalRepresentativeIdentificationType?: UserDocumentTypes | null, legalRepresentativeIdentificationNumber?: string | null, phoneCountryCode?: string | null, phoneNumber?: string | null, address?: string | null, hasRural?: boolean | null, confirmationCode?: string | null, position?: string | null, status: UserStatusTypes, phoneVerification: boolean, emailVerification: boolean, type: UserTypes, fullName: string, city?: { __typename?: 'City', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, department?: { __typename?: 'Department', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, country?: { __typename?: 'Country', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, userRoles: Array<{ __typename?: 'Role', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, description: string, defaultForType?: UserTypes | null, users?: Array<{ __typename?: 'User', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name?: string | null, middleName?: string | null, lastName?: string | null, secondSurname?: string | null, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, dateIssue?: any | null, legalRepresentativeIdentificationType?: UserDocumentTypes | null, legalRepresentativeIdentificationNumber?: string | null, phoneCountryCode?: string | null, phoneNumber?: string | null, address?: string | null, hasRural?: boolean | null, confirmationCode?: string | null, position?: string | null, status: UserStatusTypes, phoneVerification: boolean, emailVerification: boolean, type: UserTypes, fullName: string }> | null, roleFx: Array<{ __typename?: 'RoleFx', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, permission: string }> }>, userRolesFx: Array<{ __typename?: 'RoleFx', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, permission: string, role?: { __typename?: 'Role', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, description: string, defaultForType?: UserTypes | null } | null }> } } };
 
 export type UserFragmentFragment = { __typename?: 'User', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name?: string | null, middleName?: string | null, lastName?: string | null, secondSurname?: string | null, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, dateIssue?: any | null, legalRepresentativeIdentificationType?: UserDocumentTypes | null, legalRepresentativeIdentificationNumber?: string | null, phoneCountryCode?: string | null, phoneNumber?: string | null, address?: string | null, hasRural?: boolean | null, confirmationCode?: string | null, position?: string | null, status: UserStatusTypes, phoneVerification: boolean, emailVerification: boolean, type: UserTypes, fullName: string, city?: { __typename?: 'City', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, department?: { __typename?: 'Department', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, country?: { __typename?: 'Country', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, userRoles: Array<{ __typename?: 'Role', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, description: string, defaultForType?: UserTypes | null, users?: Array<{ __typename?: 'User', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name?: string | null, middleName?: string | null, lastName?: string | null, secondSurname?: string | null, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, dateIssue?: any | null, legalRepresentativeIdentificationType?: UserDocumentTypes | null, legalRepresentativeIdentificationNumber?: string | null, phoneCountryCode?: string | null, phoneNumber?: string | null, address?: string | null, hasRural?: boolean | null, confirmationCode?: string | null, position?: string | null, status: UserStatusTypes, phoneVerification: boolean, emailVerification: boolean, type: UserTypes, fullName: string }> | null, roleFx: Array<{ __typename?: 'RoleFx', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, permission: string }> }>, userRolesFx: Array<{ __typename?: 'RoleFx', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, permission: string, role?: { __typename?: 'Role', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, description: string, defaultForType?: UserTypes | null } | null }> };
+
+export type ClientsQueryVariables = Exact<{
+  orderBy?: InputMaybe<Array<FindClientOrderBy> | FindClientOrderBy>;
+  where?: InputMaybe<FindClientWhere>;
+  pagination?: InputMaybe<Pagination>;
+}>;
+
+
+export type ClientsQuery = { __typename?: 'Query', clients: Array<{ __typename?: 'Client', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, numberDocument: string, email: string, telefono?: string | null, address?: string | null, type?: TypeClientEnum | null, vertical?: string | null, celular: string, city?: { __typename?: 'City', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, department?: { __typename?: 'Department', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, country?: { __typename?: 'Country', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null }>, clientsCount: { __typename?: 'MetadataPagination', totalItems?: number | null, itemsPerPage?: number | null, totalPages?: number | null, currentPage?: number | null } };
+
+export type CreateClientMutationVariables = Exact<{
+  createInput: CreateClientInput;
+}>;
+
+
+export type CreateClientMutation = { __typename?: 'Mutation', createClient: { __typename?: 'Client', id: string } };
+
+export type RemoveClientMutationVariables = Exact<{
+  removeClientId: Scalars['ID'];
+}>;
+
+
+export type RemoveClientMutation = { __typename?: 'Mutation', removeClient: { __typename?: 'Client', id: string } };
+
+export type VisitsQueryVariables = Exact<{
+  orderBy?: InputMaybe<Array<FindVisitOrderBy> | FindVisitOrderBy>;
+  where?: InputMaybe<FindVisitWhere>;
+  pagination?: InputMaybe<Pagination>;
+}>;
+
+
+export type VisitsQuery = { __typename?: 'Query', visits: Array<{ __typename?: 'Visit', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, description: string, location?: string | null, dateVisit: string, status: StatusVisitEnum, isProyect: boolean, client: { __typename?: 'Client', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, numberDocument: string, email: string, telefono?: string | null, address?: string | null, type?: TypeClientEnum | null, vertical?: string | null, celular: string, city?: { __typename?: 'City', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, department?: { __typename?: 'Department', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, country?: { __typename?: 'Country', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null }, user: { __typename?: 'User', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name?: string | null, middleName?: string | null, lastName?: string | null, secondSurname?: string | null, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, dateIssue?: any | null, legalRepresentativeIdentificationType?: UserDocumentTypes | null, legalRepresentativeIdentificationNumber?: string | null, phoneCountryCode?: string | null, phoneNumber?: string | null, address?: string | null, hasRural?: boolean | null, confirmationCode?: string | null, position?: string | null, status: UserStatusTypes, phoneVerification: boolean, emailVerification: boolean, type: UserTypes, fullName: string, userRoles: Array<{ __typename?: 'Role', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, description: string, defaultForType?: UserTypes | null, users?: Array<{ __typename?: 'User', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name?: string | null, middleName?: string | null, lastName?: string | null, secondSurname?: string | null, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, dateIssue?: any | null, legalRepresentativeIdentificationType?: UserDocumentTypes | null, legalRepresentativeIdentificationNumber?: string | null, phoneCountryCode?: string | null, phoneNumber?: string | null, address?: string | null, hasRural?: boolean | null, confirmationCode?: string | null, position?: string | null, status: UserStatusTypes, phoneVerification: boolean, emailVerification: boolean, type: UserTypes, fullName: string }> | null, roleFx: Array<{ __typename?: 'RoleFx', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, permission: string }> }>, userRolesFx: Array<{ __typename?: 'RoleFx', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, permission: string, role?: { __typename?: 'Role', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, description: string, defaultForType?: UserTypes | null } | null }> } }>, visitsCount: { __typename?: 'MetadataPagination', totalItems?: number | null, itemsPerPage?: number | null, totalPages?: number | null, currentPage?: number | null } };
+
+export type VisitTypesQueryVariables = Exact<{
+  orderBy?: InputMaybe<Array<FindVisitTypeOrderBy> | FindVisitTypeOrderBy>;
+  where?: InputMaybe<FindVisitTypeWhere>;
+  pagination?: InputMaybe<Pagination>;
+}>;
+
+
+export type VisitTypesQuery = { __typename?: 'Query', visitTypes: Array<{ __typename?: 'VisitType', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, description: string, status: VisitTypeStatusEnum }>, visitTypesCount: { __typename?: 'MetadataPagination', currentPage?: number | null, itemsPerPage?: number | null, totalItems?: number | null, totalPages?: number | null } };
+
+export type CreateVisitTypeMutationVariables = Exact<{
+  createInput: CreateVisitTypeInput;
+}>;
+
+
+export type CreateVisitTypeMutation = { __typename?: 'Mutation', createVisitType: { __typename?: 'VisitType', id: string } };
+
+export type UpdateVisitTypeMutationVariables = Exact<{
+  updateInput: UpdateVisitTypeInput;
+}>;
+
+
+export type UpdateVisitTypeMutation = { __typename?: 'Mutation', updateVisitType: { __typename?: 'VisitType', id: string } };
 
 export const UserFragmentFragmentDoc = gql`
     fragment userFragment on User {
@@ -2172,3 +2334,437 @@ export function useSigninMutation(baseOptions?: Apollo.MutationHookOptions<Signi
 export type SigninMutationHookResult = ReturnType<typeof useSigninMutation>;
 export type SigninMutationResult = Apollo.MutationResult<SigninMutation>;
 export type SigninMutationOptions = Apollo.BaseMutationOptions<SigninMutation, SigninMutationVariables>;
+export const ClientsDocument = gql`
+    query Clients($orderBy: [FindClientOrderBy!], $where: FindClientWhere, $pagination: Pagination) {
+  clients(orderBy: $orderBy, where: $where, pagination: $pagination) {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    name
+    numberDocument
+    email
+    telefono
+    address
+    type
+    vertical
+    celular
+    city {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      code
+      name
+    }
+    department {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      code
+      name
+    }
+    country {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      code
+      name
+    }
+  }
+  clientsCount(orderBy: $orderBy, where: $where, pagination: $pagination) {
+    totalItems
+    itemsPerPage
+    totalPages
+    currentPage
+  }
+}
+    `;
+
+/**
+ * __useClientsQuery__
+ *
+ * To run a query within a React component, call `useClientsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useClientsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useClientsQuery({
+ *   variables: {
+ *      orderBy: // value for 'orderBy'
+ *      where: // value for 'where'
+ *      pagination: // value for 'pagination'
+ *   },
+ * });
+ */
+export function useClientsQuery(baseOptions?: Apollo.QueryHookOptions<ClientsQuery, ClientsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ClientsQuery, ClientsQueryVariables>(ClientsDocument, options);
+      }
+export function useClientsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ClientsQuery, ClientsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ClientsQuery, ClientsQueryVariables>(ClientsDocument, options);
+        }
+export type ClientsQueryHookResult = ReturnType<typeof useClientsQuery>;
+export type ClientsLazyQueryHookResult = ReturnType<typeof useClientsLazyQuery>;
+export type ClientsQueryResult = Apollo.QueryResult<ClientsQuery, ClientsQueryVariables>;
+export const CreateClientDocument = gql`
+    mutation CreateClient($createInput: CreateClientInput!) {
+  createClient(createInput: $createInput) {
+    id
+  }
+}
+    `;
+export type CreateClientMutationFn = Apollo.MutationFunction<CreateClientMutation, CreateClientMutationVariables>;
+
+/**
+ * __useCreateClientMutation__
+ *
+ * To run a mutation, you first call `useCreateClientMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateClientMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createClientMutation, { data, loading, error }] = useCreateClientMutation({
+ *   variables: {
+ *      createInput: // value for 'createInput'
+ *   },
+ * });
+ */
+export function useCreateClientMutation(baseOptions?: Apollo.MutationHookOptions<CreateClientMutation, CreateClientMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateClientMutation, CreateClientMutationVariables>(CreateClientDocument, options);
+      }
+export type CreateClientMutationHookResult = ReturnType<typeof useCreateClientMutation>;
+export type CreateClientMutationResult = Apollo.MutationResult<CreateClientMutation>;
+export type CreateClientMutationOptions = Apollo.BaseMutationOptions<CreateClientMutation, CreateClientMutationVariables>;
+export const RemoveClientDocument = gql`
+    mutation RemoveClient($removeClientId: ID!) {
+  removeClient(id: $removeClientId) {
+    id
+  }
+}
+    `;
+export type RemoveClientMutationFn = Apollo.MutationFunction<RemoveClientMutation, RemoveClientMutationVariables>;
+
+/**
+ * __useRemoveClientMutation__
+ *
+ * To run a mutation, you first call `useRemoveClientMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveClientMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeClientMutation, { data, loading, error }] = useRemoveClientMutation({
+ *   variables: {
+ *      removeClientId: // value for 'removeClientId'
+ *   },
+ * });
+ */
+export function useRemoveClientMutation(baseOptions?: Apollo.MutationHookOptions<RemoveClientMutation, RemoveClientMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemoveClientMutation, RemoveClientMutationVariables>(RemoveClientDocument, options);
+      }
+export type RemoveClientMutationHookResult = ReturnType<typeof useRemoveClientMutation>;
+export type RemoveClientMutationResult = Apollo.MutationResult<RemoveClientMutation>;
+export type RemoveClientMutationOptions = Apollo.BaseMutationOptions<RemoveClientMutation, RemoveClientMutationVariables>;
+export const VisitsDocument = gql`
+    query Visits($orderBy: [FindVisitOrderBy!], $where: FindVisitWhere, $pagination: Pagination) {
+  visits(orderBy: $orderBy, where: $where, pagination: $pagination) {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    description
+    location
+    dateVisit
+    status
+    isProyect
+    client {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      name
+      numberDocument
+      email
+      telefono
+      address
+      type
+      vertical
+      celular
+      city {
+        id
+        createdAt
+        updatedAt
+        deletedAt
+        code
+        name
+      }
+      department {
+        id
+        createdAt
+        updatedAt
+        deletedAt
+        code
+        name
+      }
+      country {
+        id
+        createdAt
+        updatedAt
+        deletedAt
+        code
+        name
+      }
+    }
+    user {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      name
+      middleName
+      lastName
+      secondSurname
+      email
+      identificationType
+      identificationNumber
+      dateIssue
+      legalRepresentativeIdentificationType
+      legalRepresentativeIdentificationNumber
+      phoneCountryCode
+      phoneNumber
+      address
+      hasRural
+      confirmationCode
+      position
+      status
+      phoneVerification
+      emailVerification
+      type
+      userRoles {
+        id
+        createdAt
+        updatedAt
+        deletedAt
+        name
+        description
+        defaultForType
+        users {
+          id
+          createdAt
+          updatedAt
+          deletedAt
+          name
+          middleName
+          lastName
+          secondSurname
+          email
+          identificationType
+          identificationNumber
+          dateIssue
+          legalRepresentativeIdentificationType
+          legalRepresentativeIdentificationNumber
+          phoneCountryCode
+          phoneNumber
+          address
+          hasRural
+          confirmationCode
+          position
+          status
+          phoneVerification
+          emailVerification
+          type
+          fullName
+        }
+        roleFx {
+          id
+          createdAt
+          updatedAt
+          deletedAt
+          permission
+        }
+      }
+      userRolesFx {
+        id
+        createdAt
+        updatedAt
+        deletedAt
+        permission
+        role {
+          id
+          createdAt
+          updatedAt
+          deletedAt
+          name
+          description
+          defaultForType
+        }
+      }
+      fullName
+    }
+  }
+  visitsCount(orderBy: $orderBy, where: $where, pagination: $pagination) {
+    totalItems
+    itemsPerPage
+    totalPages
+    currentPage
+  }
+}
+    `;
+
+/**
+ * __useVisitsQuery__
+ *
+ * To run a query within a React component, call `useVisitsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useVisitsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useVisitsQuery({
+ *   variables: {
+ *      orderBy: // value for 'orderBy'
+ *      where: // value for 'where'
+ *      pagination: // value for 'pagination'
+ *   },
+ * });
+ */
+export function useVisitsQuery(baseOptions?: Apollo.QueryHookOptions<VisitsQuery, VisitsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<VisitsQuery, VisitsQueryVariables>(VisitsDocument, options);
+      }
+export function useVisitsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<VisitsQuery, VisitsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<VisitsQuery, VisitsQueryVariables>(VisitsDocument, options);
+        }
+export type VisitsQueryHookResult = ReturnType<typeof useVisitsQuery>;
+export type VisitsLazyQueryHookResult = ReturnType<typeof useVisitsLazyQuery>;
+export type VisitsQueryResult = Apollo.QueryResult<VisitsQuery, VisitsQueryVariables>;
+export const VisitTypesDocument = gql`
+    query VisitTypes($orderBy: [FindVisitTypeOrderBy!], $where: FindVisitTypeWhere, $pagination: Pagination) {
+  visitTypes(orderBy: $orderBy, where: $where, pagination: $pagination) {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    name
+    description
+    status
+  }
+  visitTypesCount(orderBy: $orderBy, where: $where, pagination: $pagination) {
+    currentPage
+    itemsPerPage
+    totalItems
+    totalPages
+  }
+}
+    `;
+
+/**
+ * __useVisitTypesQuery__
+ *
+ * To run a query within a React component, call `useVisitTypesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useVisitTypesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useVisitTypesQuery({
+ *   variables: {
+ *      orderBy: // value for 'orderBy'
+ *      where: // value for 'where'
+ *      pagination: // value for 'pagination'
+ *   },
+ * });
+ */
+export function useVisitTypesQuery(baseOptions?: Apollo.QueryHookOptions<VisitTypesQuery, VisitTypesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<VisitTypesQuery, VisitTypesQueryVariables>(VisitTypesDocument, options);
+      }
+export function useVisitTypesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<VisitTypesQuery, VisitTypesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<VisitTypesQuery, VisitTypesQueryVariables>(VisitTypesDocument, options);
+        }
+export type VisitTypesQueryHookResult = ReturnType<typeof useVisitTypesQuery>;
+export type VisitTypesLazyQueryHookResult = ReturnType<typeof useVisitTypesLazyQuery>;
+export type VisitTypesQueryResult = Apollo.QueryResult<VisitTypesQuery, VisitTypesQueryVariables>;
+export const CreateVisitTypeDocument = gql`
+    mutation CreateVisitType($createInput: CreateVisitTypeInput!) {
+  createVisitType(createInput: $createInput) {
+    id
+  }
+}
+    `;
+export type CreateVisitTypeMutationFn = Apollo.MutationFunction<CreateVisitTypeMutation, CreateVisitTypeMutationVariables>;
+
+/**
+ * __useCreateVisitTypeMutation__
+ *
+ * To run a mutation, you first call `useCreateVisitTypeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateVisitTypeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createVisitTypeMutation, { data, loading, error }] = useCreateVisitTypeMutation({
+ *   variables: {
+ *      createInput: // value for 'createInput'
+ *   },
+ * });
+ */
+export function useCreateVisitTypeMutation(baseOptions?: Apollo.MutationHookOptions<CreateVisitTypeMutation, CreateVisitTypeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateVisitTypeMutation, CreateVisitTypeMutationVariables>(CreateVisitTypeDocument, options);
+      }
+export type CreateVisitTypeMutationHookResult = ReturnType<typeof useCreateVisitTypeMutation>;
+export type CreateVisitTypeMutationResult = Apollo.MutationResult<CreateVisitTypeMutation>;
+export type CreateVisitTypeMutationOptions = Apollo.BaseMutationOptions<CreateVisitTypeMutation, CreateVisitTypeMutationVariables>;
+export const UpdateVisitTypeDocument = gql`
+    mutation UpdateVisitType($updateInput: UpdateVisitTypeInput!) {
+  updateVisitType(updateInput: $updateInput) {
+    id
+  }
+}
+    `;
+export type UpdateVisitTypeMutationFn = Apollo.MutationFunction<UpdateVisitTypeMutation, UpdateVisitTypeMutationVariables>;
+
+/**
+ * __useUpdateVisitTypeMutation__
+ *
+ * To run a mutation, you first call `useUpdateVisitTypeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateVisitTypeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateVisitTypeMutation, { data, loading, error }] = useUpdateVisitTypeMutation({
+ *   variables: {
+ *      updateInput: // value for 'updateInput'
+ *   },
+ * });
+ */
+export function useUpdateVisitTypeMutation(baseOptions?: Apollo.MutationHookOptions<UpdateVisitTypeMutation, UpdateVisitTypeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateVisitTypeMutation, UpdateVisitTypeMutationVariables>(UpdateVisitTypeDocument, options);
+      }
+export type UpdateVisitTypeMutationHookResult = ReturnType<typeof useUpdateVisitTypeMutation>;
+export type UpdateVisitTypeMutationResult = Apollo.MutationResult<UpdateVisitTypeMutation>;
+export type UpdateVisitTypeMutationOptions = Apollo.BaseMutationOptions<UpdateVisitTypeMutation, UpdateVisitTypeMutationVariables>;
