@@ -1,0 +1,29 @@
+query Departments {
+  departments {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    code
+    name
+  }
+}
+
+query Cities($departmentId: ID) {
+  cities(departmentId: $departmentId) {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    code
+    name
+    department {
+      code
+      createdAt
+      deletedAt
+      id
+      name
+      updatedAt
+    }
+  }
+}

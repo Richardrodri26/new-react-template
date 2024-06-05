@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { CaretSortIcon } from "@radix-ui/react-icons";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 
 
 type InputFormBasicType = {
@@ -22,9 +22,10 @@ type InputFormBasicType = {
   label?: string | JSX.Element;
   description?: string | React.ReactNode;
   className?: string;
+  disabled?: boolean
 };
 
-interface InputFormInterface extends InputFormBasicType {}
+interface InputFormInterface extends InputFormBasicType { }
 
 export const InputForm = ({
   name,
@@ -53,7 +54,7 @@ export const InputForm = ({
   );
 };
 
-interface CheckboxFormInterface extends InputFormBasicType {}
+interface CheckboxFormInterface extends InputFormBasicType { }
 
 export const CheckBoxForm = ({
   name,
@@ -142,6 +143,8 @@ export const SelectForm = ({
   description,
   placeholder,
   options,
+  disabled,
+  className
 }: SelectFormInterface) => {
   const { control } = useFormContext();
   return (
@@ -149,9 +152,9 @@ export const SelectForm = ({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem>
+        <FormItem className={className}>
           <FormLabel>{label}</FormLabel>
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <Select disabled={disabled} onValueChange={field.onChange} defaultValue={field.value}>
             <FormControl>
               <SelectTrigger>
                 <SelectValue placeholder={placeholder} />
@@ -182,7 +185,7 @@ export const SelectForm = ({
   );
 };
 
-interface SwitchFormInterface extends InputFormBasicType {}
+interface SwitchFormInterface extends InputFormBasicType { }
 
 export const SwitchForm = ({
   name,
@@ -209,7 +212,7 @@ export const SwitchForm = ({
   );
 };
 
-interface TextareaFormInterface extends InputFormBasicType {}
+interface TextareaFormInterface extends InputFormBasicType { }
 
 export const TextareaForm = ({
   name,
@@ -240,7 +243,7 @@ export const TextareaForm = ({
   );
 };
 
-interface InputDateFormInterface extends InputFormBasicType {}
+interface InputDateFormInterface extends InputFormBasicType { }
 
 export const InputDateForm = ({
   name,
@@ -348,7 +351,7 @@ export const ComboboxForm = ({
                 >
                   {field.value
                     ? options.find((option) => option.value === field.value)
-                        ?.label
+                      ?.label
                     : "Selecciona una opción"}
                   <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
@@ -362,25 +365,27 @@ export const ComboboxForm = ({
                 />
                 <CommandEmpty>No se encontro opciones.</CommandEmpty>
                 <CommandGroup>
-                  {options.map((option) => (
-                    <CommandItem
-                      value={option.label}
-                      key={option.value}
-                      onSelect={() => {
-                        setValue("language", option.value);
-                      }}
-                    >
-                      {option.label}
-                      <CheckIcon
-                        className={cn(
-                          "ml-auto h-4 w-4",
-                          option.value === field.value
-                            ? "opacity-100"
-                            : "opacity-0"
-                        )}
-                      />
-                    </CommandItem>
-                  ))}
+                  <CommandList>
+                    {options.map((option) => (
+                      <CommandItem
+                        value={option.label}
+                        key={option.value}
+                        onSelect={() => {
+                          setValue(name, option.value);
+                        }}
+                      >
+                        {option.label}
+                        <CheckIcon
+                          className={cn(
+                            "ml-auto h-4 w-4",
+                            option.value === field.value
+                              ? "opacity-100"
+                              : "opacity-0"
+                          )}
+                        />
+                      </CommandItem>
+                    ))}
+                  </CommandList>
                 </CommandGroup>
               </Command>
             </PopoverContent>

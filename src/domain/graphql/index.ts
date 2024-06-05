@@ -231,12 +231,12 @@ export type CreateRoleInput = {
 
 export type CreateUserInput = {
   address: Scalars['String'];
-  cityId: Scalars['ID'];
-  countryId: Scalars['ID'];
+  cityId?: InputMaybe<Scalars['ID']>;
+  countryId?: InputMaybe<Scalars['ID']>;
   dateIssue?: InputMaybe<Scalars['DateTime']>;
-  departmentId: Scalars['ID'];
+  departmentId?: InputMaybe<Scalars['ID']>;
   email: Scalars['String'];
-  hasRural: Scalars['Boolean'];
+  hasRural?: InputMaybe<Scalars['Boolean']>;
   identificationNumber: Scalars['String'];
   identificationType: UserDocumentTypes;
   lastName: Scalars['String'];
@@ -245,7 +245,7 @@ export type CreateUserInput = {
   middleName?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   password: Scalars['ValidatePassword'];
-  phoneCountryCode: Scalars['String'];
+  phoneCountryCode?: InputMaybe<Scalars['String']>;
   phoneNumber: Scalars['String'];
   position?: InputMaybe<Scalars['String']>;
   secondSurname?: InputMaybe<Scalars['String']>;
@@ -2154,6 +2154,18 @@ export type RemoveClientMutationVariables = Exact<{
 
 export type RemoveClientMutation = { __typename?: 'Mutation', removeClient: { __typename?: 'Client', id: string } };
 
+export type DepartmentsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type DepartmentsQuery = { __typename?: 'Query', departments: Array<{ __typename?: 'Department', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string }> };
+
+export type CitiesQueryVariables = Exact<{
+  departmentId?: InputMaybe<Scalars['ID']>;
+}>;
+
+
+export type CitiesQuery = { __typename?: 'Query', cities: Array<{ __typename?: 'City', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string, department?: { __typename?: 'Department', code: number, createdAt: any, deletedAt?: any | null, id: string, name: string, updatedAt: any } | null }> };
+
 export type VisitsQueryVariables = Exact<{
   orderBy?: InputMaybe<Array<FindVisitOrderBy> | FindVisitOrderBy>;
   where?: InputMaybe<FindVisitWhere>;
@@ -2478,6 +2490,93 @@ export function useRemoveClientMutation(baseOptions?: Apollo.MutationHookOptions
 export type RemoveClientMutationHookResult = ReturnType<typeof useRemoveClientMutation>;
 export type RemoveClientMutationResult = Apollo.MutationResult<RemoveClientMutation>;
 export type RemoveClientMutationOptions = Apollo.BaseMutationOptions<RemoveClientMutation, RemoveClientMutationVariables>;
+export const DepartmentsDocument = gql`
+    query Departments {
+  departments {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    code
+    name
+  }
+}
+    `;
+
+/**
+ * __useDepartmentsQuery__
+ *
+ * To run a query within a React component, call `useDepartmentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDepartmentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDepartmentsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useDepartmentsQuery(baseOptions?: Apollo.QueryHookOptions<DepartmentsQuery, DepartmentsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DepartmentsQuery, DepartmentsQueryVariables>(DepartmentsDocument, options);
+      }
+export function useDepartmentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DepartmentsQuery, DepartmentsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DepartmentsQuery, DepartmentsQueryVariables>(DepartmentsDocument, options);
+        }
+export type DepartmentsQueryHookResult = ReturnType<typeof useDepartmentsQuery>;
+export type DepartmentsLazyQueryHookResult = ReturnType<typeof useDepartmentsLazyQuery>;
+export type DepartmentsQueryResult = Apollo.QueryResult<DepartmentsQuery, DepartmentsQueryVariables>;
+export const CitiesDocument = gql`
+    query Cities($departmentId: ID) {
+  cities(departmentId: $departmentId) {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    code
+    name
+    department {
+      code
+      createdAt
+      deletedAt
+      id
+      name
+      updatedAt
+    }
+  }
+}
+    `;
+
+/**
+ * __useCitiesQuery__
+ *
+ * To run a query within a React component, call `useCitiesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCitiesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCitiesQuery({
+ *   variables: {
+ *      departmentId: // value for 'departmentId'
+ *   },
+ * });
+ */
+export function useCitiesQuery(baseOptions?: Apollo.QueryHookOptions<CitiesQuery, CitiesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CitiesQuery, CitiesQueryVariables>(CitiesDocument, options);
+      }
+export function useCitiesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CitiesQuery, CitiesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CitiesQuery, CitiesQueryVariables>(CitiesDocument, options);
+        }
+export type CitiesQueryHookResult = ReturnType<typeof useCitiesQuery>;
+export type CitiesLazyQueryHookResult = ReturnType<typeof useCitiesLazyQuery>;
+export type CitiesQueryResult = Apollo.QueryResult<CitiesQuery, CitiesQueryVariables>;
 export const VisitsDocument = gql`
     query Visits($orderBy: [FindVisitOrderBy!], $where: FindVisitWhere, $pagination: Pagination) {
   visits(orderBy: $orderBy, where: $where, pagination: $pagination) {

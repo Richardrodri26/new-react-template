@@ -45,7 +45,8 @@ type DeepPartialWithZod<T extends z.ZodObject<any, any>> = {
     schema?: T;
     submit?: (data: T['_input']) => void;
     onError?: SubmitErrorHandler<DeepPartialWithZod<T>>; // Ajustamos el tipo de la función de manejo de errores
-    defaultValue?: DefaultValues<DeepPartialWithZod<T>>;
+    // defaultValue?: DefaultValues<DeepPartialWithZod<T>>;
+    defaultValue?: any;
     values?: any;
     className?: string;
   }

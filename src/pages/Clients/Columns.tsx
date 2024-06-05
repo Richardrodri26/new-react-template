@@ -37,6 +37,7 @@ export const clientsColumns = [
           type: "warning",
           title: "Eliminar cliente",
           description: "¿Estas seguro de eliminar el cliente?",
+          showCancelButton: true,
         })
 
         if (resAlert) {

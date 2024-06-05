@@ -2,7 +2,8 @@
 
 import { BasicFormProviderZod, ButtonForm, RowForm } from '@/components'
 import { DialogHeader } from '@/components/ui/dialog'
-import { InputForm, SelectForm } from '@/composables'
+import { ComboboxForm, InputForm, SelectForm } from '@/composables'
+import { DepartmentAndMunicipality } from '@/composables/DepartmentAndMunicipality'
 import { TypeClientEnum, useCreateClientMutation } from '@/domain/graphql'
 import { useShallowGeneralStore } from '@/domain/store/general.store'
 import { ToastyErrorGraph } from '@/lib/utils'
@@ -17,6 +18,9 @@ const createClientSchema = z.object({
   numberDocument: z.string(),
   type: z.string(),
   email: z.string().email(),
+  departmentId: z.string().min(1),
+  cityId: z.string().min(1)
+  // cityId: z.string()
 })
 
 type createClientSchemaType = z.infer<typeof createClientSchema>;
@@ -76,13 +80,24 @@ export const CreateClient = () => {
 
   }
 
+  const defaultValues = {
+    departmentId: "",
+    cityId: "",
+    name: "",
+    numberDocument: "",
+    type: typeClientOptions[0].key,
+    email: "",
+    celular: "",
+    Prueba: "1",
+  }
+
   return (
     <>
       <DialogHeader >
         Crear cliente
       </DialogHeader>
 
-      <BasicFormProviderZod submit={onSubmit} schema={createClientSchema}>
+      <BasicFormProviderZod submit={onSubmit} schema={createClientSchema} defaultValue={defaultValues}>
         <RowForm>
           <InputForm name='name' label={"Nombre del cliente"} />
           <InputForm name='numberDocument' label={"Número de documento"} />
@@ -90,8 +105,10 @@ export const CreateClient = () => {
         </RowForm>
 
         <RowForm>
+          <DepartmentAndMunicipality currentIdDepartment='departmentId' currentIdMunicipalities='cityId' />
           <InputForm name='email' label={"Correo electronico"} />
           <InputForm name='celular' label={"Telefono celular"} />
+          <ComboboxForm label={"Prueba"} name='Prueba' options={[{ label: "prueba 1", value: "1" }, { label: "prueba 2", value: "2" }]} />
         </RowForm>
 
         <ButtonForm>
