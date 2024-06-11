@@ -55,8 +55,18 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
+import useGeneral from "@/domain/store/general.store"
+import { useNavigate } from "react-router-dom"
 
 export function Dashboard() {
+  const navigate = useNavigate();
+  const logout = useGeneral(state => state.logout)
+
+  const onLogout = () => {
+    logout()
+    navigate("/")
+  }
+
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
 
@@ -160,13 +170,13 @@ export function Dashboard() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Support</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Logout</DropdownMenuItem>
-            </DropdownMenuContent>
+          <DropdownMenuLabel>Opciones</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          {/* <DropdownMenuItem>Settings</DropdownMenuItem>
+          <DropdownMenuItem>Support</DropdownMenuItem> */}
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={onLogout}>Cerrar sesion</DropdownMenuItem>
+        </DropdownMenuContent>
           </DropdownMenu>
         </header>
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">

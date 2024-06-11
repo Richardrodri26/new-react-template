@@ -1,4 +1,4 @@
-import { MainLayout } from "@/components/Layouts";
+import { AppGuardLayout, MainLayout } from "@/components/Layouts";
 import { ClientsPage, HomePage, LoginPage, ParametersPage, UsersPage, VisitsPage } from "@/pages";
 import { createBrowserRouter } from "react-router-dom";
 
@@ -11,7 +11,7 @@ export const appRouter = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    element: <MainLayout />,
+    element: <AppGuardLayout />,
     children: [
       // {
       //   path: "",

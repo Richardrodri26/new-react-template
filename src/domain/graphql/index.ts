@@ -2128,6 +2128,13 @@ export type WssRecipient = {
   phonePrefix?: InputMaybe<Scalars['String']>;
 };
 
+export type ValidateUserTokenQueryVariables = Exact<{
+  validateTokenInput: ValidateTokenInput;
+}>;
+
+
+export type ValidateUserTokenQuery = { __typename?: 'Query', validateUserToken: { __typename?: 'User', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name?: string | null, middleName?: string | null, lastName?: string | null, secondSurname?: string | null, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, dateIssue?: any | null, legalRepresentativeIdentificationType?: UserDocumentTypes | null, legalRepresentativeIdentificationNumber?: string | null, phoneCountryCode?: string | null, phoneNumber?: string | null, address?: string | null, hasRural?: boolean | null, confirmationCode?: string | null, position?: string | null, status: UserStatusTypes, phoneVerification: boolean, emailVerification: boolean, type: UserTypes, fullName: string, city?: { __typename?: 'City', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, department?: { __typename?: 'Department', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, country?: { __typename?: 'Country', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, userRoles: Array<{ __typename?: 'Role', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, description: string, defaultForType?: UserTypes | null, users?: Array<{ __typename?: 'User', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name?: string | null, middleName?: string | null, lastName?: string | null, secondSurname?: string | null, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, dateIssue?: any | null, legalRepresentativeIdentificationType?: UserDocumentTypes | null, legalRepresentativeIdentificationNumber?: string | null, phoneCountryCode?: string | null, phoneNumber?: string | null, address?: string | null, hasRural?: boolean | null, confirmationCode?: string | null, position?: string | null, status: UserStatusTypes, phoneVerification: boolean, emailVerification: boolean, type: UserTypes, fullName: string }> | null, roleFx: Array<{ __typename?: 'RoleFx', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, permission: string }> }>, userRolesFx: Array<{ __typename?: 'RoleFx', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, permission: string, role?: { __typename?: 'Role', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, description: string, defaultForType?: UserTypes | null } | null }> } };
+
 export type SigninMutationVariables = Exact<{
   signinInput: SigninInput;
 }>;
@@ -2346,6 +2353,148 @@ export const UserFragmentFragmentDoc = gql`
   fullName
 }
     `;
+export const ValidateUserTokenDocument = gql`
+    query ValidateUserToken($validateTokenInput: ValidateTokenInput!) {
+  validateUserToken(validateTokenInput: $validateTokenInput) {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    name
+    middleName
+    lastName
+    secondSurname
+    email
+    identificationType
+    identificationNumber
+    dateIssue
+    legalRepresentativeIdentificationType
+    legalRepresentativeIdentificationNumber
+    phoneCountryCode
+    phoneNumber
+    address
+    hasRural
+    confirmationCode
+    position
+    status
+    phoneVerification
+    emailVerification
+    type
+    city {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      code
+      name
+    }
+    department {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      code
+      name
+    }
+    country {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      code
+      name
+    }
+    userRoles {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      name
+      description
+      defaultForType
+      users {
+        id
+        createdAt
+        updatedAt
+        deletedAt
+        name
+        middleName
+        lastName
+        secondSurname
+        email
+        identificationType
+        identificationNumber
+        dateIssue
+        legalRepresentativeIdentificationType
+        legalRepresentativeIdentificationNumber
+        phoneCountryCode
+        phoneNumber
+        address
+        hasRural
+        confirmationCode
+        position
+        status
+        phoneVerification
+        emailVerification
+        type
+        fullName
+      }
+      roleFx {
+        id
+        createdAt
+        updatedAt
+        deletedAt
+        permission
+      }
+    }
+    userRolesFx {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      permission
+      role {
+        id
+        createdAt
+        updatedAt
+        deletedAt
+        name
+        description
+        defaultForType
+      }
+    }
+    fullName
+  }
+}
+    `;
+
+/**
+ * __useValidateUserTokenQuery__
+ *
+ * To run a query within a React component, call `useValidateUserTokenQuery` and pass it any options that fit your needs.
+ * When your component renders, `useValidateUserTokenQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useValidateUserTokenQuery({
+ *   variables: {
+ *      validateTokenInput: // value for 'validateTokenInput'
+ *   },
+ * });
+ */
+export function useValidateUserTokenQuery(baseOptions: Apollo.QueryHookOptions<ValidateUserTokenQuery, ValidateUserTokenQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ValidateUserTokenQuery, ValidateUserTokenQueryVariables>(ValidateUserTokenDocument, options);
+      }
+export function useValidateUserTokenLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ValidateUserTokenQuery, ValidateUserTokenQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ValidateUserTokenQuery, ValidateUserTokenQueryVariables>(ValidateUserTokenDocument, options);
+        }
+export type ValidateUserTokenQueryHookResult = ReturnType<typeof useValidateUserTokenQuery>;
+export type ValidateUserTokenLazyQueryHookResult = ReturnType<typeof useValidateUserTokenLazyQuery>;
+export type ValidateUserTokenQueryResult = Apollo.QueryResult<ValidateUserTokenQuery, ValidateUserTokenQueryVariables>;
 export const SigninDocument = gql`
     mutation Signin($signinInput: SigninInput!) {
   signin(signinInput: $signinInput) {
