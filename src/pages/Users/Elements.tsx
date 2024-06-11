@@ -7,7 +7,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { AsideMenuMobile } from '@/components'
 import { Link } from 'react-router-dom'
 
-export const ClientsHeader = () => {
+export const UsersHeader = () => {
  
 
   return (
@@ -25,7 +25,7 @@ export const ClientsHeader = () => {
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link to={"/dashboard"}>Clientes</Link>
+              <Link to={"/users"}>Usuarios</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
 
