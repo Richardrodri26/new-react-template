@@ -3,6 +3,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Visit } from "@/domain/graphql";
 import { createColumnHelper } from '@tanstack/react-table'
 import { MoreHorizontal } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const columnHelperVisits = createColumnHelper<Visit>();
 
@@ -11,12 +12,16 @@ export const visitsColumns = [
     header: "Cliente"
   }),
 
+  columnHelperVisits.accessor("user.name", {
+    header: "Usuario"
+  }),
+
   columnHelperVisits.accessor("description", {
     header: "Descripción"
   }),
 
-  columnHelperVisits.accessor("location", {
-    header: "Localización"
+  columnHelperVisits.accessor("type.name", {
+    header: "Tipo"
   }),
 
   columnHelperVisits.accessor("status", {
@@ -26,6 +31,11 @@ export const visitsColumns = [
   columnHelperVisits.display({
     id: "Acciones",
     cell: (info) => {
+      const navigate = useNavigate(); 
+      const onClickShowDetail = () => {
+        let path = `/dashboard/visit/${info.row.original.id}`; 
+        navigate(path);
+      }
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -40,7 +50,7 @@ export const visitsColumns = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>Edit</DropdownMenuItem>
+            <DropdownMenuItem onClick={onClickShowDetail}>Edit</DropdownMenuItem>
             <DropdownMenuItem>Delete</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

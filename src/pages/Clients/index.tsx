@@ -64,7 +64,7 @@ const ClientsGrid = () => {
         </TabsTrigger> */}
             </TabsList>
             <div className="ml-auto flex items-center gap-2">
-              <DropdownMenu>
+              {/* <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm" className="h-8 gap-1">
                     <ListFilter className="h-3.5 w-3.5" />
@@ -90,7 +90,7 @@ const ClientsGrid = () => {
                 <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
                   Export
                 </span>
-              </Button>
+              </Button> */}
               <Button onClick={onCreateModal} size="sm" className="h-8 gap-1">
                 <PlusCircle className="h-3.5 w-3.5" />
                 <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">

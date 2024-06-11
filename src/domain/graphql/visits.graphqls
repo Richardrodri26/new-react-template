@@ -174,7 +174,42 @@ mutation CreateVisitType($createInput: CreateVisitTypeInput!) {
     id
   }
 }
-
+query Visit($visitId: ID!) {
+  visit(id: $visitId) {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    description
+    location
+    dateVisit
+    status
+    isProyect
+    client {
+      id
+      updatedAt
+      deletedAt
+      name
+      numberDocument
+      email
+      telefono
+      address
+      type
+      vertical
+      celular
+      createdAt
+    }
+    type {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      name
+      description
+      status
+    }
+  }
+}
 mutation UpdateVisitType($updateInput: UpdateVisitTypeInput!) {
   updateVisitType(updateInput: $updateInput) {
     id

@@ -4,12 +4,15 @@ import { InputForm } from "@/composables"
 import { loginSchema, loginSchemaType } from "./controller/schemas"
 import { login } from "@/domain/store/general.actions"
 import { useNavigate } from "react-router-dom"
-
+import { toast } from "sonner";
 export function LoginPage() {
   const navigate = useNavigate()
 
   const onSubmit = async (data: loginSchemaType) => {
-
+    if(data.password?.length < 8){
+      toast.error("Min length caracter to password 8");
+      return
+    }
     const resLogin = await login(data);
 
     if(resLogin) {
@@ -39,7 +42,7 @@ export function LoginPage() {
 
             <InputForm name="email" label="Email" />
 
-            <InputForm name="password" label={<div className="flex items-center">
+            <InputForm name="password" type="password" label={<div className="flex items-center">
                 <Label htmlFor="password">Contraseña</Label>
                 <a
                   href="/forgot-password"

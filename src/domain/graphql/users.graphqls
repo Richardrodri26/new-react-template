@@ -1,0 +1,12 @@
+mutation CreateUser($createInput: CreateUserInput!) {
+  createUser(createInput: $createInput) {
+    id
+  }
+}
+
+query Users {
+  users {
+    id
+    identificationNumber
+  }
+}
