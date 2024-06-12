@@ -4,6 +4,7 @@ import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { Button } from '@/components/ui/button';
 import { PlusCircle } from 'lucide-react';
 import { useVisitQuery } from '@/domain/graphql';
+import LocationMap from '@/components/Utils/googelMaps';
 
 
 export const VisitDetailPage: React.FC = () => {
@@ -28,7 +29,6 @@ export const VisitDetailPage: React.FC = () => {
   const handleAddComment = () => {
 
   };
-
   const handleStartVisit = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -92,15 +92,8 @@ export const VisitDetailPage: React.FC = () => {
           </div>
         ) : (
           <div className="h-64 w-full mb-6">
-            <LoadScript googleMapsApiKey="YOUR_GOOGLE_MAPS_API_KEY">
-              <GoogleMap
-                mapContainerStyle={{ height: '100%', width: '100%' }}
-                center={visit.location}
-                zoom={15}
-              >
-                <Marker position={visit.location} />
-              </GoogleMap>
-            </LoadScript>
+            <p color='blue'><a href='#' color='blue'>!Click Aqui, para ver el marcador!</a></p>
+            <LocationMap latitude={visit.latitude} longitude={visit.longitude}></LocationMap>
           </div>
         )}
         <div className="p-6">

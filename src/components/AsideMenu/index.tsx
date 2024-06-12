@@ -1,5 +1,5 @@
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
-import { Package2, Home, ShoppingCart, Package, Users2, LineChart, Settings, Goal, PanelLeft, Users } from "lucide-react"
+import { Package2, Home, ShoppingCart, Package, Users2, LineChart, Settings, Goal, PanelLeft, Calendar, PersonStanding, MapPinIcon, Bolt } from "lucide-react"
 import { Fragment } from "react/jsx-runtime";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
@@ -15,7 +15,17 @@ const asideMenuItems: IAsideMenuItem[] = [
   {
     title: "Visitas",
     url: "/dashboard",
-    icon: <Goal className="h-5 w-5" />
+    icon: <MapPinIcon className="h-5 w-5" />
+  },
+  {
+    title: "Calendario",
+    url: "/dashboard/calendar",
+    icon: <Calendar className="h-5 w-5"></Calendar>
+  },
+  {
+    title: "Clientes",
+    url: "/dashboard/clients",
+    icon: <PersonStanding className="h-5 w-5" />
   },
   {
     title: "Usuarios",
@@ -23,15 +33,16 @@ const asideMenuItems: IAsideMenuItem[] = [
     icon: <Users2 className="h-5 w-5" />
   },
   {
-    title: "Parametros",
-    url: "/dashboard/parameters",
-    icon: <Settings className="h-5 w-5" />
-  },
-  {
-    title: "Clientes",
-    url: "/dashboard/clients",
-    icon: <Users className="h-5 w-5" />
-  },
+    title: "Tipo de visita",
+    url: "/dashboard/typeVisit",
+    icon: <Bolt className="h-5 w-5"></Bolt>
+  }
+  
+  // {
+  //   title: "Parametros",
+  //   url: "/dashboard/parameters",
+  //   icon: <Settings className="h-5 w-5" />
+  // },
 ]
 
 export const AsideMenu = () => {
@@ -43,7 +54,7 @@ export const AsideMenu = () => {
           href="#"
           className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
         >
-          <Package2 className="h-4 w-4 transition-all group-hover:scale-110" />
+          <Home className="h-4 w-4 transition-all group-hover:scale-110" />
           <span className="sr-only">Seller</span>
         </a>
         {

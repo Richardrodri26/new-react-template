@@ -1,5 +1,5 @@
 
-import { MetadataPagination, OrderTypes, User, useUsersQuery } from '@/domain/graphql'
+import { MetadataPagination, OrderTypes, User, useVisitTypesQuery } from '@/domain/graphql'
 import { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
@@ -9,27 +9,27 @@ import { PaginationTable } from '@/components/TableElements'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card'
 import { DataTableVisits } from '../Visits/Grids'
 import { useShallowGeneralStore } from '@/domain/store/general.store'
-import { UsersHeader } from './Elements'
-import { usersColumns } from './Columns'
-import { UsersModals } from './Modals'
+import { TypeVistHeader } from './Elements'
+import { TypeVisitColumns } from './Columns'
+import { TypeVistModals } from './Modals'
 
-export const UsersPage = () => {
+export const TypeVistPage = () => {
   return (
     <>
-      <UsersGrid />
-      <UsersModals />
+      <TypeVisitGrid />
+      <TypeVistModals />
     </>
   )
 }
 
 
-const UsersGrid = () => {
+const TypeVisitGrid = () => {
   const [setModalStatus] = useShallowGeneralStore(state => [state.setModalStatus]);
 
 
   const [skip, setSkip] = useState(0)
   const takeValue = 10
-  const { data, loading } = useUsersQuery({
+  const { data, loading } = useVisitTypesQuery({
     variables: {
       pagination: {
         skip,
@@ -42,15 +42,15 @@ const UsersGrid = () => {
   })
 
   const onCreateModal = () => {
-    setModalStatus({ id: "createUser" })
+    setModalStatus({ id: "createTypeVisit" })
 
   }
 
-  const clients = (data?.users || []) as User[];
+  const clients = (data?.visitTypes || [])
 
   return (
     <>
-      <UsersHeader />
+      <TypeVistHeader />
 
       <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
         <Tabs defaultValue="all">
@@ -94,7 +94,7 @@ const UsersGrid = () => {
               <Button onClick={onCreateModal} size="sm" className="h-8 gap-1">
                 <PlusCircle className="h-3.5 w-3.5" />
                 <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                  Crear usuario
+                  Crear tipo de visita
                 </span>
               </Button>
             </div>
@@ -102,20 +102,20 @@ const UsersGrid = () => {
           <TabsContent value="all">
             <Card x-chunk="dashboard-06-chunk-0">
               <CardHeader>
-                <CardTitle>Usuarios</CardTitle>
+                <CardTitle>Tipo de visita</CardTitle>
                 <CardDescription>
-                  Gestiona tus usuarios.
+                  Gestiona tus tipos de visita.
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 {/* Data table */}
-                <DataTableVisits isLoading={!data && loading} columns={usersColumns as any} data={clients} />
+                <DataTableVisits isLoading={!data && loading} columns={TypeVisitColumns as any} data={clients} />
               </CardContent>
               <CardFooter>
 
 
 
-                <PaginationTable skipState={{ value: skip, setValue: setSkip }} metaDataPagination={data?.usersCount as MetadataPagination} takeValue={takeValue} />
+                <PaginationTable skipState={{ value: skip, setValue: setSkip }} metaDataPagination={data?.visitTypesCount as MetadataPagination} takeValue={takeValue} />
 
               </CardFooter>
             </Card>

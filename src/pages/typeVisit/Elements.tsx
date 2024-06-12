@@ -8,7 +8,7 @@ import { AsideMenuMobile } from '@/components'
 import { Link, useNavigate } from 'react-router-dom'
 import useGeneral from '@/domain/store/general.store'
 
-export const ClientsHeader = () => {
+export const TypeVistHeader = () => {
   const navigate = useNavigate();
   const logout = useGeneral(state => state.logout)
 
@@ -16,6 +16,7 @@ export const ClientsHeader = () => {
     logout()
     navigate("/")
   }
+
 
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
@@ -32,7 +33,7 @@ export const ClientsHeader = () => {
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link to={"/dashboard"}>Clientes</Link>
+              <Link to={"/users"}>Usuarios</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
 

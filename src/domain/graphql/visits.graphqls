@@ -47,15 +47,15 @@ query Visits($orderBy: [FindVisitOrderBy!], $where: FindVisitWhere, $pagination:
         name
       }
     }
-    # type {
-    #   id
-    #   createdAt
-    #   updatedAt
-    #   deletedAt
-    #   name
-    #   description
-    #   status
-    # }
+    type {
+       id
+       createdAt
+       updatedAt
+       deletedAt
+       name
+       description
+       status
+    }
     user {
       id
       createdAt
@@ -185,6 +185,8 @@ query Visit($visitId: ID!) {
     dateVisit
     status
     isProyect
+    longitude
+    latitude
     client {
       id
       updatedAt
@@ -212,6 +214,11 @@ query Visit($visitId: ID!) {
 }
 mutation UpdateVisitType($updateInput: UpdateVisitTypeInput!) {
   updateVisitType(updateInput: $updateInput) {
+    id
+  }
+}
+mutation RemoveVisitType($removeVisitTypeId: ID!) {
+  removeVisitType(id: $removeVisitTypeId) {
     id
   }
 }
