@@ -36,13 +36,13 @@ const asideMenuItems: IAsideMenuItem[] = [
     title: "Tipo de visita",
     url: "/dashboard/typeVisit",
     icon: <Bolt className="h-5 w-5"></Bolt>
-  }
+  },
   
-  // {
-  //   title: "Parametros",
-  //   url: "/dashboard/parameters",
-  //   icon: <Settings className="h-5 w-5" />
-  // },
+  {
+    title: "Parametros",
+    url: "/dashboard/parameters",
+    icon: <Settings className="h-5 w-5" />
+  },
 ]
 
 export const AsideMenu = () => {

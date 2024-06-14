@@ -3,7 +3,9 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { DateSelectArg, EventClickArg } from '@fullcalendar/core/index.js';
-const [events, setEvents] = useState([
+
+export default function CalendarPage() {
+  const [events, setEvents] = useState([
     // Ejemplo de eventos iniciales
     { title: 'Evento 1', date: '2024-06-15' },
     { title: 'Evento 2', date: '2024-06-17' },
@@ -24,7 +26,7 @@ const handleDateSelect = (selectInfo: DateSelectArg) => {
       ]);
     }
   };
-export default function CalendarPage() {
+  
   return (
     <Card>
     <CardHeader>

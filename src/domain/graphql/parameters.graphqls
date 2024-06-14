@@ -1,0 +1,77 @@
+query Parameters($pagination: Pagination) {
+  parameters(pagination: $pagination) {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    name
+    codigo
+    descripcion
+    type
+    valueInt
+    valueString
+    valueDate
+    valueFile {
+      id
+      url
+      fileMongoId
+      createdAt
+      updatedAt
+      deletedAt
+      fileName
+      fileExtension
+      fileMode
+    }
+  }
+  parametersCount(pagination: $pagination) {
+    totalItems
+    itemsPerPage
+    totalPages
+    currentPage
+  }
+}
+
+mutation RemoveParameter($removeParameterId: ID!) {
+  removeParameter(id: $removeParameterId) {
+    id
+    name
+    type
+    descripcion
+  }
+}
+
+mutation UpdateParameter($updateInput: UpdateParametersInput!) {
+  updateParameter(updateInput: $updateInput) {
+    id
+    name
+    descripcion
+  }
+}
+
+
+mutation CreateParameter($createInput: CreateParametersInput!) {
+  createParameter(createInput: $createInput) {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    name
+    codigo
+    descripcion
+    type
+    valueInt
+    valueString
+    valueDate
+    valueFile {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      fileName
+      fileExtension
+      fileMode
+      fileMongoId
+      url
+    }
+  }
+}

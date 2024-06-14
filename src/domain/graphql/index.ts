@@ -2179,6 +2179,34 @@ export type CitiesQueryVariables = Exact<{
 
 export type CitiesQuery = { __typename?: 'Query', cities: Array<{ __typename?: 'City', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string, department?: { __typename?: 'Department', code: number, createdAt: any, deletedAt?: any | null, id: string, name: string, updatedAt: any } | null }> };
 
+export type ParametersQueryVariables = Exact<{
+  pagination?: InputMaybe<Pagination>;
+}>;
+
+
+export type ParametersQuery = { __typename?: 'Query', parameters: Array<{ __typename?: 'Parameter', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, codigo: string, descripcion: string, type: TypeParameterEnum, valueInt?: number | null, valueString?: string | null, valueDate?: any | null, valueFile?: { __typename?: 'FileInfo', id: string, url: string, fileMongoId: string, createdAt: any, updatedAt: any, deletedAt?: any | null, fileName: string, fileExtension: string, fileMode: FileModes } | null }>, parametersCount: { __typename?: 'MetadataPagination', totalItems?: number | null, itemsPerPage?: number | null, totalPages?: number | null, currentPage?: number | null } };
+
+export type RemoveParameterMutationVariables = Exact<{
+  removeParameterId: Scalars['ID'];
+}>;
+
+
+export type RemoveParameterMutation = { __typename?: 'Mutation', removeParameter: { __typename?: 'Parameter', id: string, name: string, type: TypeParameterEnum, descripcion: string } };
+
+export type UpdateParameterMutationVariables = Exact<{
+  updateInput: UpdateParametersInput;
+}>;
+
+
+export type UpdateParameterMutation = { __typename?: 'Mutation', updateParameter: { __typename?: 'Parameter', id: string, name: string, descripcion: string } };
+
+export type CreateParameterMutationVariables = Exact<{
+  createInput: CreateParametersInput;
+}>;
+
+
+export type CreateParameterMutation = { __typename?: 'Mutation', createParameter: { __typename?: 'Parameter', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, codigo: string, descripcion: string, type: TypeParameterEnum, valueInt?: number | null, valueString?: string | null, valueDate?: any | null, valueFile?: { __typename?: 'FileInfo', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, fileName: string, fileExtension: string, fileMode: FileModes, fileMongoId: string, url: string } | null } };
+
 export type UsersQueryVariables = Exact<{
   orderBy?: InputMaybe<Array<FindUsersOrderBy> | FindUsersOrderBy>;
   where?: InputMaybe<FindUsersWhere>;
@@ -2776,6 +2804,193 @@ export function useCitiesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Cit
 export type CitiesQueryHookResult = ReturnType<typeof useCitiesQuery>;
 export type CitiesLazyQueryHookResult = ReturnType<typeof useCitiesLazyQuery>;
 export type CitiesQueryResult = Apollo.QueryResult<CitiesQuery, CitiesQueryVariables>;
+export const ParametersDocument = gql`
+    query Parameters($pagination: Pagination) {
+  parameters(pagination: $pagination) {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    name
+    codigo
+    descripcion
+    type
+    valueInt
+    valueString
+    valueDate
+    valueFile {
+      id
+      url
+      fileMongoId
+      createdAt
+      updatedAt
+      deletedAt
+      fileName
+      fileExtension
+      fileMode
+    }
+  }
+  parametersCount(pagination: $pagination) {
+    totalItems
+    itemsPerPage
+    totalPages
+    currentPage
+  }
+}
+    `;
+
+/**
+ * __useParametersQuery__
+ *
+ * To run a query within a React component, call `useParametersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useParametersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useParametersQuery({
+ *   variables: {
+ *      pagination: // value for 'pagination'
+ *   },
+ * });
+ */
+export function useParametersQuery(baseOptions?: Apollo.QueryHookOptions<ParametersQuery, ParametersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ParametersQuery, ParametersQueryVariables>(ParametersDocument, options);
+      }
+export function useParametersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ParametersQuery, ParametersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ParametersQuery, ParametersQueryVariables>(ParametersDocument, options);
+        }
+export type ParametersQueryHookResult = ReturnType<typeof useParametersQuery>;
+export type ParametersLazyQueryHookResult = ReturnType<typeof useParametersLazyQuery>;
+export type ParametersQueryResult = Apollo.QueryResult<ParametersQuery, ParametersQueryVariables>;
+export const RemoveParameterDocument = gql`
+    mutation RemoveParameter($removeParameterId: ID!) {
+  removeParameter(id: $removeParameterId) {
+    id
+    name
+    type
+    descripcion
+  }
+}
+    `;
+export type RemoveParameterMutationFn = Apollo.MutationFunction<RemoveParameterMutation, RemoveParameterMutationVariables>;
+
+/**
+ * __useRemoveParameterMutation__
+ *
+ * To run a mutation, you first call `useRemoveParameterMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveParameterMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeParameterMutation, { data, loading, error }] = useRemoveParameterMutation({
+ *   variables: {
+ *      removeParameterId: // value for 'removeParameterId'
+ *   },
+ * });
+ */
+export function useRemoveParameterMutation(baseOptions?: Apollo.MutationHookOptions<RemoveParameterMutation, RemoveParameterMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemoveParameterMutation, RemoveParameterMutationVariables>(RemoveParameterDocument, options);
+      }
+export type RemoveParameterMutationHookResult = ReturnType<typeof useRemoveParameterMutation>;
+export type RemoveParameterMutationResult = Apollo.MutationResult<RemoveParameterMutation>;
+export type RemoveParameterMutationOptions = Apollo.BaseMutationOptions<RemoveParameterMutation, RemoveParameterMutationVariables>;
+export const UpdateParameterDocument = gql`
+    mutation UpdateParameter($updateInput: UpdateParametersInput!) {
+  updateParameter(updateInput: $updateInput) {
+    id
+    name
+    descripcion
+  }
+}
+    `;
+export type UpdateParameterMutationFn = Apollo.MutationFunction<UpdateParameterMutation, UpdateParameterMutationVariables>;
+
+/**
+ * __useUpdateParameterMutation__
+ *
+ * To run a mutation, you first call `useUpdateParameterMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateParameterMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateParameterMutation, { data, loading, error }] = useUpdateParameterMutation({
+ *   variables: {
+ *      updateInput: // value for 'updateInput'
+ *   },
+ * });
+ */
+export function useUpdateParameterMutation(baseOptions?: Apollo.MutationHookOptions<UpdateParameterMutation, UpdateParameterMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateParameterMutation, UpdateParameterMutationVariables>(UpdateParameterDocument, options);
+      }
+export type UpdateParameterMutationHookResult = ReturnType<typeof useUpdateParameterMutation>;
+export type UpdateParameterMutationResult = Apollo.MutationResult<UpdateParameterMutation>;
+export type UpdateParameterMutationOptions = Apollo.BaseMutationOptions<UpdateParameterMutation, UpdateParameterMutationVariables>;
+export const CreateParameterDocument = gql`
+    mutation CreateParameter($createInput: CreateParametersInput!) {
+  createParameter(createInput: $createInput) {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    name
+    codigo
+    descripcion
+    type
+    valueInt
+    valueString
+    valueDate
+    valueFile {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      fileName
+      fileExtension
+      fileMode
+      fileMongoId
+      url
+    }
+  }
+}
+    `;
+export type CreateParameterMutationFn = Apollo.MutationFunction<CreateParameterMutation, CreateParameterMutationVariables>;
+
+/**
+ * __useCreateParameterMutation__
+ *
+ * To run a mutation, you first call `useCreateParameterMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateParameterMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createParameterMutation, { data, loading, error }] = useCreateParameterMutation({
+ *   variables: {
+ *      createInput: // value for 'createInput'
+ *   },
+ * });
+ */
+export function useCreateParameterMutation(baseOptions?: Apollo.MutationHookOptions<CreateParameterMutation, CreateParameterMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateParameterMutation, CreateParameterMutationVariables>(CreateParameterDocument, options);
+      }
+export type CreateParameterMutationHookResult = ReturnType<typeof useCreateParameterMutation>;
+export type CreateParameterMutationResult = Apollo.MutationResult<CreateParameterMutation>;
+export type CreateParameterMutationOptions = Apollo.BaseMutationOptions<CreateParameterMutation, CreateParameterMutationVariables>;
 export const UsersDocument = gql`
     query Users($orderBy: [FindUsersOrderBy!], $where: FindUsersWhere, $pagination: Pagination) {
   users(orderBy: $orderBy, where: $where, pagination: $pagination) {
