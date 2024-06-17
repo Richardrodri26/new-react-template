@@ -2167,6 +2167,45 @@ export type RemoveClientMutationVariables = Exact<{
 
 export type RemoveClientMutation = { __typename?: 'Mutation', removeClient: { __typename?: 'Client', id: string } };
 
+export type ClientContactsQueryVariables = Exact<{
+  orderBy?: InputMaybe<Array<FindClientContactOrderBy> | FindClientContactOrderBy>;
+  pagination?: InputMaybe<Pagination>;
+}>;
+
+
+export type ClientContactsQuery = { __typename?: 'Query', clientContacts: Array<{ __typename?: 'ClientContact', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, numberDocument: string, celular: string, email: string, position: string, telefono?: string | null, client?: { __typename?: 'Client', id: string, name: string, numberDocument: string, telefono?: string | null, type?: TypeClientEnum | null, email: string } | null }>, clientContactsCount: { __typename?: 'MetadataPagination', totalItems?: number | null, itemsPerPage?: number | null, totalPages?: number | null, currentPage?: number | null } };
+
+export type ClientsOptionsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ClientsOptionsQuery = { __typename?: 'Query', clients: Array<{ __typename?: 'Client', id: string, name: string }> };
+
+export type PositionsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PositionsQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', id: string, name: string }> };
+
+export type RemoveClientContactMutationVariables = Exact<{
+  removeClientContactId: Scalars['ID'];
+}>;
+
+
+export type RemoveClientContactMutation = { __typename?: 'Mutation', removeClientContact: { __typename?: 'ClientContact', id: string, name: string } };
+
+export type UpdateClientContactMutationVariables = Exact<{
+  updateInput: UpdateClientContactInput;
+}>;
+
+
+export type UpdateClientContactMutation = { __typename?: 'Mutation', updateClientContact: { __typename?: 'ClientContact', id: string, name: string } };
+
+export type CreateClientContactMutationVariables = Exact<{
+  createInput: CreateClientContactInput;
+}>;
+
+
+export type CreateClientContactMutation = { __typename?: 'Mutation', createClientContact: { __typename?: 'ClientContact', id: string, name: string } };
+
 export type DepartmentsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2717,6 +2756,237 @@ export function useRemoveClientMutation(baseOptions?: Apollo.MutationHookOptions
 export type RemoveClientMutationHookResult = ReturnType<typeof useRemoveClientMutation>;
 export type RemoveClientMutationResult = Apollo.MutationResult<RemoveClientMutation>;
 export type RemoveClientMutationOptions = Apollo.BaseMutationOptions<RemoveClientMutation, RemoveClientMutationVariables>;
+export const ClientContactsDocument = gql`
+    query ClientContacts($orderBy: [FindClientContactOrderBy!], $pagination: Pagination) {
+  clientContacts(orderBy: $orderBy, pagination: $pagination) {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    name
+    numberDocument
+    celular
+    email
+    position
+    telefono
+    client {
+      id
+      name
+      numberDocument
+      telefono
+      type
+      email
+    }
+  }
+  clientContactsCount(orderBy: $orderBy, pagination: $pagination) {
+    totalItems
+    itemsPerPage
+    totalPages
+    currentPage
+  }
+}
+    `;
+
+/**
+ * __useClientContactsQuery__
+ *
+ * To run a query within a React component, call `useClientContactsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useClientContactsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useClientContactsQuery({
+ *   variables: {
+ *      orderBy: // value for 'orderBy'
+ *      pagination: // value for 'pagination'
+ *   },
+ * });
+ */
+export function useClientContactsQuery(baseOptions?: Apollo.QueryHookOptions<ClientContactsQuery, ClientContactsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ClientContactsQuery, ClientContactsQueryVariables>(ClientContactsDocument, options);
+      }
+export function useClientContactsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ClientContactsQuery, ClientContactsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ClientContactsQuery, ClientContactsQueryVariables>(ClientContactsDocument, options);
+        }
+export type ClientContactsQueryHookResult = ReturnType<typeof useClientContactsQuery>;
+export type ClientContactsLazyQueryHookResult = ReturnType<typeof useClientContactsLazyQuery>;
+export type ClientContactsQueryResult = Apollo.QueryResult<ClientContactsQuery, ClientContactsQueryVariables>;
+export const ClientsOptionsDocument = gql`
+    query ClientsOptions {
+  clients {
+    id
+    name
+  }
+}
+    `;
+
+/**
+ * __useClientsOptionsQuery__
+ *
+ * To run a query within a React component, call `useClientsOptionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useClientsOptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useClientsOptionsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useClientsOptionsQuery(baseOptions?: Apollo.QueryHookOptions<ClientsOptionsQuery, ClientsOptionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ClientsOptionsQuery, ClientsOptionsQueryVariables>(ClientsOptionsDocument, options);
+      }
+export function useClientsOptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ClientsOptionsQuery, ClientsOptionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ClientsOptionsQuery, ClientsOptionsQueryVariables>(ClientsOptionsDocument, options);
+        }
+export type ClientsOptionsQueryHookResult = ReturnType<typeof useClientsOptionsQuery>;
+export type ClientsOptionsLazyQueryHookResult = ReturnType<typeof useClientsOptionsLazyQuery>;
+export type ClientsOptionsQueryResult = Apollo.QueryResult<ClientsOptionsQuery, ClientsOptionsQueryVariables>;
+export const PositionsDocument = gql`
+    query Positions {
+  positions {
+    id
+    name
+  }
+}
+    `;
+
+/**
+ * __usePositionsQuery__
+ *
+ * To run a query within a React component, call `usePositionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePositionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePositionsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function usePositionsQuery(baseOptions?: Apollo.QueryHookOptions<PositionsQuery, PositionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PositionsQuery, PositionsQueryVariables>(PositionsDocument, options);
+      }
+export function usePositionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PositionsQuery, PositionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PositionsQuery, PositionsQueryVariables>(PositionsDocument, options);
+        }
+export type PositionsQueryHookResult = ReturnType<typeof usePositionsQuery>;
+export type PositionsLazyQueryHookResult = ReturnType<typeof usePositionsLazyQuery>;
+export type PositionsQueryResult = Apollo.QueryResult<PositionsQuery, PositionsQueryVariables>;
+export const RemoveClientContactDocument = gql`
+    mutation RemoveClientContact($removeClientContactId: ID!) {
+  removeClientContact(id: $removeClientContactId) {
+    id
+    name
+  }
+}
+    `;
+export type RemoveClientContactMutationFn = Apollo.MutationFunction<RemoveClientContactMutation, RemoveClientContactMutationVariables>;
+
+/**
+ * __useRemoveClientContactMutation__
+ *
+ * To run a mutation, you first call `useRemoveClientContactMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveClientContactMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeClientContactMutation, { data, loading, error }] = useRemoveClientContactMutation({
+ *   variables: {
+ *      removeClientContactId: // value for 'removeClientContactId'
+ *   },
+ * });
+ */
+export function useRemoveClientContactMutation(baseOptions?: Apollo.MutationHookOptions<RemoveClientContactMutation, RemoveClientContactMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemoveClientContactMutation, RemoveClientContactMutationVariables>(RemoveClientContactDocument, options);
+      }
+export type RemoveClientContactMutationHookResult = ReturnType<typeof useRemoveClientContactMutation>;
+export type RemoveClientContactMutationResult = Apollo.MutationResult<RemoveClientContactMutation>;
+export type RemoveClientContactMutationOptions = Apollo.BaseMutationOptions<RemoveClientContactMutation, RemoveClientContactMutationVariables>;
+export const UpdateClientContactDocument = gql`
+    mutation UpdateClientContact($updateInput: UpdateClientContactInput!) {
+  updateClientContact(updateInput: $updateInput) {
+    id
+    name
+  }
+}
+    `;
+export type UpdateClientContactMutationFn = Apollo.MutationFunction<UpdateClientContactMutation, UpdateClientContactMutationVariables>;
+
+/**
+ * __useUpdateClientContactMutation__
+ *
+ * To run a mutation, you first call `useUpdateClientContactMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateClientContactMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateClientContactMutation, { data, loading, error }] = useUpdateClientContactMutation({
+ *   variables: {
+ *      updateInput: // value for 'updateInput'
+ *   },
+ * });
+ */
+export function useUpdateClientContactMutation(baseOptions?: Apollo.MutationHookOptions<UpdateClientContactMutation, UpdateClientContactMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateClientContactMutation, UpdateClientContactMutationVariables>(UpdateClientContactDocument, options);
+      }
+export type UpdateClientContactMutationHookResult = ReturnType<typeof useUpdateClientContactMutation>;
+export type UpdateClientContactMutationResult = Apollo.MutationResult<UpdateClientContactMutation>;
+export type UpdateClientContactMutationOptions = Apollo.BaseMutationOptions<UpdateClientContactMutation, UpdateClientContactMutationVariables>;
+export const CreateClientContactDocument = gql`
+    mutation CreateClientContact($createInput: CreateClientContactInput!) {
+  createClientContact(createInput: $createInput) {
+    id
+    name
+  }
+}
+    `;
+export type CreateClientContactMutationFn = Apollo.MutationFunction<CreateClientContactMutation, CreateClientContactMutationVariables>;
+
+/**
+ * __useCreateClientContactMutation__
+ *
+ * To run a mutation, you first call `useCreateClientContactMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateClientContactMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createClientContactMutation, { data, loading, error }] = useCreateClientContactMutation({
+ *   variables: {
+ *      createInput: // value for 'createInput'
+ *   },
+ * });
+ */
+export function useCreateClientContactMutation(baseOptions?: Apollo.MutationHookOptions<CreateClientContactMutation, CreateClientContactMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateClientContactMutation, CreateClientContactMutationVariables>(CreateClientContactDocument, options);
+      }
+export type CreateClientContactMutationHookResult = ReturnType<typeof useCreateClientContactMutation>;
+export type CreateClientContactMutationResult = Apollo.MutationResult<CreateClientContactMutation>;
+export type CreateClientContactMutationOptions = Apollo.BaseMutationOptions<CreateClientContactMutation, CreateClientContactMutationVariables>;
 export const DepartmentsDocument = gql`
     query Departments {
   departments {

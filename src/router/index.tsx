@@ -1,5 +1,5 @@
 import { AppGuardLayout, MainLayout } from "@/components/Layouts";
-import { ClientsPage, HomePage, LoginPage, ParametersPage, UsersPage, VisitsPage } from "@/pages";
+import { ClientsPage, ContactClientsPage, HomePage, LoginPage, ParametersPage, UsersPage, VisitsPage } from "@/pages";
 import { VisitDetailPage } from "@/pages/Visits/Detalle";
 import CalendarPage from "@/pages/calendar";
 import { TypeVistPage } from "@/pages/typeVisit";
@@ -47,6 +47,10 @@ export const appRouter = createBrowserRouter([
       {
         path: "visit/:id", // Ruta para el detalle de la visita con su ID
         element: <VisitDetailPage />,
+      },
+      {
+        path: "contactsClient", // Ruta para el detalle de la visita con su ID
+        element: <ContactClientsPage />,
       },
     ]
   }

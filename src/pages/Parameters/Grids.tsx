@@ -20,7 +20,7 @@ export const ParametersGrid = () => {
 
   return (
     <>
-      <DataTable columns={parametersColumns} data={data?.parameters || []} isLoading={!data && loading} />
+      <DataTable columns={parametersColumns as any[]} data={data?.parameters || []} isLoading={!data && loading} />
 
       <PaginationTable skipState={{ value: skip, setValue: setSkip }} metaDataPagination={data?.parametersCount as MetadataPagination} takeValue={take} />
     </>

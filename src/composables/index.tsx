@@ -133,7 +133,7 @@ export const RadioGroupItemForm = ({
   );
 };
 
-interface SelectFormInterface extends InputFormBasicType {
+export interface SelectFormInterface extends InputFormBasicType {
   options: { key: string; value: string | number }[];
 }
 
