@@ -1,6 +1,7 @@
 import { ModalContent } from "@/composables/CustomModal"
 import useGeneral from "@/domain/store/general.store";
 import { CreateClient } from "./CreateClient";
+import { UpdateClient } from "./UpdateClient";
 
 
 export const ClientModals = () => {
@@ -12,7 +13,8 @@ export const ClientModals = () => {
 
       {(
         {
-          "createClient": <CreateClient />
+          "createClient": <CreateClient />,
+          "updateClient": <UpdateClient />
         }[modalId || ""] || <></>
       )}
 

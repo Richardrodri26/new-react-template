@@ -2,15 +2,16 @@
 
 import { BasicFormProviderZod, ButtonForm, RowForm } from '@/components'
 import { DialogHeader } from '@/components/ui/dialog'
-import { ComboboxForm, InputForm, SelectForm, SelectFormInterface } from '@/composables'
+import { ComboboxForm, InputForm, SelectForm } from '@/composables'
 import { DepartmentAndMunicipality } from '@/composables/DepartmentAndMunicipality'
-import { OrderTypes, TypeClientEnum, useCreateClientMutation, useUsersQuery } from '@/domain/graphql'
+import { Client, TypeClientEnum, useCreateClientMutation, useUpdateClientMutation } from '@/domain/graphql'
 import { useShallowGeneralStore } from '@/domain/store/general.store'
 import { ToastyErrorGraph } from '@/lib/utils'
 import { apolloClient } from '@/main.config'
 import React from 'react'
 import { toast } from 'sonner'
 import { z } from 'zod'
+import { UserSelect } from './CreateClient'
 
 const createClientSchema = z.object({
   celular: z.string(),
@@ -18,7 +19,6 @@ const createClientSchema = z.object({
   numberDocument: z.string(),
   type: z.string(),
   email: z.string().email(),
-  userId: z.string(),
   address: z.string()
   // cityId: z.string()
 })
@@ -44,18 +44,19 @@ const typeClientOptions: { key: string; value: string | number }[] = [
   },
 ]
 
-export const CreateClient = () => {
-  const [createClient] = useCreateClientMutation();
-  const [setModalStatus] = useShallowGeneralStore(state => [state.setModalStatus])
-
+export const UpdateClient = () => {
+  const [updateClient] = useUpdateClientMutation();
+  const [setModalStatus, modalStatus] = useShallowGeneralStore(state => [state.setModalStatus, state.modalStatus])
+  const modalStatusContent = modalStatus?.content as Partial<Client>
   const onSubmit = async (data: createClientSchemaType) => {
 
     try {
-      toast.info("Creando cliente...")
-      const resMutation = await createClient({
+      toast.info("Actualizando cliente...")
+      const resMutation = await updateClient({
         variables: {
-          createInput: {
+            updateInput: {
             ...data,
+            id: modalStatusContent?.id || "",
             type: data.type as TypeClientEnum
           }
         }
@@ -66,7 +67,7 @@ export const CreateClient = () => {
         return
       }
 
-      toast.success("Cliente creado con exito")
+      toast.success("Cliente actualizado con exito")
 
       apolloClient.cache.evict({ fieldName: "clients" })
 
@@ -81,22 +82,22 @@ export const CreateClient = () => {
   }
 
   const defaultValues = {
-    departmentId: "",
-    cityId: "",
-    name: "",
-    numberDocument: "",
-    type: typeClientOptions[0].key,
-    email: "",
-    celular: "",
+    departmentId: modalStatusContent?.department?.id,
+    cityId: modalStatusContent?.city?.id,
+    name: modalStatusContent?.name,
+    numberDocument: modalStatusContent?.numberDocument,
+    type: modalStatusContent?.type,
+    email: modalStatusContent?.email,
+    celular: modalStatusContent?.celular,
+    userId: modalStatusContent?.user?.id,
+    address: modalStatusContent?.address,
     Prueba: "1",
-    address: "",
-    userId: ""
   }
 
   return (
     <>
       <DialogHeader >
-        Crear cliente
+        Actualizar cliente
       </DialogHeader>
 
       <BasicFormProviderZod submit={onSubmit} schema={createClientSchema} defaultValue={defaultValues}>
@@ -116,37 +117,9 @@ export const CreateClient = () => {
         </RowForm>
 
         <ButtonForm>
-          Crear
+          Actualizar
         </ButtonForm>
       </BasicFormProviderZod>
     </>
-  )
-}
-export const UserSelect = (props: Omit<SelectFormInterface, "options">) => {
-  const { data, loading } = useUsersQuery({
-    variables: {
-      pagination: {
-        skip: 0,
-        take: 999999
-      },
-      orderBy: {
-        createdAt: OrderTypes.Desc
-      }
-    }
-  })
-
-  const userPositions: {
-    key: string;
-    value: string | number;
-  }[] = data?.users?.map(item => ({ key: item.id, value: item?.name  || ""})) || []
-
-  if (!data && loading) return <></>
-
-  return (
-    <SelectForm
-      options={userPositions}
-      {...props}
-
-    />
   )
 }

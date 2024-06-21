@@ -23,6 +23,7 @@ type InputFormBasicType = {
   description?: string | React.ReactNode;
   className?: string;
   disabled?: boolean
+  type?: string
 };
 
 interface InputFormInterface extends InputFormBasicType { }
@@ -33,6 +34,7 @@ export const InputForm = ({
   placeholder,
   description,
   className,
+  type = "text"
 }: InputFormInterface) => {
   const { control } = useFormContext();
 
@@ -44,7 +46,7 @@ export const InputForm = ({
         <FormItem className={cn("w-full flex-1", className)}>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Input placeholder={placeholder} {...field} />
+            <Input placeholder={placeholder} {...field} type={type} />
           </FormControl>
           <FormDescription>{description}</FormDescription>
           <FormMessage />
