@@ -584,6 +584,7 @@ export type MultikeyRegisterIdInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  acceptOrDeclineVisit: Scalars['String'];
   addUserRole: User;
   codeConfirmation: User;
   create: RoleFx;
@@ -659,6 +660,11 @@ export type Mutation = {
   updateVisit: Visit;
   updateVisitComent: VisitComent;
   updateVisitType: VisitType;
+};
+
+
+export type MutationAcceptOrDeclineVisitArgs = {
+  UpdateStatusInput: UpdateStatusInput;
 };
 
 
@@ -1936,6 +1942,12 @@ export type UpdateRoleInput = {
   name?: InputMaybe<Scalars['String']>;
 };
 
+export type UpdateStatusInput = {
+  id: Scalars['String'];
+  status: StatusVisitEnum;
+  token: Scalars['String'];
+};
+
 export type UpdateUserInformationInput = {
   email?: InputMaybe<Scalars['String']>;
   lastName?: InputMaybe<Scalars['String']>;
@@ -2353,6 +2365,20 @@ export type RemoveVisitTypeMutationVariables = Exact<{
 
 
 export type RemoveVisitTypeMutation = { __typename?: 'Mutation', removeVisitType: { __typename?: 'VisitType', id: string } };
+
+export type UpdateVisitMutationVariables = Exact<{
+  updateInput: UpdateVisitInput;
+}>;
+
+
+export type UpdateVisitMutation = { __typename?: 'Mutation', updateVisit: { __typename?: 'Visit', id: string } };
+
+export type AcceptOrDeclineVisitMutationVariables = Exact<{
+  updateStatusInput: UpdateStatusInput;
+}>;
+
+
+export type AcceptOrDeclineVisitMutation = { __typename?: 'Mutation', acceptOrDeclineVisit: string };
 
 export const UserFragmentFragmentDoc = gql`
     fragment userFragment on User {
@@ -3920,3 +3946,67 @@ export function useRemoveVisitTypeMutation(baseOptions?: Apollo.MutationHookOpti
 export type RemoveVisitTypeMutationHookResult = ReturnType<typeof useRemoveVisitTypeMutation>;
 export type RemoveVisitTypeMutationResult = Apollo.MutationResult<RemoveVisitTypeMutation>;
 export type RemoveVisitTypeMutationOptions = Apollo.BaseMutationOptions<RemoveVisitTypeMutation, RemoveVisitTypeMutationVariables>;
+export const UpdateVisitDocument = gql`
+    mutation UpdateVisit($updateInput: UpdateVisitInput!) {
+  updateVisit(updateInput: $updateInput) {
+    id
+  }
+}
+    `;
+export type UpdateVisitMutationFn = Apollo.MutationFunction<UpdateVisitMutation, UpdateVisitMutationVariables>;
+
+/**
+ * __useUpdateVisitMutation__
+ *
+ * To run a mutation, you first call `useUpdateVisitMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateVisitMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateVisitMutation, { data, loading, error }] = useUpdateVisitMutation({
+ *   variables: {
+ *      updateInput: // value for 'updateInput'
+ *   },
+ * });
+ */
+export function useUpdateVisitMutation(baseOptions?: Apollo.MutationHookOptions<UpdateVisitMutation, UpdateVisitMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateVisitMutation, UpdateVisitMutationVariables>(UpdateVisitDocument, options);
+      }
+export type UpdateVisitMutationHookResult = ReturnType<typeof useUpdateVisitMutation>;
+export type UpdateVisitMutationResult = Apollo.MutationResult<UpdateVisitMutation>;
+export type UpdateVisitMutationOptions = Apollo.BaseMutationOptions<UpdateVisitMutation, UpdateVisitMutationVariables>;
+export const AcceptOrDeclineVisitDocument = gql`
+    mutation AcceptOrDeclineVisit($updateStatusInput: UpdateStatusInput!) {
+  acceptOrDeclineVisit(UpdateStatusInput: $updateStatusInput)
+}
+    `;
+export type AcceptOrDeclineVisitMutationFn = Apollo.MutationFunction<AcceptOrDeclineVisitMutation, AcceptOrDeclineVisitMutationVariables>;
+
+/**
+ * __useAcceptOrDeclineVisitMutation__
+ *
+ * To run a mutation, you first call `useAcceptOrDeclineVisitMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAcceptOrDeclineVisitMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [acceptOrDeclineVisitMutation, { data, loading, error }] = useAcceptOrDeclineVisitMutation({
+ *   variables: {
+ *      updateStatusInput: // value for 'updateStatusInput'
+ *   },
+ * });
+ */
+export function useAcceptOrDeclineVisitMutation(baseOptions?: Apollo.MutationHookOptions<AcceptOrDeclineVisitMutation, AcceptOrDeclineVisitMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AcceptOrDeclineVisitMutation, AcceptOrDeclineVisitMutationVariables>(AcceptOrDeclineVisitDocument, options);
+      }
+export type AcceptOrDeclineVisitMutationHookResult = ReturnType<typeof useAcceptOrDeclineVisitMutation>;
+export type AcceptOrDeclineVisitMutationResult = Apollo.MutationResult<AcceptOrDeclineVisitMutation>;
+export type AcceptOrDeclineVisitMutationOptions = Apollo.BaseMutationOptions<AcceptOrDeclineVisitMutation, AcceptOrDeclineVisitMutationVariables>;
