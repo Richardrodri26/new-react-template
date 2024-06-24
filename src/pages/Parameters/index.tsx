@@ -128,14 +128,14 @@ const SettingsVisitTypes = () => {
       <CardHeader>
         <CardTitle>Parametros</CardTitle>
         <CardDescription>
-          Aqui puedes agregar o editar los parametros
+          Aqui puedes agregar o editar los parametros <br></br><br></br>
+          <Button onClick={createParameter}>Agregar</Button>
         </CardDescription>
       </CardHeader>
       <CardContent>
         <ParametersGrid />
       </CardContent>
       <CardFooter className="border-t px-6 py-4">
-        <Button onClick={createParameter}>Agregar</Button>
       </CardFooter>
     </Card>
   )

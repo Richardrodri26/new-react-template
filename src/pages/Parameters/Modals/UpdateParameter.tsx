@@ -1,11 +1,12 @@
 
 import { BasicFormProviderZod, ButtonForm, RowForm } from "@/components";
 import { DialogHeader } from "@/components/ui/dialog"
-import { InputForm, SelectForm } from "@/composables";
+import { InputDateForm, InputForm, SelectForm } from "@/composables";
 import { TypeParameterEnum, useCreateParameterMutation, useUpdateParameterMutation } from "@/domain/graphql";
 import { useShallowGeneralStore } from "@/domain/store/general.store";
 import { ToastyErrorGraph } from "@/lib/utils";
 import { apolloClient } from "@/main.config";
+import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -14,6 +15,9 @@ const createParameterSchema = z.object({
   descripcion: z.string(),
   name: z.string(),
   type: z.string(),
+  valueInt: z.string().optional(),
+  valueString: z.string().optional(),
+  valueDate: z.date().optional(),
 })
 
 type createParameterSchemaType = z.infer<typeof createParameterSchema>;
@@ -43,9 +47,20 @@ const typeOptions: {
 export const UpdateParameter = () => {
   const [updateMutation] = useUpdateParameterMutation()
   const [setModalStatus, modalStatus] = useShallowGeneralStore(state => [state.setModalStatus, state.modalStatus])
-
+  
   const parameterId = modalStatus?.content?.id
   const parameterData = modalStatus?.content?.data
+
+  const defaultData = {
+    codigo: parameterData?.codigo,
+    descripcion: parameterData?.descripcion,
+    name: parameterData?.name,
+    type: parameterData?.type,
+    valueInt: parameterData?.valueInt,
+    valueString: parameterData?.valueString,
+    valueDate: parameterData?.valueDate
+  }
+  const [type, setType] = useState<TypeParameterEnum | ''>(defaultData.type as TypeParameterEnum); // Estado para almacenar el tipo seleccionado
 
   const onSubmit = async (data: createParameterSchemaType) => {
     try {
@@ -54,6 +69,7 @@ export const UpdateParameter = () => {
         variables: {
           updateInput: {
             ...data,
+            valueInt: data.valueInt ? +data.valueInt : undefined,
             id: parameterId || "",
             type: data.type as TypeParameterEnum
 
@@ -78,17 +94,10 @@ export const UpdateParameter = () => {
     }
   }
 
-  const defaultData = {
-    codigo: parameterData?.codigo,
-    descripcion: parameterData?.descripcion,
-    name: parameterData?.name,
-    type: parameterData?.type,
-  }
-
   return (
     <>
       <DialogHeader>
-        Crear parameter
+        Actualizar parametro
       </DialogHeader>
 
       <BasicFormProviderZod defaultValue={defaultData} submit={onSubmit} schema={createParameterSchema}>
@@ -104,11 +113,24 @@ export const UpdateParameter = () => {
           <SelectForm name='type' label={"Tipo"} placeholder="Selecciona un tipo" options={ typeOptions} />
 
           <InputForm name='descripcion' label={"Descripción"} />
+          {/* Ejemplo de campo condicional para 'Número' */}
+          {type === TypeParameterEnum.Number && (
+            <InputForm name='valueInt' label={"Valor Número"} type="number"/>
+          )}
 
+          {/* Ejemplo de campo condicional para 'Texto' */}
+          {type === TypeParameterEnum.String && (
+            <InputForm name='valueString' label={"Valor Texto"} />
+          )}
+
+          {/* Ejemplo de campo condicional para 'Fecha' */}
+          {type === TypeParameterEnum.Date && (
+            <InputDateForm name='valueDate' label={"Valor Fecha"} />
+          )}
         </RowForm>
 
         <ButtonForm>
-          Crear
+          Actualizar
         </ButtonForm>
       </BasicFormProviderZod>
     </>

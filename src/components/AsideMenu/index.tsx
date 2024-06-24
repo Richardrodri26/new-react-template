@@ -44,9 +44,9 @@ const asideMenuItems: IAsideMenuItem[] = [
   },
   
   {
-    title: "Parametros",
-    url: "/dashboard/parameters",
-    icon: <Settings className="h-5 w-5" />
+    title: "Reportes",
+    url: "/dashboard/reports",
+    icon: <LineChart className="h-5 w-5" />
   },
 ]
 
@@ -162,14 +162,14 @@ export const AsideMenu = () => {
           <Tooltip>
             <TooltipTrigger asChild>
               <a
-                href="#"
+                href="/dashboard/parameters"
                 className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
               >
                 <Settings className="h-5 w-5" />
-                <span className="sr-only">Settings</span>
+                <span className="sr-only">Parametros</span>
               </a>
             </TooltipTrigger>
-            <TooltipContent side="right">Settings</TooltipContent>
+            <TooltipContent side="right" >Parametros</TooltipContent>
           </Tooltip>
         </TooltipProvider>
       </nav>
