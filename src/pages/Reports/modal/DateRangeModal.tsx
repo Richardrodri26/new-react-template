@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+/* @ts-ignore */
 import Modal from 'react-modal';
 
 interface DateRangeModalProps {
