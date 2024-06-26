@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Client, useRemoveClientMutation } from "@/domain/graphql";
-import { fireAlert } from "@/domain/store/general.store";
+import { fireAlert, useShallowGeneralStore } from "@/domain/store/general.store";
 import { ToastyErrorGraph } from "@/lib/utils";
 import { apolloClient } from "@/main.config";
 import { createColumnHelper } from '@tanstack/react-table'
@@ -26,11 +26,15 @@ export const clientsColumns = [
   columnHelperClients.accessor("type", {
     header: "Tipo de cliente"
   }),
+  columnHelperClients.accessor("user.name", {
+    header: "Usuario"
+  }),
 
   columnHelperClients.display({
     id: "Acciones",
     cell: (info) => {
       const [removeClient] = useRemoveClientMutation({ variables: { removeClientId: info.row.original.id } });
+      const [setModalStatus] = useShallowGeneralStore((state) => [state.setModalStatus])
 
       const onRemoveClient = async () => {
         const resAlert = await fireAlert({
@@ -59,6 +63,12 @@ export const clientsColumns = [
 
         }
       }
+      const onEditUser = () => {
+        setModalStatus({
+          id: "updateClient",
+          content: info.row.original
+        })
+      }
 
       return (
         <DropdownMenu>
@@ -74,8 +84,8 @@ export const clientsColumns = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>Edit</DropdownMenuItem>
-            <DropdownMenuItem onClick={onRemoveClient}>Delete</DropdownMenuItem>
+            <DropdownMenuItem onClick={onEditUser}>Editar cliente</DropdownMenuItem>
+            <DropdownMenuItem onClick={onRemoveClient}>Eliminar</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )

@@ -36,6 +36,11 @@ query Clients($orderBy: [FindClientOrderBy!], $where: FindClientWhere, $paginati
       code
       name
     }
+    user {
+      name
+      id
+      email
+    }
   }
   clientsCount(orderBy: $orderBy, where: $where, pagination: $pagination) {
     totalItems
@@ -53,6 +58,12 @@ mutation CreateClient($createInput: CreateClientInput!) {
 
 mutation RemoveClient($removeClientId: ID!) {
   removeClient(id: $removeClientId) {
+    id
+  }
+}
+
+mutation UpdateClient($updateInput: UpdateClientInput!) {
+  updateClient(updateInput: $updateInput) {
     id
   }
 }

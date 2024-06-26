@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import dayjs from "dayjs";
 
 
 type InputFormBasicType = {
@@ -23,6 +24,8 @@ type InputFormBasicType = {
   description?: string | React.ReactNode;
   className?: string;
   disabled?: boolean
+  type?: string
+  onChange?: (value: string) => void;
 };
 
 interface InputFormInterface extends InputFormBasicType { }
@@ -33,6 +36,7 @@ export const InputForm = ({
   placeholder,
   description,
   className,
+  type = "text"
 }: InputFormInterface) => {
   const { control } = useFormContext();
 
@@ -44,7 +48,7 @@ export const InputForm = ({
         <FormItem className={cn("w-full flex-1", className)}>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Input placeholder={placeholder} {...field} />
+            <Input placeholder={placeholder} {...field} type={type} />
           </FormControl>
           <FormDescription>{description}</FormDescription>
           <FormMessage />
@@ -150,7 +154,8 @@ export const SelectForm = ({
   className,
   side = 'bottom',
   align = 'start',
-  position = 'item-aligned'
+  position = 'item-aligned',
+  onChange
 }: SelectFormInterface) => {
   const { control } = useFormContext();
   return (
@@ -160,7 +165,12 @@ export const SelectForm = ({
       render={({ field }) => (
         <FormItem className={className}>
           <FormLabel>{label}</FormLabel>
-          <Select disabled={disabled} onValueChange={field.onChange} defaultValue={field.value}>
+          <Select disabled={disabled} onValueChange={(value) => {
+              field.onChange(value);
+              if (onChange) {
+                onChange(value);
+              }
+            }} defaultValue={field.value}>
             <FormControl>
               <SelectTrigger>
                 <SelectValue placeholder={placeholder} />
@@ -285,7 +295,7 @@ export const InputDateForm = ({
                   {field.value ? (
                     <>
                       <span className="flex-1">
-                        {formatDate(field.value, "DD/MM/YYYY")}{" "}
+                        {dayjs(field.value).format('DD/MM/YYYY')}{" "}
                       </span>
                       <Trash2
                         onClick={(e) => {

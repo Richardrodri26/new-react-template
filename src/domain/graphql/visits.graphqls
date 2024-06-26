@@ -222,3 +222,13 @@ mutation RemoveVisitType($removeVisitTypeId: ID!) {
     id
   }
 }
+
+mutation UpdateVisit($updateInput: UpdateVisitInput!) {
+  updateVisit(updateInput: $updateInput) {
+    id
+  }
+}
+
+mutation AcceptOrDeclineVisit($updateStatusInput: UpdateStatusInput!) {
+  acceptOrDeclineVisit(UpdateStatusInput: $updateStatusInput)
+}

@@ -42,7 +42,7 @@ export function LoginPage() {
 
             <InputForm name="email" label="Email" />
 
-            <InputForm name="password" label={<div className="flex items-center">
+            <InputForm name="password" type="password" label={<div className="flex items-center">
                 <Label htmlFor="password">Contraseña</Label>
                 <a
                   href="/forgot-password"
