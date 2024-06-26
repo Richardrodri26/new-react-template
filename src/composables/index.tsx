@@ -135,6 +135,9 @@ export const RadioGroupItemForm = ({
 
 export interface SelectFormInterface extends InputFormBasicType {
   options: { key: string; value: string | number }[];
+  side?: "top" | "right" | "bottom" | "left";
+  align?: "start" | "center" | "end";
+  position?: "item-aligned" | "popper"
 }
 
 export const SelectForm = ({
@@ -144,7 +147,10 @@ export const SelectForm = ({
   placeholder,
   options,
   disabled,
-  className
+  className,
+  side = 'bottom',
+  align = 'start',
+  position = 'item-aligned'
 }: SelectFormInterface) => {
   const { control } = useFormContext();
   return (
@@ -160,7 +166,7 @@ export const SelectForm = ({
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
             </FormControl>
-            <SelectContent>
+            <SelectContent position={position} align={align} side={side}>
               {options?.map((item, index) => (
                 <SelectItem key={index} value={item.key}>
                   {item.value}

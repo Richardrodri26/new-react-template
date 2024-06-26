@@ -45,7 +45,7 @@ export const DepartmentAndMunicipality = ({ currentIdDepartment, currentIdMunici
 
   return (
     <div className='mb-5 flex flex-1 gap-2'>
-      <SelectForm placeholder="Selecciona un departamento" className="flex-1" disabled={disabledDepartment}  label='Departamento' name={currentIdDepartment} options={departmentOptions} />
+      <SelectForm align="end" side="right" placeholder="Selecciona un departamento" className="flex-1" disabled={disabledDepartment}  label='Departamento' name={currentIdDepartment} options={departmentOptions} />
       {departmentOptions.length > 0 ? <MunicipalitySelect disabledMunicipality={disabledMunicipality} currentId={currentIdMunicipalities} currentIdDepartment={currentIdDepartment} /> : <div className='loader flex-1 rounded-sm' />}
     </div>
   );
@@ -88,5 +88,5 @@ export const MunicipalitySelect = ({ currentId, currentIdDepartment, disabledMun
 
   if (!municipalitiesData && isLoadingMunicipalities) return <div className='loader flex-1' />;
 
-  return <SelectForm placeholder="Selecciona un municipio" className="flex-1" disabled={disabledMunicipality} label='Municipio' name={currentId} options={municipalityOptions} />;
+  return <SelectForm  align="end" side="right" placeholder="Selecciona un municipio" className="flex-1" disabled={disabledMunicipality} label='Municipio' name={currentId} options={municipalityOptions} />;
 };
