@@ -161,7 +161,7 @@ export function Dashboard() {
                 className="overflow-hidden rounded-full"
               >
                 <img
-                  src="/image.png"
+                  src="/sell-icon.jpeg"
                   width={36}
                   height={36}
                   alt="Avatar"
@@ -264,7 +264,7 @@ export function Dashboard() {
                             alt="Product img"
                             className="aspect-square rounded-md object-cover"
                             height="64"
-                            src="/image.png"
+                            src="/sell-icon.jpeg"
                             width="64"
                           />
                         </TableCell>
@@ -309,7 +309,7 @@ export function Dashboard() {
                             alt="Product img"
                             className="aspect-square rounded-md object-cover"
                             height="64"
-                            src="/image.png"
+                            src="/sell-icon.jpeg"
                             width="64"
                           />
                         </TableCell>
@@ -354,7 +354,7 @@ export function Dashboard() {
                             alt="Product img"
                             className="aspect-square rounded-md object-cover"
                             height="64"
-                            src="/image.png"
+                            src="/sell-icon.jpeg"
                             width="64"
                           />
                         </TableCell>
@@ -399,7 +399,7 @@ export function Dashboard() {
                             alt="Product img"
                             className="aspect-square rounded-md object-cover"
                             height="64"
-                            src="/image.png"
+                            src="/sell-icon.jpeg"
                             width="64"
                           />
                         </TableCell>
@@ -444,7 +444,7 @@ export function Dashboard() {
                             alt="Product img"
                             className="aspect-square rounded-md object-cover"
                             height="64"
-                            src="/image.png"
+                            src="/sell-icon.jpeg"
                             width="64"
                           />
                         </TableCell>
@@ -489,7 +489,7 @@ export function Dashboard() {
                             alt="Product img"
                             className="aspect-square rounded-md object-cover"
                             height="64"
-                            src="/image.png"
+                            src="/sell-icon.jpeg"
                             width="64"
                           />
                         </TableCell>

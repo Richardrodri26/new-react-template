@@ -7,15 +7,25 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { AsideMenuMobile } from '@/components'
 import { Link, useNavigate } from 'react-router-dom'
 import useGeneral from '@/domain/store/general.store'
+import { useEffect, useState } from 'react'
+import { useDebounceCallback } from '@/hooks'
 
-export const ClientsHeader = () => {
+export const ClientsHeader = ({ callback }: { callback: (searchValue: string) => Promise<void> }) => {
   const navigate = useNavigate();
   const logout = useGeneral(state => state.logout)
+
+  const [value, setValue] = useState<string>('')
+  const debounced = useDebounceCallback(setValue, 500)
 
   const onLogout = () => {
     logout()
     navigate("/")
   }
+
+
+  useEffect(() => {
+    callback(value)
+  }, [value])
 
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
@@ -45,6 +55,8 @@ export const ClientsHeader = () => {
           type="search"
           placeholder="Search..."
           className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
+          onChange={event => debounced(event.target.value)}
+          defaultValue={value}
         />
       </div>
       <DropdownMenu>
@@ -55,7 +67,7 @@ export const ClientsHeader = () => {
             className="overflow-hidden rounded-full"
           >
             <img
-              src="/image.png"
+              src="/sell-icon.jpeg"
               width={36}
               height={36}
               alt="Avatar"

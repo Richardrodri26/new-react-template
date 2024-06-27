@@ -55,7 +55,7 @@ export const ClientsContactHeader = () => {
             className="overflow-hidden rounded-full"
           >
             <img
-              src="/image.png"
+              src="/sell-icon.jpeg"
               width={36}
               height={36}
               alt="Avatar"

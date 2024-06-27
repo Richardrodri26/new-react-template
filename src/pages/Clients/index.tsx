@@ -29,7 +29,7 @@ const ClientsGrid = () => {
 
   const [skip, setSkip] = useState(0)
   const takeValue = 10
-  const { data, loading } = useClientsQuery({
+  const { data, loading, refetch } = useClientsQuery({
     variables: {
       pagination: {
         skip,
@@ -41,6 +41,23 @@ const ClientsGrid = () => {
     }
   })
 
+  const onSearchCallback = async (searchValue: string) => {
+    refetch({
+      pagination: {
+        skip: 0,
+        take: takeValue
+      },
+      orderBy: {
+        createdAt: OrderTypes.Desc
+      },
+      where: {
+        name:{
+          _contains: searchValue || "" 
+        }
+      }
+    })
+  }
+
   const onCreateModal = () => {
     setModalStatus({ id: "createClient" })
 
@@ -50,7 +67,7 @@ const ClientsGrid = () => {
 
   return (
     <>
-      <ClientsHeader />
+      <ClientsHeader callback={onSearchCallback} />
 
       <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
         <Tabs defaultValue="all">
