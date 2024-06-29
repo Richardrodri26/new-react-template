@@ -50,6 +50,35 @@ query Clients($orderBy: [FindClientOrderBy!], $where: FindClientWhere, $paginati
   }
 }
 
+query Client($clientId: ID!) {
+  client(id: $clientId) {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    name
+    numberDocument
+    email
+    telefono
+    address
+    type
+    vertical
+    celular
+    department {
+      id
+      name
+    }
+    city {
+      id
+      name
+    }
+    user {
+      id
+      fullName
+    }
+  }
+}
+
 mutation CreateClient($createInput: CreateClientInput!) {
   createClient(createInput: $createInput) {
     id

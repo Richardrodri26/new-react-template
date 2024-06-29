@@ -24,6 +24,14 @@ export const ContactClientsPage = ({ id }: { id: string }) => {
   )
 }
 
+export const OnlyContactClientsPage = ({ id }: { id: string }) => {
+  return (
+    <>
+      <ContactClientsGrid id={id} />
+    </>
+  )
+}
+
 export const OnlyContactClientGrid = ({ id }: { id: string }) => {
   const [skip, setSkip] = useState(0)
   const takeValue = 3
@@ -41,7 +49,9 @@ export const OnlyContactClientGrid = ({ id }: { id: string }) => {
           _eq: id
         }
       }
-    }
+    },
+    fetchPolicy: "cache-and-network",
+    nextFetchPolicy: "cache-first"
   })
 
   

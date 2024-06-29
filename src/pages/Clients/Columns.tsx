@@ -6,6 +6,7 @@ import { ToastyErrorGraph } from "@/lib/utils";
 import { apolloClient } from "@/main.config";
 import { createColumnHelper } from '@tanstack/react-table'
 import { MoreHorizontal } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const columnHelperClients = createColumnHelper<Client>();
@@ -36,7 +37,9 @@ export const clientsColumns = [
     id: "Acciones",
     cell: (info) => {
       const [removeClient] = useRemoveClientMutation({ variables: { removeClientId: info.row.original.id } });
-      const [setModalStatus] = useShallowGeneralStore((state) => [state.setModalStatus])
+      const [setModalStatus] = useShallowGeneralStore((state) => [state.setModalStatus]);
+
+      const navigate = useNavigate()
 
       const onRemoveClient = async () => {
         const resAlert = await fireAlert({
@@ -66,10 +69,11 @@ export const clientsColumns = [
         }
       }
       const onEditUser = () => {
-        setModalStatus({
-          id: "updateClient",
-          content: info.row.original
-        })
+        navigate(`/dashboard/clients/edit/${info.row.original.id}`)
+        // setModalStatus({
+        //   id: "updateClient",
+        //   content: info.row.original
+        // })
       }
 
       return (

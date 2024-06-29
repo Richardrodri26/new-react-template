@@ -16,8 +16,9 @@ import { ClientWithForm, ContactClientsPage } from '@/pages/ContactClients'
 import { DataTableVisits } from '@/pages/Visits/Grids'
 import { visitsColumns } from '@/pages/Visits/Columns'
 import { PaginationTable } from '@/components/TableElements'
+import { useNavigate } from 'react-router-dom'
 
-const createClientSchema = z.object({
+export const createClientSchema = z.object({
   celular: z.string(),
   name: z.string(),
   numberDocument: z.string(),
@@ -28,9 +29,9 @@ const createClientSchema = z.object({
   departmentId: z.string()
 })
 
-type createClientSchemaType = z.infer<typeof createClientSchema>;
+export type createClientSchemaType = z.infer<typeof createClientSchema>;
 
-const typeClientOptions: { key: string; value: string | number }[] = [
+export const typeClientOptions: { key: string; value: string | number }[] = [
   {
     key: TypeClientEnum.ClienteFinal,
     value: "final"
@@ -50,6 +51,8 @@ const typeClientOptions: { key: string; value: string | number }[] = [
 ]
 
 export const UpdateClient = () => {
+  const navigate = useNavigate()
+
   const [updateClient] = useUpdateClientMutation();
   const [setModalStatus, modalStatus] = useShallowGeneralStore(state => [state.setModalStatus, state.modalStatus])
   const modalStatusContent = modalStatus?.content as Partial<Client>
@@ -95,6 +98,7 @@ export const UpdateClient = () => {
       apolloClient.cache.evict({ fieldName: "clients" })
 
       setModalStatus()
+      navigate(-1)
 
 
     } catch (error) {

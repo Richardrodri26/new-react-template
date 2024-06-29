@@ -2188,6 +2188,13 @@ export type ClientsQueryVariables = Exact<{
 
 export type ClientsQuery = { __typename?: 'Query', clients: Array<{ __typename?: 'Client', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, numberDocument: string, email: string, telefono?: string | null, address?: string | null, type?: TypeClientEnum | null, vertical?: string | null, celular: string, city?: { __typename?: 'City', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, department?: { __typename?: 'Department', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, country?: { __typename?: 'Country', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, user?: { __typename?: 'User', name?: string | null, id: string, email: string } | null }>, clientsCount: { __typename?: 'MetadataPagination', totalItems?: number | null, itemsPerPage?: number | null, totalPages?: number | null, currentPage?: number | null } };
 
+export type ClientQueryVariables = Exact<{
+  clientId: Scalars['ID'];
+}>;
+
+
+export type ClientQuery = { __typename?: 'Query', client: { __typename?: 'Client', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, numberDocument: string, email: string, telefono?: string | null, address?: string | null, type?: TypeClientEnum | null, vertical?: string | null, celular: string, department?: { __typename?: 'Department', id: string, name: string } | null, city?: { __typename?: 'City', id: string, name: string } | null, user?: { __typename?: 'User', id: string, fullName: string } | null } };
+
 export type CreateClientMutationVariables = Exact<{
   createInput: CreateClientInput;
 }>;
@@ -2760,6 +2767,64 @@ export function useClientsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Cl
 export type ClientsQueryHookResult = ReturnType<typeof useClientsQuery>;
 export type ClientsLazyQueryHookResult = ReturnType<typeof useClientsLazyQuery>;
 export type ClientsQueryResult = Apollo.QueryResult<ClientsQuery, ClientsQueryVariables>;
+export const ClientDocument = gql`
+    query Client($clientId: ID!) {
+  client(id: $clientId) {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    name
+    numberDocument
+    email
+    telefono
+    address
+    type
+    vertical
+    celular
+    department {
+      id
+      name
+    }
+    city {
+      id
+      name
+    }
+    user {
+      id
+      fullName
+    }
+  }
+}
+    `;
+
+/**
+ * __useClientQuery__
+ *
+ * To run a query within a React component, call `useClientQuery` and pass it any options that fit your needs.
+ * When your component renders, `useClientQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useClientQuery({
+ *   variables: {
+ *      clientId: // value for 'clientId'
+ *   },
+ * });
+ */
+export function useClientQuery(baseOptions: Apollo.QueryHookOptions<ClientQuery, ClientQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ClientQuery, ClientQueryVariables>(ClientDocument, options);
+      }
+export function useClientLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ClientQuery, ClientQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ClientQuery, ClientQueryVariables>(ClientDocument, options);
+        }
+export type ClientQueryHookResult = ReturnType<typeof useClientQuery>;
+export type ClientLazyQueryHookResult = ReturnType<typeof useClientLazyQuery>;
+export type ClientQueryResult = Apollo.QueryResult<ClientQuery, ClientQueryVariables>;
 export const CreateClientDocument = gql`
     mutation CreateClient($createInput: CreateClientInput!) {
   createClient(createInput: $createInput) {

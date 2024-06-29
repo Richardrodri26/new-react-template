@@ -48,7 +48,6 @@ export const CreateClientContact = () => {
 
       setModalStatus()
 
-
     } catch (error) {
       ToastyErrorGraph(error as any)
     }

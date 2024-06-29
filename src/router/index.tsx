@@ -1,5 +1,5 @@
 import { AppGuardLayout, MainLayout } from "@/components/Layouts";
-import { ClientsPage, ContactClientsPage, HomePage, LoginPage, ParametersPage, UsersPage, VisitsPage } from "@/pages";
+import { ClientsEditPage, ClientsPage, ContactClientsPage, HomePage, LoginPage, ParametersPage, UsersPage, VisitsPage } from "@/pages";
 import ReportsPage from "@/pages/Reports";
 import { VisitDetailPage } from "@/pages/Visits/Detalle";
 import CalendarPage from "@/pages/calendar";
@@ -37,6 +37,10 @@ export const appRouter = createBrowserRouter([
       {
         path: "clients",
         element: <ClientsPage />
+      },
+      {
+        path: "clients/edit/:id",
+        element: <ClientsEditPage />
       },
       {
         path: "typeVisit",

@@ -1,5 +1,5 @@
 
-import { Client, MetadataPagination, OrderTypes, useClientsQuery } from '@/domain/graphql'
+import { Client, MetadataPagination, OrderTypes, TypeClientEnum, useClientQuery, useClientsQuery, useUpdateClientMutation, useVisitsQuery } from '@/domain/graphql'
 import React, { useState } from 'react'
 import { ClientsHeader } from './Elements'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -13,12 +13,180 @@ import { clientsColumns } from './Columns'
 import { useShallowGeneralStore } from '@/domain/store/general.store'
 import { ClientModals } from './Modals'
 import { orderBy } from 'lodash'
+import { ContactClientsPage, OnlyContactClientsPage } from '../ContactClients'
+import { useNavigate, useParams } from 'react-router-dom'
+import { BasicFormProviderZod, ButtonForm, RowForm } from '@/components'
+import { InputForm, SelectForm } from '@/composables'
+import { DepartmentAndMunicipality } from '@/composables/DepartmentAndMunicipality'
+import { UserSelect } from './Modals/CreateClient'
+import { createClientSchema, createClientSchemaType, typeClientOptions } from './Modals/UpdateClient'
+import { toast } from 'sonner'
+import { apolloClient } from '@/main.config'
+import { ToastyErrorGraph } from '@/lib/utils'
+import { visitsColumns } from '../Visits/Columns'
+import { ClientContactModals } from '../ContactClients/Modals'
 
 export const ClientsPage = () => {
   return (
     <>
       <ClientsGrid />
       <ClientModals />
+    </>
+  )
+}
+
+export const ClientsEditPage = () => {
+  const navigate = useNavigate()
+  const { id } = useParams()
+  const [updateClient] = useUpdateClientMutation();
+  const [setModalStatus, modalStatus] = useShallowGeneralStore(state => [state.setModalStatus, state.modalStatus])
+  // const modalStatusContent = modalStatus?.content as Partial<Client>
+  const [skip, setSkip] = useState(0)
+  const takeValue = 5
+  const { data, loading } = useVisitsQuery({
+    variables: {
+      pagination: {
+        skip,
+        take: takeValue
+      },
+      orderBy: {
+        dateVisit: OrderTypes.Desc
+      },
+      where: {
+        client: {
+          _eq: id
+        }
+      }
+    }
+  })
+
+  const { data: dataClient, loading: loadingClient } = useClientQuery({
+    variables: {
+      clientId: id || ""
+    },
+    fetchPolicy: "cache-and-network",
+    nextFetchPolicy: "cache-first"
+  })
+
+
+  const onSubmit = async (data: createClientSchemaType) => {
+  
+    try {
+      toast.info("Actualizando cliente...")
+      const resMutation = await updateClient({
+        variables: {
+            updateInput: {
+            ...data,
+            id: id || "",
+            type: data.type as TypeClientEnum
+          }
+        }
+      });
+
+      if (resMutation.errors) {
+        toast.error("¡Oops, hubo un error")
+        return
+      }
+
+      toast.success("Cliente actualizado con exito")
+
+      apolloClient.cache.evict({ fieldName: "clients" })
+
+      setModalStatus()
+      navigate(-1)
+
+
+    } catch (error) {
+      ToastyErrorGraph(error as any)
+    }
+
+
+  }
+
+  if(!dataClient || loadingClient) return
+
+  const clientData = dataClient.client
+
+  const defaultValues = {
+    departmentId: clientData?.department?.id,
+    cityId: clientData?.city?.id,
+    name: clientData?.name,
+    numberDocument: clientData?.numberDocument,
+    type: clientData?.type,
+    email: clientData?.email,
+    celular: clientData?.celular,
+    userId: clientData?.user?.id,
+    address: clientData?.address,
+    Prueba: "1",
+  }
+
+  return (
+    <>
+    <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
+        <Tabs defaultValue="all">
+          <div className="flex items-center">
+           
+            <div className="ml-auto flex items-center gap-2">
+              
+            </div>
+          </div>
+          <TabsContent value="all">
+            <Card x-chunk="dashboard-06-chunk-0">
+              <CardHeader>
+                <CardTitle>Editar</CardTitle>
+                <CardDescription>
+                  Edita al cliente. <br/>
+                  <Button onClick={() => navigate(-1)}>Volver</Button>
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+
+      <CardTitle >
+        Actualizar cliente
+      </CardTitle>
+
+
+      <div className='overflow-y-auto'>
+      <BasicFormProviderZod submit={onSubmit} schema={createClientSchema} defaultValue={defaultValues}>
+        <RowForm>
+          <InputForm name='name' label={"Nombre del cliente"} />
+          <InputForm name='numberDocument' label={"Número de documento"} />
+          <InputForm name='address' label={"Dirrecion"} />
+          <SelectForm options={typeClientOptions} name={'type'} placeholder='Selecciona una opción' label={"Tipo de cliente"} />
+        </RowForm>
+
+        <RowForm>
+          <DepartmentAndMunicipality currentIdDepartment='departmentId' currentIdMunicipalities='cityId' />
+          <InputForm name='email' label={"Correo electronico"} />
+          <InputForm name='celular' label={"Telefono celular"} />
+          <UserSelect name="userId" label={"Usuario"} placeholder="Selecciona un usuario" />
+          {/* <ComboboxForm label={"Prueba"} name='Prueba' options={[{ label: "prueba 1", value: "1" }, { label: "prueba 2", value: "2" }]} /> */}
+        </RowForm>
+        <ButtonForm>
+          Actualizar
+        </ButtonForm>
+      </BasicFormProviderZod>
+      <CardTitle >
+          Contacto Cliente
+        </CardTitle>
+        <OnlyContactClientsPage id={id || ""}/>
+        <CardTitle >
+          Visitas
+        </CardTitle>
+        <DataTableVisits isLoading={!data && loading} columns={visitsColumns as any} data={data?.visits || []} />
+        <PaginationTable skipState={{ value: skip, setValue: setSkip }} metaDataPagination={data?.visitsCount as MetadataPagination} takeValue={takeValue} />
+      </div>
+
+      
+
+              </CardContent>
+              
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </main>
+
+      <ClientContactModals />
     </>
   )
 }
