@@ -123,6 +123,7 @@ export const UpdateClient = () => {
         Actualizar cliente
       </DialogHeader>
 
+      <div className='overflow-y-auto'>
       <BasicFormProviderZod submit={onSubmit} schema={createClientSchema} defaultValue={defaultValues}>
         <RowForm>
           <InputForm name='name' label={"Nombre del cliente"} />
@@ -151,6 +152,7 @@ export const UpdateClient = () => {
         </DialogHeader>
         <DataTableVisits isLoading={!data && loading} columns={visitsColumns as any} data={data?.visits || []} />
         <PaginationTable skipState={{ value: skip, setValue: setSkip }} metaDataPagination={data?.visitsCount as MetadataPagination} takeValue={takeValue} />
+      </div>
     </>
   )
 }
