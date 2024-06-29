@@ -52,7 +52,7 @@ export const appRouter = createBrowserRouter([
       },
       {
         path: "contactsClient", // Ruta para el detalle de la visita con su ID
-        element: <ContactClientsPage />,
+        element: <ContactClientsPage id="" />,
       },
       {
         path: "reports", // Ruta para el detalle de la visita con su ID

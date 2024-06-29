@@ -12,7 +12,7 @@ import React, { useState } from 'react'
 import { toast } from 'sonner'
 import { z } from 'zod'
 import { UserSelect } from './CreateClient'
-import { ContactClientsPage } from '@/pages/ContactClients'
+import { ClientWithForm, ContactClientsPage } from '@/pages/ContactClients'
 import { DataTableVisits } from '@/pages/Visits/Grids'
 import { visitsColumns } from '@/pages/Visits/Columns'
 import { PaginationTable } from '@/components/TableElements'
@@ -146,7 +146,7 @@ export const UpdateClient = () => {
       <DialogHeader >
           Contacto Cliente
         </DialogHeader>
-        <ContactClientsPage id={modalStatusContent?.id}/>
+        <ClientWithForm id={modalStatusContent?.id || ""}/>
         <DialogHeader >
           Visitas
         </DialogHeader>

@@ -8,7 +8,7 @@ import { apolloClient } from "@/main.config";
 import { toast } from "sonner";
 import { z } from "zod";
 
-const createClientContactSchema = z.object({
+export const createClientContactSchema = z.object({
 
   celular: z.string(),
   clientId: z.string(),
@@ -19,7 +19,7 @@ const createClientContactSchema = z.object({
 
 })
 
-type createClientContactSchemaType = z.infer<typeof createClientContactSchema>;
+export type createClientContactSchemaType = z.infer<typeof createClientContactSchema>;
 
 
 export const CreateClientContact = () => {
