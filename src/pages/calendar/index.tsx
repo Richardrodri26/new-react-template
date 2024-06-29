@@ -8,6 +8,8 @@ import ModalInfoCalendar from './modal/info.modal';
 import { UserSelect } from '../Clients/Modals/CreateClient';
 import { BasicFormProviderZod } from '@/components';
 import { useNavigate } from 'react-router-dom';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
 
 interface Event {
   id: string;
@@ -29,6 +31,8 @@ const CalendarPage: React.FC = () => {
     const lastDay = date.endOf(initial ? 'years' : 'month').format('YYYY-MM-DD');
     return { firstDay, lastDay };
   };
+
+  const [selectedItem, setSelectedItem] = useState<string>("")
 
   const colorCalendat = (status: StatusVisitEnum): string => {
     switch (status) {
@@ -141,15 +145,30 @@ const CalendarPage: React.FC = () => {
     };
 
     return (
-      <div>
-        <label>Select a User:</label>
-        <select onChange={handleChange}>
-          <option value="">Select a user...</option>
-          {users.map((user) => (
-            <option key={user.id} value={user.id}>{user.name}</option>
-          ))}
-        </select>
-      </div>
+      <>
+        {/* <div>
+          <label>Select a User:</label>
+          <select onChange={handleChange}>
+            <option value="">Select a user...</option>
+            {users.map((user) => (
+              <option key={user.id} value={user.id}>{user.name}</option>
+            ))}
+          </select>
+        </div> */}
+
+        <Label htmlFor='user'>Selecciona un usuario:</Label>
+        <Select value={selectedItem} onValueChange={value => {setSelectedItem(value); refesh(value)}}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="usuario" />
+          </SelectTrigger>
+          <SelectContent>
+            {users.map((user) => (
+              <SelectItem key={user.id} value={user.id}>{user.name}</SelectItem>
+            ))}
+
+          </SelectContent>
+        </Select>
+      </>
     );
   };
 
