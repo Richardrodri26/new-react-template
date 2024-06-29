@@ -15,7 +15,6 @@ const updateClientContactSchema = z.object({
   clientId: z.string(),
   email: z.string().email(),
   name: z.string(),
-  numberDocument: z.string(),
   position: z.string(),
   telefono: z.string(),
 
@@ -76,7 +75,6 @@ export const UpdateClientContact = () => {
       name: contactClientData?.name,
       email: contactClientData?.email,
       celular: contactClientData?.celular,
-      numberDocument: contactClientData?.numberDocument,
       telefono: contactClientData?.client?.telefono,
       clientId: contactClientData?.client?.id,
       position: contactClientData?.position,
@@ -101,7 +99,7 @@ export const UpdateClientContact = () => {
           {/* <InputForm name='type' label={"Tipo"} /> */}
 
           <InputForm name='celular' label={"Celular"} />
-          <InputForm name='numberDocument' label={"Numero de documento"} />
+          {/* <InputForm name='numberDocument' label={"Numero de documento"} /> */}
           <InputForm name='telefono' label={"Telefono"} />
 
         </RowForm>

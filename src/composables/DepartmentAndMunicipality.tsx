@@ -25,7 +25,7 @@ export const DepartmentAndMunicipality = ({ currentIdDepartment, currentIdMunici
       data?.map(department => ({
         key: department.id,
         value: department.name,
-      })) || []
+      })).sort((a,b) => a.value.toLowerCase().localeCompare(b.value.toLocaleLowerCase())) || []
     );
   }, [departmentData]);
 

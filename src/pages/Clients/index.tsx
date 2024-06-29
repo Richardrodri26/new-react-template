@@ -12,6 +12,7 @@ import { DataTableVisits } from '../Visits/Grids'
 import { clientsColumns } from './Columns'
 import { useShallowGeneralStore } from '@/domain/store/general.store'
 import { ClientModals } from './Modals'
+import { orderBy } from 'lodash'
 
 export const ClientsPage = () => {
   return (
@@ -36,7 +37,7 @@ const ClientsGrid = () => {
         take: takeValue
       },
       orderBy: {
-        createdAt: OrderTypes.Desc
+        name: OrderTypes.Asc
       }
     }
   })
@@ -48,12 +49,19 @@ const ClientsGrid = () => {
         take: takeValue
       },
       orderBy: {
-        createdAt: OrderTypes.Desc
+        name: OrderTypes.Asc
       },
       where: {
         name:{
           _contains: searchValue || "" 
-        }
+        },
+        _or: [
+          {
+            numberDocument: {
+              _contains:  searchValue || "" 
+            }
+          }
+        ]
       }
     })
   }

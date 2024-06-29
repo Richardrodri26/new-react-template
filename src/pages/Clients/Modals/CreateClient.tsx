@@ -11,11 +11,11 @@ import { apolloClient } from '@/main.config'
 import React from 'react'
 import { toast } from 'sonner'
 import { z } from 'zod'
-
+const regexNit = /^\d{9}-\d$/
 const createClientSchema = z.object({
   celular: z.string(),
   name: z.string(),
-  numberDocument: z.string(),
+  numberDocument: z.string().regex(regexNit, 'No se cumple con el pratrón de 123456789-0'),
   type: z.string(),
   email: z.string().email(),
   userId: z.string(),
@@ -102,7 +102,7 @@ export const CreateClient = () => {
       <BasicFormProviderZod submit={onSubmit} schema={createClientSchema} defaultValue={defaultValues}>
         <RowForm>
           <InputForm name='name' label={"Nombre del cliente"} />
-          <InputForm name='numberDocument' label={"Número de documento"} />
+          <InputForm name='numberDocument' label={"Número de documento"} placeholder='Ejemplo (123456789-0)' />
           <InputForm name='address' label={"Dirrecion"} />
           <SelectForm options={typeClientOptions} name={'type'} placeholder='Selecciona una opción' label={"Tipo de cliente"} />
         </RowForm>

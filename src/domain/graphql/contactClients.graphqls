@@ -1,11 +1,10 @@
-query ClientContacts($orderBy: [FindClientContactOrderBy!], $pagination: Pagination) {
-  clientContacts(orderBy: $orderBy, pagination: $pagination) {
+query ClientContacts($orderBy: [FindClientContactOrderBy!], $pagination: Pagination,$where: FindClientContactWhere) {
+  clientContacts(orderBy: $orderBy, pagination: $pagination,where: $where) {
     id
     createdAt
     updatedAt
     deletedAt
     name
-    numberDocument
     celular
     email
     position
@@ -19,7 +18,7 @@ query ClientContacts($orderBy: [FindClientContactOrderBy!], $pagination: Paginat
       email
     }
   }
-  clientContactsCount(orderBy: $orderBy, pagination: $pagination) {
+  clientContactsCount(orderBy: $orderBy, pagination: $pagination,where: $where) {
     totalItems
     itemsPerPage
     totalPages

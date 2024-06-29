@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { PlusCircle } from 'lucide-react';
 import { useVisitQuery } from '@/domain/graphql';
 import LocationMap from '@/components/Utils/googelMaps';
+import VisitComments from './ComentVisit';
 
 
 export const VisitDetailPage: React.FC = () => {
@@ -92,42 +93,20 @@ export const VisitDetailPage: React.FC = () => {
           </div>
         ) : (
           <div className="h-64 w-full mb-6">
-            <p color='blue'><a href='#' color='blue'>!Click Aqui, para ver el marcador!</a></p>
-            <LocationMap latitude={visit.latitude} longitude={visit.longitude}></LocationMap>
+            {
+              visit.status === 'realized' 
+              ?
+              <>
+                <p color='blue'><a href='#' color='blue'>!Click Aqui, para ver el marcador!</a></p>
+                <LocationMap latitude={visit.latitude} longitude={visit.longitude}></LocationMap>
+              </>
+              :
+              <></>
+            }
           </div>
         )}
         <div className="p-6">
-          <h2 className="text-2xl font-bold mb-4">Comentarios</h2>
-          {/* {visit?.comments?.concat(comments)?.map(comment => (
-            <div key={comment.id} className="mb-2">
-              <span className={`inline-block px-2 py-1 rounded-full text-sm font-semibold text-white ${comment.type === 'A' ? 'bg-blue-500' : 'bg-green-500'}`}>
-                {comment.type}
-              </span>
-              <span className="ml-2 text-gray-700">{comment.text}</span>
-            </div>
-          ))} */}
-          <div className="mt-4">
-            <textarea
-              className="w-full p-3 border rounded mb-2"
-              rows={3}
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              placeholder="Añadir comentario..."
-            />
-            <div className="flex items-center mb-4">
-              <label className="mr-2">Tipo:</label>
-              <select value={commentType} onChange={(e) => setCommentType(e.target.value as 'A' | 'B')} className="p-2 border rounded">
-                <option value="A">A</option>
-                <option value="B">B</option>
-              </select>
-            </div>
-              <Button onClick={handleAddComment} size="sm" className="h-8 gap-1">
-                <PlusCircle className="h-3.5 w-3.5" />
-                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                  Crear Comentatio
-                </span>
-              </Button>
-          </div>
+          <VisitComments visitId={id}></VisitComments>
         </div>
       </div>
     </div>

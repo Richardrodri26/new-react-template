@@ -67,3 +67,16 @@ mutation UpdateClient($updateInput: UpdateClientInput!) {
     id
   }
 }
+
+query VisitComents($orderBy: [FindVisitComentOrderBy!], $where: FindVisitComentWhere) {
+  visitComents(orderBy: $orderBy, where: $where) {
+    status
+    type
+    user {
+      name
+    }
+    id
+    description
+    createdAt
+  }
+}

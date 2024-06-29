@@ -14,7 +14,9 @@ export const clientsColumns = [
   columnHelperClients.accessor("name", {
     header: "Cliente"
   }),
-
+  columnHelperClients.accessor("numberDocument", {
+    header: "Numero de documento"
+  }),
   columnHelperClients.accessor("address", {
     header: "Dirección"
   }),

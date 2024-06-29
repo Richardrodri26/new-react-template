@@ -50,8 +50,8 @@ export const visitsColumns = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={onClickShowDetail}>Edit</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+            <DropdownMenuItem onClick={onClickShowDetail}>Ver detalle</DropdownMenuItem>
+            {/* <DropdownMenuItem>Delete</DropdownMenuItem> */}
           </DropdownMenuContent>
         </DropdownMenu>
       )

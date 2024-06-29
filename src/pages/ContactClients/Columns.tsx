@@ -11,8 +11,11 @@ import { toast } from "sonner";
 const columnHelperClientsContact = createColumnHelper<ClientContact>();
 
 export const clientsContactsColumns = [
-  columnHelperClientsContact.accessor("name", {
+  columnHelperClientsContact.accessor("client.name", {
     header: "Cliente"
+  }),
+  columnHelperClientsContact.accessor("name", {
+    header: "Nombre"
   }),
 
   columnHelperClientsContact.accessor("email", {
@@ -21,10 +24,6 @@ export const clientsContactsColumns = [
 
   columnHelperClientsContact.accessor("celular", {
     header: "Telefono"
-  }),
-
-  columnHelperClientsContact.accessor("numberDocument", {
-    header: "Número de documento"
   }),
 
   columnHelperClientsContact.display({

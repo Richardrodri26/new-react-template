@@ -14,7 +14,6 @@ const createClientContactSchema = z.object({
   clientId: z.string(),
   email: z.string().email(),
   name: z.string(),
-  numberDocument: z.string(),
   position: z.string(),
   telefono: z.string(),
 
@@ -85,7 +84,7 @@ export const CreateClientContact = () => {
           {/* <InputForm name='type' label={"Tipo"} /> */}
 
           <InputForm name='celular' label={"Celular"} />
-          <InputForm name='numberDocument' label={"Numero de documento"} />
+          {/* <InputForm name='numberDocument' label={"Numero de documento"} /> */}
           <InputForm name='telefono' label={"Telefono"} />
 
         </RowForm>
