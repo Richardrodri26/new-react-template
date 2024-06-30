@@ -11,6 +11,7 @@ query Clients($orderBy: [FindClientOrderBy!], $where: FindClientWhere, $paginati
     address
     type
     vertical
+    descripcion
     celular
     city {
       id
@@ -64,6 +65,7 @@ query Client($clientId: ID!) {
     type
     vertical
     celular
+    descripcion
     department {
       id
       name
@@ -107,5 +109,12 @@ query VisitComents($orderBy: [FindVisitComentOrderBy!], $where: FindVisitComentW
     id
     description
     createdAt
+    date
+    visit {
+      id
+      client {
+        name
+      }
+    }
   }
 }

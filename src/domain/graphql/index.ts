@@ -53,6 +53,7 @@ export type Client = {
   createdAt: Scalars['DateTime'];
   deletedAt?: Maybe<Scalars['DateTime']>;
   department?: Maybe<Department>;
+  descripcion?: Maybe<Scalars['String']>;
   email: Scalars['String'];
   id: Scalars['ID'];
   name: Scalars['String'];
@@ -124,6 +125,7 @@ export type CreateClientInput = {
   cityId?: InputMaybe<Scalars['String']>;
   countryId?: InputMaybe<Scalars['String']>;
   departmentId?: InputMaybe<Scalars['String']>;
+  descripcion?: InputMaybe<Scalars['String']>;
   email?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   numberDocument: Scalars['String'];
@@ -258,6 +260,7 @@ export type CreateUserInput = {
 };
 
 export type CreateVisitComentInput = {
+  date?: InputMaybe<Scalars['DateTime']>;
   description: Scalars['String'];
   status?: InputMaybe<VisitComentStatusEnum>;
   type: VisitComentTypeEnum;
@@ -488,11 +491,13 @@ export type FindUsersWhere = {
 
 export type FindVisitComentOrderBy = {
   createdAt?: InputMaybe<OrderTypes>;
+  date?: InputMaybe<OrderTypes>;
 };
 
 export type FindVisitComentWhere = {
   _and?: InputMaybe<Array<FindVisitComentWhere>>;
   _or?: InputMaybe<Array<FindVisitComentWhere>>;
+  date?: InputMaybe<DateFilter>;
   status?: InputMaybe<StringFilter>;
   type?: InputMaybe<StringFilter>;
   user?: InputMaybe<StringFilter>;
@@ -632,6 +637,7 @@ export type Mutation = {
   removeVisitComent: VisitComent;
   removeVisitType: VisitType;
   replaceAllRolesFx: Array<RoleFx>;
+  resetPassword: User;
   resetSuperAdmin: User;
   sendCodeDoubleVerification: Scalars['String'];
   signInAdmin: AuthResponse;
@@ -889,6 +895,11 @@ export type MutationRemoveVisitTypeArgs = {
 
 export type MutationReplaceAllRolesFxArgs = {
   replaceAllRoleFxInput: CreateAndRemoveRoleFxInput;
+};
+
+
+export type MutationResetPasswordArgs = {
+  password: Scalars['String'];
 };
 
 
@@ -1230,6 +1241,7 @@ export type Query = {
   rolesCount: MetadataPagination;
   rolesFx: Array<RoleFx>;
   rolesFxCount: MetadataPagination;
+  sendEmailRecovryPassword: Scalars['String'];
   user: User;
   users: Array<User>;
   usersCount: MetadataPagination;
@@ -1556,6 +1568,11 @@ export type QueryRolesFxCountArgs = {
 };
 
 
+export type QuerySendEmailRecovryPasswordArgs = {
+  email: Scalars['String'];
+};
+
+
 export type QueryUserArgs = {
   id: Scalars['ID'];
 };
@@ -1820,6 +1837,7 @@ export type UpdateClientInput = {
   cityId?: InputMaybe<Scalars['String']>;
   countryId?: InputMaybe<Scalars['String']>;
   departmentId?: InputMaybe<Scalars['String']>;
+  descripcion?: InputMaybe<Scalars['String']>;
   email?: InputMaybe<Scalars['String']>;
   id: Scalars['ID'];
   name?: InputMaybe<Scalars['String']>;
@@ -1985,6 +2003,7 @@ export type UpdateUserPasswordInput = {
 };
 
 export type UpdateVisitComentInput = {
+  date?: InputMaybe<Scalars['DateTime']>;
   description?: InputMaybe<Scalars['String']>;
   id: Scalars['ID'];
   status?: InputMaybe<VisitComentStatusEnum>;
@@ -2096,7 +2115,7 @@ export type Visit = {
   __typename?: 'Visit';
   client: Client;
   createdAt: Scalars['DateTime'];
-  dateVisit: Scalars['String'];
+  dateVisit: Scalars['DateTime'];
   deletedAt?: Maybe<Scalars['DateTime']>;
   description: Scalars['String'];
   id: Scalars['ID'];
@@ -2113,6 +2132,7 @@ export type Visit = {
 export type VisitComent = {
   __typename?: 'VisitComent';
   createdAt: Scalars['DateTime'];
+  date?: Maybe<Scalars['DateTime']>;
   deletedAt?: Maybe<Scalars['DateTime']>;
   description: Scalars['String'];
   id: Scalars['ID'];
@@ -2186,14 +2206,14 @@ export type ClientsQueryVariables = Exact<{
 }>;
 
 
-export type ClientsQuery = { __typename?: 'Query', clients: Array<{ __typename?: 'Client', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, numberDocument: string, email: string, telefono?: string | null, address?: string | null, type?: TypeClientEnum | null, vertical?: string | null, celular: string, city?: { __typename?: 'City', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, department?: { __typename?: 'Department', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, country?: { __typename?: 'Country', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, user?: { __typename?: 'User', name?: string | null, id: string, email: string } | null }>, clientsCount: { __typename?: 'MetadataPagination', totalItems?: number | null, itemsPerPage?: number | null, totalPages?: number | null, currentPage?: number | null } };
+export type ClientsQuery = { __typename?: 'Query', clients: Array<{ __typename?: 'Client', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, numberDocument: string, email: string, telefono?: string | null, address?: string | null, type?: TypeClientEnum | null, vertical?: string | null, descripcion?: string | null, celular: string, city?: { __typename?: 'City', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, department?: { __typename?: 'Department', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, country?: { __typename?: 'Country', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, user?: { __typename?: 'User', name?: string | null, id: string, email: string } | null }>, clientsCount: { __typename?: 'MetadataPagination', totalItems?: number | null, itemsPerPage?: number | null, totalPages?: number | null, currentPage?: number | null } };
 
 export type ClientQueryVariables = Exact<{
   clientId: Scalars['ID'];
 }>;
 
 
-export type ClientQuery = { __typename?: 'Query', client: { __typename?: 'Client', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, numberDocument: string, email: string, telefono?: string | null, address?: string | null, type?: TypeClientEnum | null, vertical?: string | null, celular: string, department?: { __typename?: 'Department', id: string, name: string } | null, city?: { __typename?: 'City', id: string, name: string } | null, user?: { __typename?: 'User', id: string, fullName: string } | null } };
+export type ClientQuery = { __typename?: 'Query', client: { __typename?: 'Client', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, numberDocument: string, email: string, telefono?: string | null, address?: string | null, type?: TypeClientEnum | null, vertical?: string | null, celular: string, descripcion?: string | null, department?: { __typename?: 'Department', id: string, name: string } | null, city?: { __typename?: 'City', id: string, name: string } | null, user?: { __typename?: 'User', id: string, fullName: string } | null } };
 
 export type CreateClientMutationVariables = Exact<{
   createInput: CreateClientInput;
@@ -2222,7 +2242,7 @@ export type VisitComentsQueryVariables = Exact<{
 }>;
 
 
-export type VisitComentsQuery = { __typename?: 'Query', visitComents: Array<{ __typename?: 'VisitComent', status?: VisitComentStatusEnum | null, type: VisitComentTypeEnum, id: string, description: string, createdAt: any, user: { __typename?: 'User', name?: string | null } }> };
+export type VisitComentsQuery = { __typename?: 'Query', visitComents: Array<{ __typename?: 'VisitComent', status?: VisitComentStatusEnum | null, type: VisitComentTypeEnum, id: string, description: string, createdAt: any, date?: any | null, user: { __typename?: 'User', name?: string | null }, visit: { __typename?: 'Visit', id: string, client: { __typename?: 'Client', name: string } } }> };
 
 export type ClientContactsQueryVariables = Exact<{
   orderBy?: InputMaybe<Array<FindClientContactOrderBy> | FindClientContactOrderBy>;
@@ -2275,6 +2295,20 @@ export type CitiesQueryVariables = Exact<{
 
 
 export type CitiesQuery = { __typename?: 'Query', cities: Array<{ __typename?: 'City', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string, department?: { __typename?: 'Department', code: number, createdAt: any, deletedAt?: any | null, id: string, name: string, updatedAt: any } | null }> };
+
+export type ResetPasswordMutationVariables = Exact<{
+  password: Scalars['String'];
+}>;
+
+
+export type ResetPasswordMutation = { __typename?: 'Mutation', resetPassword: { __typename?: 'User', email: string } };
+
+export type SendEmailRecovryPasswordQueryVariables = Exact<{
+  email: Scalars['String'];
+}>;
+
+
+export type SendEmailRecovryPasswordQuery = { __typename?: 'Query', sendEmailRecovryPassword: string };
 
 export type ParametersQueryVariables = Exact<{
   pagination?: InputMaybe<Pagination>;
@@ -2341,7 +2375,7 @@ export type VisitsQueryVariables = Exact<{
 }>;
 
 
-export type VisitsQuery = { __typename?: 'Query', visits: Array<{ __typename?: 'Visit', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, description: string, location?: string | null, dateVisit: string, status: StatusVisitEnum, isProyect: boolean, client: { __typename?: 'Client', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, numberDocument: string, email: string, telefono?: string | null, address?: string | null, type?: TypeClientEnum | null, vertical?: string | null, celular: string, city?: { __typename?: 'City', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, department?: { __typename?: 'Department', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, country?: { __typename?: 'Country', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null }, type: { __typename?: 'VisitType', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, description: string, status: VisitTypeStatusEnum }, user: { __typename?: 'User', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name?: string | null, middleName?: string | null, lastName?: string | null, secondSurname?: string | null, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, dateIssue?: any | null, legalRepresentativeIdentificationType?: UserDocumentTypes | null, legalRepresentativeIdentificationNumber?: string | null, phoneCountryCode?: string | null, phoneNumber?: string | null, address?: string | null, hasRural?: boolean | null, confirmationCode?: string | null, position?: string | null, status: UserStatusTypes, phoneVerification: boolean, emailVerification: boolean, type: UserTypes, fullName: string, userRoles: Array<{ __typename?: 'Role', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, description: string, defaultForType?: UserTypes | null, users?: Array<{ __typename?: 'User', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name?: string | null, middleName?: string | null, lastName?: string | null, secondSurname?: string | null, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, dateIssue?: any | null, legalRepresentativeIdentificationType?: UserDocumentTypes | null, legalRepresentativeIdentificationNumber?: string | null, phoneCountryCode?: string | null, phoneNumber?: string | null, address?: string | null, hasRural?: boolean | null, confirmationCode?: string | null, position?: string | null, status: UserStatusTypes, phoneVerification: boolean, emailVerification: boolean, type: UserTypes, fullName: string }> | null, roleFx: Array<{ __typename?: 'RoleFx', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, permission: string }> }>, userRolesFx: Array<{ __typename?: 'RoleFx', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, permission: string, role?: { __typename?: 'Role', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, description: string, defaultForType?: UserTypes | null } | null }> } }>, visitsCount: { __typename?: 'MetadataPagination', totalItems?: number | null, itemsPerPage?: number | null, totalPages?: number | null, currentPage?: number | null } };
+export type VisitsQuery = { __typename?: 'Query', visits: Array<{ __typename?: 'Visit', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, description: string, location?: string | null, dateVisit: any, status: StatusVisitEnum, isProyect: boolean, client: { __typename?: 'Client', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, numberDocument: string, email: string, telefono?: string | null, address?: string | null, type?: TypeClientEnum | null, vertical?: string | null, celular: string, city?: { __typename?: 'City', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, department?: { __typename?: 'Department', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, country?: { __typename?: 'Country', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null }, type: { __typename?: 'VisitType', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, description: string, status: VisitTypeStatusEnum }, user: { __typename?: 'User', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name?: string | null, middleName?: string | null, lastName?: string | null, secondSurname?: string | null, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, dateIssue?: any | null, legalRepresentativeIdentificationType?: UserDocumentTypes | null, legalRepresentativeIdentificationNumber?: string | null, phoneCountryCode?: string | null, phoneNumber?: string | null, address?: string | null, hasRural?: boolean | null, confirmationCode?: string | null, position?: string | null, status: UserStatusTypes, phoneVerification: boolean, emailVerification: boolean, type: UserTypes, fullName: string, userRoles: Array<{ __typename?: 'Role', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, description: string, defaultForType?: UserTypes | null, users?: Array<{ __typename?: 'User', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name?: string | null, middleName?: string | null, lastName?: string | null, secondSurname?: string | null, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, dateIssue?: any | null, legalRepresentativeIdentificationType?: UserDocumentTypes | null, legalRepresentativeIdentificationNumber?: string | null, phoneCountryCode?: string | null, phoneNumber?: string | null, address?: string | null, hasRural?: boolean | null, confirmationCode?: string | null, position?: string | null, status: UserStatusTypes, phoneVerification: boolean, emailVerification: boolean, type: UserTypes, fullName: string }> | null, roleFx: Array<{ __typename?: 'RoleFx', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, permission: string }> }>, userRolesFx: Array<{ __typename?: 'RoleFx', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, permission: string, role?: { __typename?: 'Role', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, description: string, defaultForType?: UserTypes | null } | null }> } }>, visitsCount: { __typename?: 'MetadataPagination', totalItems?: number | null, itemsPerPage?: number | null, totalPages?: number | null, currentPage?: number | null } };
 
 export type VisitTypesQueryVariables = Exact<{
   orderBy?: InputMaybe<Array<FindVisitTypeOrderBy> | FindVisitTypeOrderBy>;
@@ -2364,7 +2398,7 @@ export type VisitQueryVariables = Exact<{
 }>;
 
 
-export type VisitQuery = { __typename?: 'Query', visit: { __typename?: 'Visit', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, description: string, location?: string | null, dateVisit: string, status: StatusVisitEnum, isProyect: boolean, longitude?: string | null, latitude?: string | null, client: { __typename?: 'Client', id: string, updatedAt: any, deletedAt?: any | null, name: string, numberDocument: string, email: string, telefono?: string | null, address?: string | null, type?: TypeClientEnum | null, vertical?: string | null, celular: string, createdAt: any }, type: { __typename?: 'VisitType', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, description: string, status: VisitTypeStatusEnum } } };
+export type VisitQuery = { __typename?: 'Query', visit: { __typename?: 'Visit', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, description: string, location?: string | null, dateVisit: any, status: StatusVisitEnum, isProyect: boolean, longitude?: string | null, latitude?: string | null, client: { __typename?: 'Client', id: string, updatedAt: any, deletedAt?: any | null, name: string, numberDocument: string, email: string, telefono?: string | null, address?: string | null, type?: TypeClientEnum | null, vertical?: string | null, celular: string, createdAt: any }, type: { __typename?: 'VisitType', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, description: string, status: VisitTypeStatusEnum } } };
 
 export type UpdateVisitTypeMutationVariables = Exact<{
   updateInput: UpdateVisitTypeInput;
@@ -2698,6 +2732,7 @@ export const ClientsDocument = gql`
     address
     type
     vertical
+    descripcion
     celular
     city {
       id
@@ -2782,6 +2817,7 @@ export const ClientDocument = gql`
     type
     vertical
     celular
+    descripcion
     department {
       id
       name
@@ -2935,6 +2971,13 @@ export const VisitComentsDocument = gql`
     id
     description
     createdAt
+    date
+    visit {
+      id
+      client {
+        name
+      }
+    }
   }
 }
     `;
@@ -3285,6 +3328,72 @@ export function useCitiesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Cit
 export type CitiesQueryHookResult = ReturnType<typeof useCitiesQuery>;
 export type CitiesLazyQueryHookResult = ReturnType<typeof useCitiesLazyQuery>;
 export type CitiesQueryResult = Apollo.QueryResult<CitiesQuery, CitiesQueryVariables>;
+export const ResetPasswordDocument = gql`
+    mutation ResetPassword($password: String!) {
+  resetPassword(password: $password) {
+    email
+  }
+}
+    `;
+export type ResetPasswordMutationFn = Apollo.MutationFunction<ResetPasswordMutation, ResetPasswordMutationVariables>;
+
+/**
+ * __useResetPasswordMutation__
+ *
+ * To run a mutation, you first call `useResetPasswordMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useResetPasswordMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [resetPasswordMutation, { data, loading, error }] = useResetPasswordMutation({
+ *   variables: {
+ *      password: // value for 'password'
+ *   },
+ * });
+ */
+export function useResetPasswordMutation(baseOptions?: Apollo.MutationHookOptions<ResetPasswordMutation, ResetPasswordMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ResetPasswordMutation, ResetPasswordMutationVariables>(ResetPasswordDocument, options);
+      }
+export type ResetPasswordMutationHookResult = ReturnType<typeof useResetPasswordMutation>;
+export type ResetPasswordMutationResult = Apollo.MutationResult<ResetPasswordMutation>;
+export type ResetPasswordMutationOptions = Apollo.BaseMutationOptions<ResetPasswordMutation, ResetPasswordMutationVariables>;
+export const SendEmailRecovryPasswordDocument = gql`
+    query sendEmailRecovryPassword($email: String!) {
+  sendEmailRecovryPassword(email: $email)
+}
+    `;
+
+/**
+ * __useSendEmailRecovryPasswordQuery__
+ *
+ * To run a query within a React component, call `useSendEmailRecovryPasswordQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSendEmailRecovryPasswordQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSendEmailRecovryPasswordQuery({
+ *   variables: {
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useSendEmailRecovryPasswordQuery(baseOptions: Apollo.QueryHookOptions<SendEmailRecovryPasswordQuery, SendEmailRecovryPasswordQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SendEmailRecovryPasswordQuery, SendEmailRecovryPasswordQueryVariables>(SendEmailRecovryPasswordDocument, options);
+      }
+export function useSendEmailRecovryPasswordLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SendEmailRecovryPasswordQuery, SendEmailRecovryPasswordQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SendEmailRecovryPasswordQuery, SendEmailRecovryPasswordQueryVariables>(SendEmailRecovryPasswordDocument, options);
+        }
+export type SendEmailRecovryPasswordQueryHookResult = ReturnType<typeof useSendEmailRecovryPasswordQuery>;
+export type SendEmailRecovryPasswordLazyQueryHookResult = ReturnType<typeof useSendEmailRecovryPasswordLazyQuery>;
+export type SendEmailRecovryPasswordQueryResult = Apollo.QueryResult<SendEmailRecovryPasswordQuery, SendEmailRecovryPasswordQueryVariables>;
 export const ParametersDocument = gql`
     query Parameters($pagination: Pagination) {
   parameters(pagination: $pagination) {

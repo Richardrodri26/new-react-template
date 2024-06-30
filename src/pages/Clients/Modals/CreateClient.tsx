@@ -19,7 +19,8 @@ const createClientSchema = z.object({
   type: z.string(),
   email: z.string().email(),
   userId: z.string(),
-  address: z.string()
+  address: z.string(),
+  descripcion: z.string()
   // cityId: z.string()
 })
 
@@ -90,6 +91,7 @@ export const CreateClient = () => {
     celular: "",
     Prueba: "1",
     address: "",
+    descripcion: "",
     userId: ""
   }
 
@@ -113,6 +115,9 @@ export const CreateClient = () => {
           <InputForm name='celular' label={"Telefono celular"} />
           <UserSelect name="userId" label={"Usuario"} placeholder="Selecciona un usuario" />
           {/* <ComboboxForm label={"Prueba"} name='Prueba' options={[{ label: "prueba 1", value: "1" }, { label: "prueba 2", value: "2" }]} /> */}
+        </RowForm>
+        <RowForm>
+          <InputForm name='descripcion' label={"Descripcion"} />
         </RowForm>
 
         <ButtonForm>

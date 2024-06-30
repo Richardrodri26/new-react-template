@@ -11,7 +11,6 @@ import { z } from "zod";
 export const createClientContactSchema = z.object({
 
   celular: z.string(),
-  clientId: z.string(),
   email: z.string().email(),
   name: z.string(),
   position: z.string(),
@@ -22,7 +21,7 @@ export const createClientContactSchema = z.object({
 export type createClientContactSchemaType = z.infer<typeof createClientContactSchema>;
 
 
-export const CreateClientContact = () => {
+export const CreateClientContact = ({id}: {id: string}) => {
   const [createMutation] = useCreateClientContactMutation()
   const [setModalStatus] = useShallowGeneralStore(state => [state.setModalStatus])
 
@@ -33,6 +32,7 @@ export const CreateClientContact = () => {
         variables: {
           createInput: {
             ...data,
+            clientId: id
           }
         }
       });
@@ -85,14 +85,14 @@ export const CreateClientContact = () => {
           <InputForm name='celular' label={"Celular"} />
           {/* <InputForm name='numberDocument' label={"Numero de documento"} /> */}
           <InputForm name='telefono' label={"Telefono"} />
+          <InputForm name='position' label={"Cargo"} />
 
         </RowForm>
 
         <RowForm>
           {/* <PositionsSelect name="position" placeholder="Selecciona una posicion" /> */}
-          <InputForm name='position' label={"Posicion"} />
 
-          <ClientSelect name="clientId" label={"Cliente"} placeholder="Selecciona un cliente" />
+          {/* <ClientSelect name="clientId" label={"Cliente"} placeholder="Selecciona un cliente" /> */}
 
         </RowForm>
 

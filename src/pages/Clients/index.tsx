@@ -93,7 +93,7 @@ export const ClientsEditPage = () => {
       apolloClient.cache.evict({ fieldName: "clients" })
 
       setModalStatus()
-      navigate(-1)
+      // navigate(-1)
 
 
     } catch (error) {
@@ -117,6 +117,7 @@ export const ClientsEditPage = () => {
     celular: clientData?.celular,
     userId: clientData?.user?.id,
     address: clientData?.address,
+    descripcion: clientData?.descripcion,
     Prueba: "1",
   }
 
@@ -162,6 +163,10 @@ export const ClientsEditPage = () => {
           <UserSelect name="userId" label={"Usuario"} placeholder="Selecciona un usuario" />
           {/* <ComboboxForm label={"Prueba"} name='Prueba' options={[{ label: "prueba 1", value: "1" }, { label: "prueba 2", value: "2" }]} /> */}
         </RowForm>
+        <RowForm>
+        <InputForm name='descripcion' label={"Descripción"} />
+
+        </RowForm>
         <ButtonForm>
           Actualizar
         </ButtonForm>
@@ -169,10 +174,14 @@ export const ClientsEditPage = () => {
       <CardTitle >
           Contacto Cliente
         </CardTitle>
+        <br />
         <OnlyContactClientsPage id={id || ""}/>
+        <br />
+
         <CardTitle >
           Visitas
         </CardTitle>
+        <br />
         <DataTableVisits isLoading={!data && loading} columns={visitsColumns as any} data={data?.visits || []} />
         <PaginationTable skipState={{ value: skip, setValue: setSkip }} metaDataPagination={data?.visitsCount as MetadataPagination} takeValue={takeValue} />
       </div>

@@ -19,12 +19,13 @@ export const ContactClientsPage = ({ id }: { id: string }) => {
   return (
     <>
       <ContactClientsGrid id={id} />
-      <ClientContactModals />
+      <ClientContactModals id={id} />
     </>
   )
 }
 
 export const OnlyContactClientsPage = ({ id }: { id: string }) => {
+  console.log("OnlyContactClientsPage", id)
   return (
     <>
       <ContactClientsGrid id={id} />
@@ -92,8 +93,7 @@ const ContactClientsGrid = ({ id }: { id: string }) => {
   })
 
   const onCreateModal = () => {
-    setModalStatus({ id: "createClientContact" })
-
+    setModalStatus({ id: "createClientContact", content: {idClient: id}})
   }
 
   const clients = (data?.clientContacts || []) as ClientContact[];
@@ -107,6 +107,9 @@ const ContactClientsGrid = ({ id }: { id: string }) => {
           Crear contacto
         </span>
       </Button>
+      <br />
+      <br />
+      
       <DataTableVisits isLoading={!data && loading} columns={clientsContactsColumns as any} data={clients} />
       <PaginationTable skipState={{ value: skip, setValue: setSkip }} metaDataPagination={data?.clientContactsCount as MetadataPagination} takeValue={takeValue} />
     </>
@@ -125,6 +128,7 @@ export const ClientWithForm = ({ id }: { id: string }) => {
         variables: {
           createInput: {
             ...data,
+            clientId: id
           }
         }
       });

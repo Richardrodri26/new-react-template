@@ -23,7 +23,7 @@ const updateClientContactSchema = z.object({
 type updateClientContactSchemaType = z.infer<typeof updateClientContactSchema>;
 
 
-export const UpdateClientContact = () => {
+export const UpdateClientContact = ({id}: {id: string}) => {
   const [updateMutation] = useUpdateClientContactMutation()
   const [setModalStatus, modalStatus] = useShallowGeneralStore(state => [state.setModalStatus, state.modalStatus])
 
@@ -37,7 +37,8 @@ export const UpdateClientContact = () => {
         variables: {
           updateInput: {
             id: contactClientId,
-            ...data
+            ...data,
+           clientId: id 
           }
         }
       });
@@ -107,7 +108,7 @@ export const UpdateClientContact = () => {
         <RowForm>
           {/* <PositionsSelect name="position" placeholder="Selecciona una posicion" /> */}
           <InputForm name='position' label={"Posicion"} />
-          <ClientSelect name="clientId" label={"Cliente"} placeholder="Selecciona un cliente" />
+          {/* <ClientSelect name="clientId" label={"Cliente"} placeholder="Selecciona un cliente" /> */}
 
         </RowForm>
 

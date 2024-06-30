@@ -137,7 +137,7 @@ export const UpdateUser = () => {
         </RowForm>
 
         <ButtonForm>
-          Crear
+          Actualizar
         </ButtonForm>
       </BasicFormProviderZod>
     </>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useVisitComentsQuery } from '@/domain/graphql';
+import { VisitComent, useVisitComentsQuery } from '@/domain/graphql';
 import { format } from 'date-fns';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'; // Importamos componentes de React Tabs
 import 'react-tabs/style/react-tabs.css'; // Estilos básicos de React Tabs
@@ -13,20 +13,11 @@ const tipoComentario = {
 
 const estadoComentario = {
   CANCELED: { label: 'Cancelado', color: '#ff0000' },
-  PENDING: { label: 'Pendiente', color: '#ffa500' },
+  PENDINIG: { label: 'Pendiente', color: '#ffa500' },
   REALIZED: { label: 'Realizado', color: '#008000' },
+  notColor: null
 };
 
-interface VisitComment {
-  type: keyof typeof tipoComentario; // Tipo de comentario como una de las claves de tipoComentario
-  createdAt: Date;
-  id: string;
-  user: {
-    name: string;
-  };
-  description: string;
-  status: keyof typeof estadoComentario; // Estado de comentario como una de las claves de estadoComentario
-}
 
 interface VisitCommentsProps {
   visitId: string;
@@ -49,7 +40,7 @@ const VisitComments: React.FC<VisitCommentsProps> = ({ visitId }) => {
   const { visitComents } = data;
 
   // Agrupamos los comentarios por tipo
-  const groupedComments: { [key in keyof typeof tipoComentario]: VisitComment[] } = {
+  const groupedComments: { [key in keyof typeof tipoComentario]: VisitComent[] } = {
     COMMITMENTS: [],
     RESULTS: [],
   };
@@ -73,7 +64,7 @@ const VisitComments: React.FC<VisitCommentsProps> = ({ visitId }) => {
               <Card
                 key={comment.id}
                 className="border border-gray-200 rounded-lg shadow-md"
-                style={{ borderColor: estadoComentario[comment.status]?.color || '' }}
+                style={{ borderColor: estadoComentario[comment?.status || "notColor"]?.color || '' }}
               >
                 <CardContent>
                   <div className="flex justify-between items-center mb-2">
@@ -82,8 +73,11 @@ const VisitComments: React.FC<VisitCommentsProps> = ({ visitId }) => {
                       {format(new Date(comment.createdAt), 'dd/MM/yyyy HH:mm')}
                     </span>
                   </div>
-                  <CardDescription className="text-gray-700 mb-2">{estadoComentario[comment.status]?.label || ''}</CardDescription>
+                  <CardDescription className="text-gray-700 mb-2">{estadoComentario[comment?.status || "notColor"]?.label || ''}</CardDescription>
                   <CardDescription className="text-gray-600">{comment.description}</CardDescription>
+                  {comment.type == "COMMITMENTS" ? <span className="text-sm text-gray-500">
+                      fecha de vencimiento: {format(new Date(comment.date), 'dd/MM/yyyy HH:mm')}
+                  </span> : <></> }
                 </CardContent>
               </Card>
             ))}

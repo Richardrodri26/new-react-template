@@ -44,12 +44,12 @@ export function LoginPage() {
 
             <InputForm name="password" type="password" label={<div className="flex items-center">
                 <Label htmlFor="password">Contraseña</Label>
-                <a
+                {/* <a
                   href="/forgot-password"
                   className="ml-auto inline-block text-sm underline"
                 >
                   ¿Olvidaste tu contraseña?
-                </a>
+                </a> */}
               </div>} />
 
             <ButtonForm className="w-full">

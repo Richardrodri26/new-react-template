@@ -4,17 +4,19 @@ import { CreateClientContact } from "./CreateClientContact";
 import { UpdateClientContact } from "./UpdateClientContact";
 
 
-export const ClientContactModals = () => {
+export const ClientContactModals = ({id}: {id?: string}) => {
   const modalStatus = useGeneral(s => s.modalStatus);
 
   const modalId = modalStatus?.id
+  const idClient = modalStatus?.content?.idClient
+
   return (
     <ModalContent>
 
       {(
         {
-          "createClientContact": <CreateClientContact />,
-          "updateClientContact": <UpdateClientContact />
+          "createClientContact": <CreateClientContact id={idClient || ""} />,
+          "updateClientContact": <UpdateClientContact id={idClient || ""} />
         }[modalId || ""] || <></>
       )}
 

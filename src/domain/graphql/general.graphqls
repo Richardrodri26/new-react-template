@@ -27,3 +27,13 @@ query Cities($departmentId: ID) {
     }
   }
 }
+
+mutation ResetPassword($password: String!) {
+  resetPassword(password: $password) {
+    email
+  }
+}
+
+query sendEmailRecovryPassword($email: String!) {
+  sendEmailRecovryPassword(email: $email)
+}

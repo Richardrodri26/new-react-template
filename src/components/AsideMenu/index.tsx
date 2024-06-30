@@ -18,8 +18,13 @@ const asideMenuItems: IAsideMenuItem[] = [
     icon: <MapPinIcon className="h-5 w-5" />
   },
   {
-    title: "Calendario",
+    title: "Calendario de visitas",
     url: "/dashboard/calendar",
+    icon: <Calendar className="h-5 w-5"></Calendar>
+  },
+  {
+    title: "Calendario de compromisos",
+    url: "/dashboard/calendar2",
     icon: <Calendar className="h-5 w-5"></Calendar>
   },
   {
@@ -32,11 +37,11 @@ const asideMenuItems: IAsideMenuItem[] = [
     url: "/dashboard/users",
     icon: <Users2 className="h-5 w-5" />
   },
-  {
-    title: "Contactos",
-    url: "/dashboard/contactsClient",
-    icon: <Users className="h-5 w-5" />
-  },
+  // {
+  //   title: "Contactos",
+  //   url: "/dashboard/contactsClient",
+  //   icon: <Users className="h-5 w-5" />
+  // },
   {
     title: "Tipo de visita",
     url: "/dashboard/typeVisit",

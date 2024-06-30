@@ -13,8 +13,11 @@ const columnHelperUsers = createColumnHelper<User>();
 
 
 export const usersColumns = [
-  columnHelperUsers.accessor("name", {
-    header: "Usuarios"
+  columnHelperUsers.accessor("lastName", {
+    header: "Usuarios",
+    cell: ({ row }) => (
+      <span>{`${row.original.name} ${row.original?.lastName || ""}`}</span>
+    )
   }),
   columnHelperUsers.accessor("phoneNumber", {
     header: "Número de telefono"

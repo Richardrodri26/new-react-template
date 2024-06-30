@@ -106,19 +106,13 @@ export const CreateParameter = () => {
           />
           <InputForm name='descripcion' label={"Descripción"} />
           {/* Ejemplo de campo condicional para 'Número' */}
-          {type === TypeParameterEnum.Number && (
-            <InputForm name='valueInt' label={"Valor Número"} type='number' />
-          )}
 
-          {/* Ejemplo de campo condicional para 'Texto' */}
-          {type === TypeParameterEnum.String && (
-            <InputForm name='valueString' label={"Valor Texto"} />
-          )}
+        </RowForm>
 
-          {/* Ejemplo de campo condicional para 'Fecha' */}
-          {type === TypeParameterEnum.Date && (
-            <InputDateForm name='valueDate' label={"Valor Fecha"} />
-          )}
+        <RowForm>
+          <InputForm name='valueInt' label={"Valor Número"} type='number' />
+          <InputForm name='valueString' label={"Valor Texto"} />
+          <InputDateForm name='valueDate' label={"Valor Fecha"} />
         </RowForm>
 
         <ButtonForm>

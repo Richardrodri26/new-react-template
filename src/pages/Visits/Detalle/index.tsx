@@ -6,6 +6,7 @@ import { PlusCircle } from 'lucide-react';
 import { useVisitQuery } from '@/domain/graphql';
 import LocationMap from '@/components/Utils/googelMaps';
 import VisitComments from './ComentVisit';
+import dayjs from 'dayjs';
 
 
 export const VisitDetailPage: React.FC = () => {
@@ -58,7 +59,7 @@ export const VisitDetailPage: React.FC = () => {
           <div className="grid grid-cols-3 gap-4 mb-6">
             <div>
               <label className="block text-gray-700 text-sm font-bold mb-2">Fecha</label>
-              <p className="text-gray-900">{visit.dateVisit}</p>
+              <p className="text-gray-900">{dayjs(visit.dateVisit).format("YYYY-MM-DD HH:mm:ss")}</p>
             </div>
             <div>
               <label className="block text-gray-700 text-sm font-bold mb-2">Estado</label>
@@ -84,11 +85,11 @@ export const VisitDetailPage: React.FC = () => {
         </div>
         {visit.status === 'confirmed' ? (
           <div className="p-6 text-center">
-            <button
-              onClick={handleStartVisit}
+            <button disabled={true}
+              // onClick={handleStartVisit}
               className="bg-blue-500 text-white px-4 py-2 rounded"
             >
-              Realizar Visita
+              No ha realizado la visita
             </button>
           </div>
         ) : (

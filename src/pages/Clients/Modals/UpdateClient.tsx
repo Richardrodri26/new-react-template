@@ -26,7 +26,9 @@ export const createClientSchema = z.object({
   email: z.string().email(),
   address: z.string(),
   cityId: z.string(),
-  departmentId: z.string()
+  departmentId: z.string(),
+  userId: z.string(),
+  descripcion: z.string().optional()
 })
 
 export type createClientSchemaType = z.infer<typeof createClientSchema>;
@@ -118,6 +120,7 @@ export const UpdateClient = () => {
     celular: modalStatusContent?.celular,
     userId: modalStatusContent?.user?.id,
     address: modalStatusContent?.address,
+    descripcion: modalStatusContent?.descripcion,
     Prueba: "1",
   }
 
@@ -142,6 +145,10 @@ export const UpdateClient = () => {
           <InputForm name='celular' label={"Telefono celular"} />
           <UserSelect name="userId" label={"Usuario"} placeholder="Selecciona un usuario" />
           {/* <ComboboxForm label={"Prueba"} name='Prueba' options={[{ label: "prueba 1", value: "1" }, { label: "prueba 2", value: "2" }]} /> */}
+        </RowForm>
+        <RowForm>
+        <InputForm name='descripcion' label={"Descripcion"} />
+
         </RowForm>
         <ButtonForm>
           Actualizar

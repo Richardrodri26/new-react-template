@@ -3,10 +3,12 @@ import { ClientsEditPage, ClientsPage, ContactClientsPage, HomePage, LoginPage, 
 import ReportsPage from "@/pages/Reports";
 import { VisitDetailPage } from "@/pages/Visits/Detalle";
 import CalendarPage from "@/pages/calendar";
+import CalendarPage2 from "@/pages/calendar2";
 import {ConfirmEmailPage} from "@/pages/public/ConfirmEmail";
+import { ForgotPasswordPage } from "@/pages/public/ConfirmEmail/forgot-password";
+import {ResetPasswordPage} from "@/pages/public/ConfirmEmail/resetPassword";
 import { TypeVistPage } from "@/pages/typeVisit";
 import { createBrowserRouter } from "react-router-dom";
-
 
 export const appRouter = createBrowserRouter([
   {
@@ -51,6 +53,10 @@ export const appRouter = createBrowserRouter([
         element: <CalendarPage/>
       },
       {
+        path: "calendar2",
+        element: <CalendarPage2/>
+      },
+      {
         path: "visit/:id", // Ruta para el detalle de la visita con su ID
         element: <VisitDetailPage />,
       },
@@ -72,5 +78,13 @@ export const appRouter = createBrowserRouter([
         element: <ConfirmEmailPage></ConfirmEmailPage>
       }
     ]
+  }, 
+  {
+    path: '/resetPassword/:token',
+    element: <ResetPasswordPage/>
+  },
+  {
+    path: 'forgot-password',
+    element: <ForgotPasswordPage/>
   }
 ])
