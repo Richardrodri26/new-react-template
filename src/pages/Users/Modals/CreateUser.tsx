@@ -8,7 +8,8 @@ import { UserDocumentTypes, UserTypes, useCreateClientMutation, useCreateUserMut
 import { useShallowGeneralStore } from '@/domain/store/general.store'
 import { ToastyErrorGraph } from '@/lib/utils'
 import { apolloClient } from '@/main.config'
-import React from 'react'
+import { Eye, EyeOff } from 'lucide-react'
+import React, { useState } from 'react'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
@@ -19,7 +20,9 @@ const createUserSchema = z.object({
   identificationType: z.string(),
   lastName: z.string(),
   name: z.string(),
-  password: z.string(),
+  password: z.string().min(8, 'La contraseña debe tener al menos 8 caracteres')
+  .regex(/[A-Z]/, 'La contraseña debe tener al menos una letra mayúscula')
+  .regex(/[@$!%*?&]/, 'La contraseña debe tener al menos un carácter especial'),
   phoneNumber: z.string(),
   type: z.string(),
 })
@@ -59,7 +62,7 @@ const typesUserOptions: { key: string; value: string | number }[] = [
 export const CreateUser = () => {
   const [createUser] = useCreateUserMutation();
   const [setModalStatus] = useShallowGeneralStore(state => [state.setModalStatus])
-
+  const [showPassword, setShowPassword] = useState(false);
   const onSubmit = async (data: createUserSchemaType) => {
 
     try {
@@ -123,7 +126,17 @@ export const CreateUser = () => {
           <SelectForm name='type' label={"Tipo de usuario"} options={typesUserOptions} placeholder='Selecciona un tipo de usuario' />
 
           <InputForm name='address' label={"Dirección del usuario"} />
-          <InputForm name='password' label={"Contraseña del usuario"} />
+          <InputForm name="password" label="Nueva contraseña" type={showPassword ? "text" : "password"} />
+              <span
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                      cursor: "pointer",
+                      display: 'flex',
+                      alignItems: 'center'
+                  }}
+              >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </span>
 
         </RowForm>
 

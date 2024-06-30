@@ -1,3 +1,5 @@
+import { Button } from '@/components/ui/button';
+import dayjs from 'dayjs';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -91,10 +93,10 @@ const ModalInfoCalendar: React.FC<ModalProps> = ({ title, date, description, id,
     onClose();
   };
   const handleGo = () =>{
-    handleClose()
     const navigate = useNavigate(); 
     let path = `/dashboard/visit/${id}`; 
-    navigate(path);
+
+    // handleClose()
   }
   if(id == "") return
   return (
@@ -105,11 +107,11 @@ const ModalInfoCalendar: React.FC<ModalProps> = ({ title, date, description, id,
           <span className="close" style={{ cursor: 'pointer', fontSize: '2rem' }} onClick={handleClose}>&times;</span>
         </div>
         <div className="modal-body" style={modalBodyStyle}>
-          <p><strong>Fecha:</strong> {date}</p>
+          <p><strong>Fecha:</strong> {dayjs(date).format("YYYY-MM-DD HH:mm")}</p>
           <p><strong>Descripción:</strong> {description}</p>
         </div>
         <div className="modal-footer" style={modalFooterStyle}>
-          {/* <button className="button" style={buttonStyle} onClick={handleGo()}>Ir a la visita</button> */}
+          <Button className="button" style={buttonStyle} onClick={()=>    window.location.href = `/dashboard/visit/${id}`}>Ir a la visita</Button>
           {/* <button className="button" style={closeButtonStyle} onClick={handleClose}>Cerrar</button> */}
         </div>
       </div>

@@ -15,6 +15,8 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { publicGraph } from "@/domain/api.config";
+import { gql } from "@apollo/client";
 
 const passwordSchema = z.object({
     password: z.string().min(8, 'La contraseña debe tener al menos 8 caracteres')
@@ -28,17 +30,26 @@ export const ResetPasswordPage = () => {
     const { token } = useParams<{ token: string }>();
     const [resetPasswordMutation] = useResetPasswordMutation();
     const [showPassword, setShowPassword] = useState(false);
-
+    const ResetPasswordDocument = gql`
+        mutation ResetPassword($password: String!) {
+    resetPassword(password: $password) {
+        email
+    }
+    }
+        `
     const onSubmit = async (data: PasswordForm) => {
         try {
             toast.info("Actualizando contraseña...");
-            const resMutation = await resetPasswordMutation({
-                variables: {
-                    password: data.password
-                },
-            });
+            publicGraph.setHeader("Authorization", "Bearer " + token!)
+            const response = await publicGraph.request(ResetPasswordDocument,{
+                password: data.password
+            }) as any
+            // return response
+            // const resMutation = await resetPasswordMutation({
 
-            if (resMutation.errors) {
+            // });
+
+            if (response["errors"]) {
                 toast.error("¡Oops, hubo un error!");
                 return;
             }

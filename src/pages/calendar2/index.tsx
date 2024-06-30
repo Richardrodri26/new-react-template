@@ -69,7 +69,7 @@ const CalendarPage2: React.FC = () => {
         id: coment.id,
         idVisit: coment?.visit?.id,
         title: coment?.visit?.client?.name || "",
-        date: coment.date,
+        date: dayjs(coment.date).format("YYYY-MM-DD HH:mm"),
         description: coment.description, // Agrega la descripción del evento si está disponible
         backgroundColor: colorCalendat(coment.status) // Asegurar formato ISO 8601
       }));
@@ -86,8 +86,8 @@ const CalendarPage2: React.FC = () => {
 
   const eventClick = (arg: any) => {
     const clickedEvent = events.find(event => event.id === arg.event.id);
-    let confi = confirm(clickedEvent?.description)
-    if (clickedEvent && confi) {
+    // let confi = confirm(clickedEvent?.description)
+    if (clickedEvent) {
       setSelectedEvent(clickedEvent);
       setModalOpen(true); // Abre el modal después de seleccionar el evento
     }
@@ -193,7 +193,7 @@ const CalendarPage2: React.FC = () => {
       </CardFooter>
       <ModalInfoCalendar
         title={selectedEvent?.title || ''}
-        date={selectedEvent?.date || ''}
+        date={selectedEvent?.date|| ''}
         description={selectedEvent?.description || ''}
         onClose={handleCloseModal}
         isOpen={modalOpen}
