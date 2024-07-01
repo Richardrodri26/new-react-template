@@ -1,11 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { User, useRemoveUserMutation } from "@/domain/graphql";
 import { fireAlert, useShallowGeneralStore } from "@/domain/store/general.store";
 import { ToastyErrorGraph } from "@/lib/utils";
 import { apolloClient } from "@/main.config";
 import { createColumnHelper } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Trash, User as UserIcon } from "lucide-react";
 import { toast } from "sonner";
 
 
@@ -68,23 +69,42 @@ export const usersColumns = [
       }
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              aria-haspopup="true"
-              size="icon"
-              variant="ghost"
-            >
-              <MoreHorizontal className="h-4 w-4" />
-              <span className="sr-only">Toggle menu</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-            <DropdownMenuItem onClick={onEditUser}>Editar usuario</DropdownMenuItem>
-            <DropdownMenuItem onClick={onRemoveUser}>Eliminar usuario</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <>
+         <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger> <UserIcon onClick={onEditUser} /></TooltipTrigger>
+              <TooltipContent>
+                <p>Editar usuario</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger> <Trash className="text-red-500" onClick={onRemoveUser} /></TooltipTrigger>
+              <TooltipContent>
+                <p>Eliminar usuario</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </>
+        // <DropdownMenu>
+        //   <DropdownMenuTrigger asChild>
+        //     <Button
+        //       aria-haspopup="true"
+        //       size="icon"
+        //       variant="ghost"
+        //     >
+        //       <MoreHorizontal className="h-4 w-4" />
+        //       <span className="sr-only">Toggle menu</span>
+        //     </Button>
+        //   </DropdownMenuTrigger>
+        //   <DropdownMenuContent align="end">
+        //     <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+        //     <DropdownMenuItem onClick={onEditUser}>Editar usuario</DropdownMenuItem>
+        //     <DropdownMenuItem onClick={onRemoveUser}>Eliminar usuario</DropdownMenuItem>
+        //   </DropdownMenuContent>
+        // </DropdownMenu>
       )
     }
   })

@@ -1,11 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { User, VisitType, useRemoveUserMutation, useRemoveVisitTypeMutation } from "@/domain/graphql";
 import { fireAlert, useShallowGeneralStore } from "@/domain/store/general.store";
 import { ToastyErrorGraph } from "@/lib/utils";
 import { apolloClient } from "@/main.config";
 import { createColumnHelper } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "sonner";
 
 
@@ -65,23 +66,35 @@ export const TypeVisitColumns = [
       }
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              aria-haspopup="true"
-              size="icon"
-              variant="ghost"
-            >
-              <MoreHorizontal className="h-4 w-4" />
-              <span className="sr-only">Toggle menu</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-            {/* <DropdownMenuItem onClick={onEditUser}>Editar tipo de visita</DropdownMenuItem> */}
-            <DropdownMenuItem onClick={onRemoveTypeVisit}>Eliminar tipo de visita</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <>
+         <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger> <Trash onClick={onRemoveTypeVisit} /></TooltipTrigger>
+              <TooltipContent>
+                <p>Eliminar tipo de visita</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+                 
+        </>
+        // <DropdownMenu>
+        //   <DropdownMenuTrigger asChild>
+        //     <Button
+        //       aria-haspopup="true"
+        //       size="icon"
+        //       variant="ghost"
+        //     >
+        //       <MoreHorizontal className="h-4 w-4" />
+        //       <span className="sr-only">Toggle menu</span>
+        //     </Button>
+        //   </DropdownMenuTrigger>
+        //   <DropdownMenuContent align="end">
+        //     <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+        //     {/* <DropdownMenuItem onClick={onEditUser}>Editar tipo de visita</DropdownMenuItem> */}
+        //     <DropdownMenuItem onClick={onRemoveTypeVisit}>Eliminar tipo de visita</DropdownMenuItem>
+        //   </DropdownMenuContent>
+        // </DropdownMenu>
       )
     }
   })

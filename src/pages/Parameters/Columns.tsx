@@ -1,12 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Parameter, useRemoveParameterMutation } from "@/domain/graphql";
 import useGeneral, { fireAlert } from "@/domain/store/general.store";
 import { ToastyErrorGraph } from "@/lib/utils";
 import { apolloClient } from "@/main.config";
 import { createColumnHelper } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Settings, Trash } from "lucide-react";
 import { toast } from "sonner";
 
 
@@ -77,23 +78,44 @@ export const parametersColumns = [
       }
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              aria-haspopup="true"
-              size="icon"
-              variant="ghost"
-            >
-              <MoreHorizontal className="h-4 w-4" />
-              <span className="sr-only">Toggle menu</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-            <DropdownMenuItem onClick={onEdit}>Editar</DropdownMenuItem>
-            <DropdownMenuItem onClick={onRemoveParameter}>Eliminar</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex items-center gap-2">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger> <Settings onClick={onEdit} /></TooltipTrigger>
+              <TooltipContent>
+                <p>Editar</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger> <Trash className="text-red-500" onClick={onRemoveParameter} /></TooltipTrigger>
+              <TooltipContent>
+                <p>Eliminar</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+        </div>
+        
+        // <DropdownMenu>
+        //   <DropdownMenuTrigger asChild>
+        //     <Button
+        //       aria-haspopup="true"
+        //       size="icon"
+        //       variant="ghost"
+        //     >
+        //       <MoreHorizontal className="h-4 w-4" />
+        //       <span className="sr-only">Toggle menu</span>
+        //     </Button>
+        //   </DropdownMenuTrigger>
+        //   <DropdownMenuContent align="end">
+        //     <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+        //     <DropdownMenuItem onClick={onEdit}>Editar</DropdownMenuItem>
+        //     <DropdownMenuItem onClick={onRemoveParameter}>Eliminar</DropdownMenuItem>
+        //   </DropdownMenuContent>
+        // </DropdownMenu>
       )
     }
   })

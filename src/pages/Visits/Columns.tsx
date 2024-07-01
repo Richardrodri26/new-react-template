@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Visit } from "@/domain/graphql";
 import { createColumnHelper } from '@tanstack/react-table'
-import { MoreHorizontal } from "lucide-react";
+import { Eye, MoreHorizontal } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const columnHelperVisits = createColumnHelper<Visit>();
@@ -37,23 +38,37 @@ export const visitsColumns = [
         navigate(path);
       }
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              aria-haspopup="true"
-              size="icon"
-              variant="ghost"
-            >
-              <MoreHorizontal className="h-4 w-4" />
-              <span className="sr-only">Toggle menu</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={onClickShowDetail}>Ver detalle</DropdownMenuItem>
-            {/* <DropdownMenuItem>Delete</DropdownMenuItem> */}
-          </DropdownMenuContent>
-        </DropdownMenu>
+
+        <div className="flex items-center gap-2">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger> <Eye onClick={onClickShowDetail} /></TooltipTrigger>
+              <TooltipContent>
+                <p>Ver detalle</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+       
+
+        </div>
+        // <DropdownMenu>
+        //   <DropdownMenuTrigger asChild>
+        //     <Button
+        //       aria-haspopup="true"
+        //       size="icon"
+        //       variant="ghost"
+        //     >
+        //       <MoreHorizontal className="h-4 w-4" />
+        //       <span className="sr-only">Toggle menu</span>
+        //     </Button>
+        //   </DropdownMenuTrigger>
+        //   <DropdownMenuContent align="end">
+        //     <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        //     <DropdownMenuItem onClick={onClickShowDetail}>Ver detalle</DropdownMenuItem>
+        //     {/* <DropdownMenuItem>Delete</DropdownMenuItem> */}
+        //   </DropdownMenuContent>
+        // </DropdownMenu>
       )
     }
   })
