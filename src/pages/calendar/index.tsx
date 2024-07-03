@@ -71,7 +71,7 @@ const CalendarPage: React.FC = () => {
     if (!loading && data?.visits) {
       const formattedEvents = data.visits.map((visit) => ({
         id: visit.id,
-        title: visit.client.name + " / " + visit.user.name,
+        title: visit.user.name + " - " + visit.client.name,
         date: dayjs(visit.dateVisit).format('YYYY-MM-DDTHH:mm:ss'),
         description: visit.description, // Agrega la descripción del evento si está disponible
         backgroundColor: colorCalendat(visit.status) // Asegurar formato ISO 8601
@@ -105,19 +105,18 @@ const CalendarPage: React.FC = () => {
   };
 
   const refesh = (id: string) => {
-    refetch({
-      where: {
-        dateVisit: {
-          _between: [firstDay, lastDay]
-        },
-        user: {
-          _eq: id
-        }
+    const where =  {
+      dateVisit: {
+        _between: [firstDay, lastDay]
       },
-      pagination: {
-        skip: 0,
-        take: 999999
+      user: {
+        _eq: id
       }
+    }
+    /*@ts-ignore*/
+    if(id == "TODOS") delete where.user
+    refetch({
+      where
     });
   };
 
@@ -156,14 +155,15 @@ const CalendarPage: React.FC = () => {
           </select>
         </div> */}
 
-        <Label htmlFor='user'>Selecciona un usuario:</Label>
+        <Label htmlFor='user' className='text-center text-2xl font-bold'>Selecciona un usuario:</Label>
         <Select value={selectedItem} onValueChange={value => {setSelectedItem(value); refesh(value)}}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[280px]">
             <SelectValue placeholder="usuario" />
           </SelectTrigger>
           <SelectContent>
+          <SelectItem key={"TODOS"} value='TODOS'>Seleccionar todos</SelectItem>
             {users.map((user) => (
-              <SelectItem key={user.id} value={user.id}>{user.name}</SelectItem>
+              <SelectItem key={user.id} value={user.id}>{`${user.name} ${user.lastName || ""}`.toLocaleUpperCase()}</SelectItem>
             ))}
 
           </SelectContent>
@@ -175,7 +175,7 @@ const CalendarPage: React.FC = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Calendario</CardTitle>
+        <CardTitle className='text-center text-4xl font-bold'>Calendario de visitas</CardTitle>
         <CardDescription>
           <UserSelect />
         </CardDescription>

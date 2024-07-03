@@ -68,7 +68,7 @@ const CalendarPage2: React.FC = () => {
       const formattedEvents = data.visitComents.map((coment) => ({
         id: coment.id,
         idVisit: coment?.visit?.id,
-        title: coment?.visit?.client?.name || "",
+        title: coment.user.name + " - " + coment?.visit?.client?.name || "",
         date: dayjs(coment.date).format("YYYY-MM-DD HH:mm"),
         description: coment.description, // Agrega la descripción del evento si está disponible
         backgroundColor: colorCalendat(coment.status) // Asegurar formato ISO 8601
@@ -103,18 +103,21 @@ const CalendarPage2: React.FC = () => {
   };
 
   const refesh = (id: string) => {
-    refetch({
-      where: {
-        user: {
-          _eq: id
-        },
-        type: {
-          _contains: VisitComentTypeEnum.Commitments
-        },
-        date: {
-          _between: [firstDay, lastDay]
-        }
+    const where = {
+      user: {
+        _eq: id
       },
+      type: {
+        _contains: VisitComentTypeEnum.Commitments
+      },
+      date: {
+        _between: [firstDay, lastDay]
+      }
+    }
+    /*@ts-ignore*/
+    if(id == "TODOS") delete where.user
+    refetch({
+      where
     });
   };
 
@@ -153,14 +156,15 @@ const CalendarPage2: React.FC = () => {
           </select>
         </div> */}
 
-        <Label htmlFor='user'>Selecciona un usuario:</Label>
+        <Label htmlFor='user' className='text-center text-2xl font-bold'>Selecciona un usuario:</Label>
         <Select value={selectedItem} onValueChange={value => {setSelectedItem(value); refesh(value)}}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[280px]">
             <SelectValue placeholder="usuario" />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem key={"TODOS"} value='TODOS'>Seleccionar todos</SelectItem>
             {users.map((user) => (
-              <SelectItem key={user.id} value={user.id}>{user.name}</SelectItem>
+                <SelectItem key={user.id} value={user.id}>{`${user.name} ${user.lastName || ""}`.toLocaleUpperCase()}</SelectItem>
             ))}
 
           </SelectContent>
@@ -172,7 +176,7 @@ const CalendarPage2: React.FC = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Calendario de compromisos</CardTitle>
+        <CardTitle className='text-center text-4xl font-bold'>Calendario de compromisos</CardTitle>
         <CardDescription>
           <UserSelect />
         </CardDescription>

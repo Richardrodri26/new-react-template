@@ -3,7 +3,7 @@ import { Package2, Home, ShoppingCart, Package, Users2, LineChart, Settings, Goa
 import { Fragment } from "react/jsx-runtime";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface IAsideMenuItem {
   title: string;
@@ -13,8 +13,13 @@ interface IAsideMenuItem {
 
 const asideMenuItems: IAsideMenuItem[] = [
   {
+    title: "Reportes",
+    url: "/dashboard/reports",
+    icon: <Home className="h-5 w-5" />
+  },
+  {
     title: "Visitas",
-    url: "/dashboard",
+    url: "/dashboard/visit",
     icon: <MapPinIcon className="h-5 w-5" />
   },
   {
@@ -47,26 +52,20 @@ const asideMenuItems: IAsideMenuItem[] = [
     url: "/dashboard/typeVisit",
     icon: <Bolt className="h-5 w-5"></Bolt>
   },
-  
-  {
-    title: "Reportes",
-    url: "/dashboard/reports",
-    icon: <LineChart className="h-5 w-5" />
-  },
 ]
 
 export const AsideMenu = () => {
-
+  const navigate = useNavigate()
   return (
     <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
-        <a
-          href="#"
+        {/* <a
+          onClick={()=> navigate("/reports")}
           className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
         >
           <Home className="h-4 w-4 transition-all group-hover:scale-110" />
           <span className="sr-only">Seller</span>
-        </a>
+        </a> */}
         {
           asideMenuItems.map((item) => (
             <Fragment key={item.url}>

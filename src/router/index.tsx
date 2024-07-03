@@ -20,12 +20,16 @@ export const appRouter = createBrowserRouter([
     path: "/dashboard",
     element: <AppGuardLayout />,
     children: [
+      {
+        path: "reports", // Ruta para el detalle de la visita con su ID
+        element: <ReportsPage />,
+      },
       // {
       //   path: "",
       //   element: <HomePage />
       // }
       {
-        path: "",
+        path: "visit",
         element: <VisitsPage />
       },
       {
@@ -63,11 +67,7 @@ export const appRouter = createBrowserRouter([
       {
         path: "contactsClient", // Ruta para el detalle de la visita con su ID
         element: <ContactClientsPage id="" />,
-      },
-      {
-        path: "reports", // Ruta para el detalle de la visita con su ID
-        element: <ReportsPage />,
-      },
+      }
     ]
   },
   {
