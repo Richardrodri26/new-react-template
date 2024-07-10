@@ -4,11 +4,13 @@ import { Search } from 'lucide-react'
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '@/components/ui/breadcrumb'
 import { Input } from '@/components/ui/input'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { AsideMenuMobile } from '@/components'
+import { AsideMenuMobile, BasicFormProviderZod, ButtonForm } from '@/components'
 import { Link, useNavigate } from 'react-router-dom'
 import useGeneral from '@/domain/store/general.store'
 import { useEffect, useState } from 'react'
 import { useDebounceCallback } from '@/hooks'
+import { DepartmentAndMunicipality } from '@/composables/DepartmentAndMunicipality'
+import { z } from 'zod'
 
 export const ClientsHeader = ({ callback }: { callback: (searchValue: string) => Promise<void> }) => {
   const navigate = useNavigate();
@@ -48,7 +50,9 @@ export const ClientsHeader = ({ callback }: { callback: (searchValue: string) =>
 
         </BreadcrumbList>
       </Breadcrumb>
+      <div className="ml-auto flex items-center gap-2">
 
+      </div>
       <div className="relative ml-auto flex-1 md:grow-0">
         <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
         <Input

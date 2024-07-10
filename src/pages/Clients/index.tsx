@@ -25,6 +25,7 @@ import { apolloClient } from '@/main.config'
 import { ToastyErrorGraph } from '@/lib/utils'
 import { visitsColumns } from '../Visits/Columns'
 import { ClientContactModals } from '../ContactClients/Modals'
+import { z } from 'zod'
 
 export const ClientsPage = () => {
   return (
@@ -206,6 +207,9 @@ const ClientsGrid = () => {
 
 
   const [skip, setSkip] = useState(0)
+  const [city, setCity] = useState('')
+  const [department, setDepartment] = useState('')
+
   const takeValue = 10
   const { data, loading, refetch } = useClientsQuery({
     variables: {
@@ -219,8 +223,8 @@ const ClientsGrid = () => {
     }
   })
 
-  const onSearchCallback = async (searchValue: string) => {
-    refetch({
+  const onSearchCallback = async (searchValue: string, cityId?: string, departmentId?: string) => {
+    let  where = {
       pagination: {
         skip: 0,
         take: takeValue
@@ -238,15 +242,48 @@ const ClientsGrid = () => {
               _contains:  searchValue || "" 
             }
           }
-        ]
+        ],
+      },
+      city: undefined,
+      department: undefined
+    }
+    if((city && department)){
+      /*@ts-ignore*/
+      delete where.where._or
+      /*@ts-ignore*/
+      delete where.pagination
+      /*@ts-ignore*/
+      where.where.city = {
+        _eq: cityId
       }
-    })
+      /*@ts-ignore*/
+      where.where.department ={
+        _eq: departmentId
+      }
+    }
+    refetch(where)
   }
 
   const onCreateModal = () => {
     setModalStatus({ id: "createClient" })
 
   }
+  const findClientSchema = z.object({
+    departmentId: z.string(),
+    cityId: z.string()
+  })
+  
+  type findClientSchemaType = z.infer<typeof findClientSchema>;
+  const onSubmitFilter = (data: findClientSchemaType) => {
+    setCity(data.cityId)
+    setDepartment(data.departmentId)
+    onSearchCallback("", data.cityId, data.departmentId)
+  }
+  const defaultValueFilter = {
+    cityId: undefined,
+    department: undefined
+  }
+
 
   const clients = (data?.clients || []) as Client[];
 
@@ -307,6 +344,19 @@ const ClientsGrid = () => {
                 <CardTitle>Clientes</CardTitle>
                 <CardDescription>
                   Gestiona tus clientes.
+                  <BasicFormProviderZod submit={onSubmitFilter} schema={findClientSchema} className='dashboard-05-chunk-0'>
+                  <RowForm>
+                  <DepartmentAndMunicipality currentIdDepartment='departmentId' currentIdMunicipalities='cityId' />
+                  <ButtonForm className='dashboard-06-chunk-0'>
+                    Filtrar
+                  </ButtonForm>
+                  </RowForm>
+                </BasicFormProviderZod>
+                <Button className='dashboard-05-chunk-2' onClick={() => {
+                  setDepartment('')
+                  setCity('')
+                  onSearchCallback("")
+                }}>Borrar filtro</Button>
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -317,7 +367,7 @@ const ClientsGrid = () => {
 
 
 
-                <PaginationTable skipState={{ value: skip, setValue: setSkip }} metaDataPagination={data?.clientsCount as MetadataPagination} takeValue={takeValue} />
+                { !city && !department ? <PaginationTable skipState={{ value: skip, setValue: setSkip }} metaDataPagination={data?.clientsCount as MetadataPagination} takeValue={takeValue} /> : <></> }
 
               </CardFooter>
             </Card>

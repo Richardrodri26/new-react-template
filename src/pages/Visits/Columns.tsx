@@ -1,7 +1,8 @@
+import { STATUSVISITCHANGSPANISH } from "@/components/Utils/status";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Visit } from "@/domain/graphql";
+import { StatusVisitEnum, Visit } from "@/domain/graphql";
 import { createColumnHelper } from '@tanstack/react-table'
 import { Eye, MoreHorizontal } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -26,7 +27,10 @@ export const visitsColumns = [
   }),
 
   columnHelperVisits.accessor("status", {
-    header: "Estado"
+    header: "Estado",
+    cell: (info) => {
+      return STATUSVISITCHANGSPANISH(info.row.original.status)
+    }
   }),
 
   columnHelperVisits.display({

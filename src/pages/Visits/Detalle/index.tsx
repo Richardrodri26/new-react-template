@@ -7,6 +7,7 @@ import { useVisitQuery } from '@/domain/graphql';
 import LocationMap from '@/components/Utils/googelMaps';
 import VisitComments from './ComentVisit';
 import dayjs from 'dayjs';
+import { STATUSVISITCHANGSPANISH } from '@/components/Utils/status';
 
 
 export const VisitDetailPage: React.FC = () => {
@@ -63,7 +64,7 @@ export const VisitDetailPage: React.FC = () => {
             </div>
             <div>
               <label className="block text-gray-700 text-sm font-bold mb-2">Estado</label>
-              <p className="text-gray-900">{visit.status}</p>
+              <p className="text-gray-900">{STATUSVISITCHANGSPANISH(visit.status)}</p>
             </div>
             <div>
               <label className="block text-gray-700 text-sm font-bold mb-2">Descripción</label>

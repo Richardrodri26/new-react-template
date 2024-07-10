@@ -431,6 +431,8 @@ export type FindClientOrderBy = {
 export type FindClientWhere = {
   _and?: InputMaybe<Array<FindClientWhere>>;
   _or?: InputMaybe<Array<FindClientWhere>>;
+  city?: InputMaybe<StringFilter>;
+  department?: InputMaybe<StringFilter>;
   name?: InputMaybe<StringFilter>;
   numberDocument?: InputMaybe<StringFilter>;
   user?: InputMaybe<StringFilter>;
