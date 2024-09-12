@@ -13,7 +13,18 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const columnHelperVisits = createColumnHelper<Visit>();
-
+const change = async (id: string, status: StatusVisitEnum) => {
+  const [confirmVisitMutation] = useAcceptOrDeclineVisitMutation({
+    variables: {
+      updateStatusInput: {
+          id: id,
+          status: status,
+          token: ""
+        }
+      }
+  })
+  return await confirmVisitMutation()
+}
 export const visitsPendingColumns = [
   columnHelperVisits.accessor("client.name", {
     header: "Cliente"
@@ -42,51 +53,76 @@ export const visitsPendingColumns = [
     id: "Acciones",
     header: "Acciones",
     cell: (info) => {
-      const navigate = useNavigate(); 
-      const  changeStatus  = async (status: StatusVisitEnum) => {
-        const alertRes = await fireAlert({
-            type: "warning",
-            title: `Cambiar a ${status === StatusVisitEnum.Confirmed ? 'CONFIRMADO' : 'CANCELADO'}`,
-            description: `¿Estas seguro que quieres cambiar a ${status === StatusVisitEnum.Confirmed ? 'CONFIRMADO' : 'CANCELADO'}?`,
-            showCancelButton: true,
-          })
-          if(alertRes){
-            const [confirmVisitMutation] = useAcceptOrDeclineVisitMutation()
-            try {
-                toast.info("Actualizando datos...")
-                const resMutation = await confirmVisitMutation({
-                    variables: {
-                    updateStatusInput: {
-                        id: info.row.original.id,
-                        status: status,
-                        token: ""
-                      }
-                    }
-                });  
-                if(resMutation.errors){
-                    toast.error("¡Oops, hubo un error!")
-                    return
-                }
-                toast.success("Actualizado con exito")
-                
-              apolloClient.cache.evict({ fieldName: "visitPending" })
-            } catch (error) {
-                ToastyErrorGraph(error as any) 
+      const [confirmVisitMutation] = useAcceptOrDeclineVisitMutation({
+        variables: {
+          updateStatusInput: {
+              id: info.row.original.id,
+              status: StatusVisitEnum.Confirmed,
+              token: ""
             }
           }
+      })
+      const [canceldVisitMutation] = useAcceptOrDeclineVisitMutation({
+        variables: {
+          updateStatusInput: {
+              id: info.row.original.id,
+              status: StatusVisitEnum.Canceled,
+              token: ""
+            }
+          }
+      })
+      const  changeStatusCanceled  = async () => {
+        const alertRes = await fireAlert({
+            type: "warning",
+            title: `Cambiar a CANCELADO`,
+            description: `¿Estas seguro que quieres cambiar a CANCELADO?`,
+            showCancelButton: true,
+          })
+        if(alertRes){
+          toast.info("Actualizando datos...")
+          try{
+            const resMutation = await canceldVisitMutation()
+            toast.success("Actualizado con exito")
+            apolloClient.cache.evict({ fieldName: "visitPending" })
+
+          }catch(error){
+            ToastyErrorGraph(error as any)
+            return
+          }   
         }
+      }
+      const  changeStatusConfirmed  = async () => {
+        const alertRes = await fireAlert({
+            type: "warning",
+            title: `Cambiar a CONFIRMADO`,
+            description: `¿Estas seguro que quieres cambiar a CONFIRMADO?`,
+            showCancelButton: true,
+          })
+        if(alertRes){
+          toast.info("Actualizando datos...")
+          try{
+            const resMutation = await confirmVisitMutation()
+            toast.success("Actualizado con exito")
+            
+            apolloClient.cache.evict({ fieldName: "visitPending" })
+          }catch (error){
+            ToastyErrorGraph(error as any)
+            return
+          }
+        }
+      }
       return (
 
         <div className="flex items-center gap-2">
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger> <CircleCheckBig onClick={ () => changeStatus(StatusVisitEnum.Confirmed)} /></TooltipTrigger>
+              <TooltipTrigger> <CircleCheckBig onClick={changeStatusConfirmed} /></TooltipTrigger>
               <TooltipContent>
                 <p>ACEPTAR</p>
               </TooltipContent>
             </Tooltip>
             <Tooltip>
-              <TooltipTrigger> <CircleX onClick={ () => changeStatus(StatusVisitEnum.Canceled)} /></TooltipTrigger>
+              <TooltipTrigger> <CircleX onClick={changeStatusCanceled} /></TooltipTrigger>
               <TooltipContent>
                 <p>CANCELAR</p>
               </TooltipContent>
