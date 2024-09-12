@@ -232,3 +232,9 @@ mutation UpdateVisit($updateInput: UpdateVisitInput!) {
 mutation AcceptOrDeclineVisit($updateStatusInput: UpdateStatusInput!) {
   acceptOrDeclineVisit(UpdateStatusInput: $updateStatusInput)
 }
+
+mutation CreateVisitComent($createInput: CreateVisitComentInput!) {
+  createVisitComent(createInput: $createInput) {
+    id
+  }
+}

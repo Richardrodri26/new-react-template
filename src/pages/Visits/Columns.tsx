@@ -4,6 +4,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { StatusVisitEnum, Visit } from "@/domain/graphql";
 import { createColumnHelper } from '@tanstack/react-table'
+import dayjs from "dayjs";
 import { Eye, MoreHorizontal } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -17,7 +18,12 @@ export const visitsColumns = [
   columnHelperVisits.accessor("user.name", {
     header: "Usuario"
   }),
-
+  columnHelperVisits.accessor("dateVisit", {
+    header: "Fecha",
+    cell: (info) => {
+      return dayjs(info.row.original.dateVisit).format("YYYY-MM-DD HH:mm:ss")
+    }
+  }),
   columnHelperVisits.accessor("description", {
     header: "Descripción"
   }),

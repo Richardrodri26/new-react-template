@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
+import timeGridPlugin from "@fullcalendar/timegrid";
 import dayjs from 'dayjs';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { OrderTypes, StatusVisitEnum, useUsersQuery, useVisitsQuery } from '@/domain/graphql';
+import { OrderTypes, StatusVisitEnum, useUpdateVisitMutation, useUsersQuery, useVisitsQuery } from '@/domain/graphql';
 import ModalInfoCalendar from './modal/info.modal';
 import { UserSelect } from '../Clients/Modals/CreateClient';
 import { BasicFormProviderZod } from '@/components';
 import { useNavigate } from 'react-router-dom';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
+import { ToastyErrorGraph } from '@/lib/utils';
+import { toast } from 'sonner';
 
 interface Event {
   id: string;
@@ -25,7 +29,7 @@ const CalendarPage: React.FC = () => {
   const [currentMonth, setCurrentMonth] = useState<dayjs.Dayjs>(initialMonth);
   const [modalOpen, setModalOpen] = useState(false); // Estado para controlar la visibilidad del modal
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null); // Estado para almacenar detalles del evento seleccionado
-
+  const [updateDateVisit] = useUpdateVisitMutation();
   const getFirstAndLastDayOfMonth = (date: dayjs.Dayjs, initial = false) => {
     const firstDay = date.startOf(initial ? 'years' : 'month').format('YYYY-MM-DD');
     const lastDay = date.endOf(initial ? 'years' : 'month').format('YYYY-MM-DD');
@@ -94,7 +98,43 @@ const CalendarPage: React.FC = () => {
       setModalOpen(true); // Abre el modal después de seleccionar el evento
     }
   };
-
+  const handleEventDrop =  (info: any) => {
+    const newDate = dayjs(info.event.start); // La nueva fecha seleccionada
+    const currentDate = dayjs();
+  
+    // Validar si la nueva fecha es pasada
+    // if (newDate.isBefore(currentDate)) {
+    //   alert("No puedes seleccionar una fecha pasada.");
+    //   info.revert(); // Revertir el evento a su fecha original
+    //   return;
+    // }
+    try {
+      updateDateVisit({
+        variables: {
+          updateInput: {
+            id: info.event.id,
+            dateVisit: newDate,
+            status: StatusVisitEnum.Reprogrammed
+          }
+        }
+      }).then(() => {
+        toast.success("Actualizado con éxito");
+      }).catch((err) => {
+        ToastyErrorGraph(err as any);
+      });
+    }catch(error){
+      ToastyErrorGraph(error as any)
+      return
+    } 
+  
+    // Actualizar el estado o hacer cualquier lógica de guardado
+    const updatedEvents = events.map(event => 
+      event.id === info.event.id 
+        ? { ...event, date: newDate.format('YYYY-MM-DDTHH:mm:ss') } 
+        : event
+    );
+    setEvents(updatedEvents);
+  };
   const handleCloseModal = () => {
     setModalOpen(false); // Cierra el modal
   };
@@ -142,6 +182,7 @@ const CalendarPage: React.FC = () => {
       const selectedUserId = event.target.value;
       refesh(selectedUserId);
     };
+    
 
     return (
       <>
@@ -182,13 +223,21 @@ const CalendarPage: React.FC = () => {
       </CardHeader>
       <CardContent>
         <FullCalendar
-          plugins={[dayGridPlugin]}
+          plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]} // Agrega los plugins necesarios
           initialView="dayGridMonth"
+          headerToolbar={{
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay' // Configura las vistas disponibles
+          }}
           height="auto"
           eventClick={eventClick}
+          editable={true}
           events={events}
           selectable={true}
+          locale={'es'}
           datesSet={handleDatesSet}
+          eventDrop={handleEventDrop} 
         />
       </CardContent>
       <CardFooter>

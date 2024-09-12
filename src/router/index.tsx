@@ -2,6 +2,7 @@ import { AppGuardLayout, MainLayout } from "@/components/Layouts";
 import { ClientsEditPage, ClientsPage, ContactClientsPage, HomePage, LoginPage, ParametersPage, UsersPage, VisitsPage } from "@/pages";
 import ReportsPage from "@/pages/Reports";
 import { VisitDetailPage } from "@/pages/Visits/Detalle";
+import { HomeBlog } from "@/pages/blog";
 import CalendarPage from "@/pages/calendar";
 import CalendarPage2 from "@/pages/calendar2";
 import {ConfirmEmailPage} from "@/pages/public/ConfirmEmail";
@@ -9,7 +10,6 @@ import { ForgotPasswordPage } from "@/pages/public/ConfirmEmail/forgot-password"
 import {ResetPasswordPage} from "@/pages/public/ConfirmEmail/resetPassword";
 import { TypeVistPage } from "@/pages/typeVisit";
 import { createBrowserRouter } from "react-router-dom";
-
 export const appRouter = createBrowserRouter([
   {
     path: "/",

@@ -26,6 +26,7 @@ import { ToastyErrorGraph } from '@/lib/utils'
 import { visitsColumns } from '../Visits/Columns'
 import { ClientContactModals } from '../ContactClients/Modals'
 import { z } from 'zod'
+import { TIPOS_VERTICALES } from '@/components/Utils/vertical'
 
 export const ClientsPage = () => {
   return (
@@ -119,6 +120,7 @@ export const ClientsEditPage = () => {
     userId: clientData?.user?.id,
     address: clientData?.address,
     descripcion: clientData?.descripcion,
+    vertical: clientData?.vertical,
     Prueba: "1",
   }
 
@@ -155,6 +157,7 @@ export const ClientsEditPage = () => {
           <InputForm name='numberDocument' label={"Número de documento"} />
           <InputForm name='address' label={"Dirrecion"} />
           <SelectForm options={typeClientOptions} name={'type'} placeholder='Selecciona una opción' label={"Tipo de cliente"} />
+          <SelectForm options={TIPOS_VERTICALES} name={'vertical'} placeholder='Selecciona una opción' label={"Tipo de vertical"} />
         </RowForm>
 
         <RowForm>

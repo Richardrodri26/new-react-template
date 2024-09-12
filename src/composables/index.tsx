@@ -320,7 +320,7 @@ export const InputDateForm = ({
                 selected={field.value}
                 onSelect={field.onChange}
                 disabled={(date) =>
-                  date > new Date() || date < new Date("1900-01-01")
+                  date > new Date() || date < new Date("1900-01-01 00:00:00")
                 }
                 initialFocus
               />
@@ -334,6 +334,77 @@ export const InputDateForm = ({
   );
 };
 
+interface InputDateTimeFormInterface {
+  name: string;
+  className?: string;
+  description?: string;
+  label: string;
+}
+export const InputDateTimeForm: React.FC<InputDateTimeFormInterface> = ({
+  name,
+  className,
+  description,
+  label,
+}) => {
+  const { control, trigger, setValue, resetField } = useFormContext();
+
+  return (
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => {
+        const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+          const newDate = e.target.value;
+          const time = field.value ? dayjs(field.value).format('HH:mm') : '00:00';
+          const newDateTime = `${newDate}T${time}`;
+          field.onChange(newDateTime);
+        };
+
+        const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+          const newTime = e.target.value;
+          const date = field.value ? dayjs(field.value).format('YYYY-MM-DD') : dayjs().format('YYYY-MM-DD');
+          const newDateTime = `${date}T${newTime}`;
+          field.onChange(newDateTime);
+        };
+
+        const handleClear = () => {
+          setValue(name, undefined, { shouldValidate: true });
+          resetField(name);
+        };
+
+        return (
+          <FormItem className={cn("flex flex-1 flex-col", className)}>
+            <FormLabel>{label}</FormLabel>
+            <FormControl>
+              <div className="flex items-center space-x-2">
+                <input
+                  type="date"
+                  value={field.value ? dayjs(field.value).format('YYYY-MM-DD') : ''}
+                  onChange={handleDateChange}
+                  className="form-input w-full"
+                />
+                <input
+                  type="time"
+                  value={field.value ? dayjs(field.value).format('HH:mm') : ''}
+                  onChange={handleTimeChange}
+                  className="form-input w-full"
+                />
+                {field.value && (
+                  <Trash2
+                    onClick={handleClear}
+                    className="ml- h-4 w-4 opacity-50 hover:stroke-red-900 cursor-pointer"
+                  />
+                )}
+              </div>
+            </FormControl>
+            <FormDescription>{description}</FormDescription>
+            <FormMessage />
+          </FormItem>
+        );
+      }}
+    />
+  );
+};
 interface IComboboxFormInterface extends InputFormBasicType {
   options: { value: string; label: string }[];
 }
