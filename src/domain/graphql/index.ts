@@ -2438,6 +2438,13 @@ export type AcceptOrDeclineVisitMutationVariables = Exact<{
 
 export type AcceptOrDeclineVisitMutation = { __typename?: 'Mutation', acceptOrDeclineVisit: string };
 
+export type CreateVisitComentMutationVariables = Exact<{
+  createInput: CreateVisitComentInput;
+}>;
+
+
+export type CreateVisitComentMutation = { __typename?: 'Mutation', createVisitComent: { __typename?: 'VisitComent', id: string } };
+
 export const UserFragmentFragmentDoc = gql`
     fragment userFragment on User {
   id
@@ -4245,3 +4252,36 @@ export function useAcceptOrDeclineVisitMutation(baseOptions?: Apollo.MutationHoo
 export type AcceptOrDeclineVisitMutationHookResult = ReturnType<typeof useAcceptOrDeclineVisitMutation>;
 export type AcceptOrDeclineVisitMutationResult = Apollo.MutationResult<AcceptOrDeclineVisitMutation>;
 export type AcceptOrDeclineVisitMutationOptions = Apollo.BaseMutationOptions<AcceptOrDeclineVisitMutation, AcceptOrDeclineVisitMutationVariables>;
+export const CreateVisitComentDocument = gql`
+    mutation CreateVisitComent($createInput: CreateVisitComentInput!) {
+  createVisitComent(createInput: $createInput) {
+    id
+  }
+}
+    `;
+export type CreateVisitComentMutationFn = Apollo.MutationFunction<CreateVisitComentMutation, CreateVisitComentMutationVariables>;
+
+/**
+ * __useCreateVisitComentMutation__
+ *
+ * To run a mutation, you first call `useCreateVisitComentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateVisitComentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createVisitComentMutation, { data, loading, error }] = useCreateVisitComentMutation({
+ *   variables: {
+ *      createInput: // value for 'createInput'
+ *   },
+ * });
+ */
+export function useCreateVisitComentMutation(baseOptions?: Apollo.MutationHookOptions<CreateVisitComentMutation, CreateVisitComentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateVisitComentMutation, CreateVisitComentMutationVariables>(CreateVisitComentDocument, options);
+      }
+export type CreateVisitComentMutationHookResult = ReturnType<typeof useCreateVisitComentMutation>;
+export type CreateVisitComentMutationResult = Apollo.MutationResult<CreateVisitComentMutation>;
+export type CreateVisitComentMutationOptions = Apollo.BaseMutationOptions<CreateVisitComentMutation, CreateVisitComentMutationVariables>;
