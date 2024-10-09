@@ -257,6 +257,7 @@ export type CreateUserInput = {
   position?: InputMaybe<Scalars['String']>;
   secondSurname?: InputMaybe<Scalars['String']>;
   type: UserTypes;
+  typeWoker?: InputMaybe<TypeWorker>;
 };
 
 export type CreateVisitComentInput = {
@@ -1823,6 +1824,11 @@ export enum TypeParameterEnum {
   String = 'string'
 }
 
+export enum TypeWorker {
+  Externo = 'externo',
+  Interno = 'interno'
+}
+
 export type UpdateClientContactInput = {
   celular?: InputMaybe<Scalars['String']>;
   clientId?: InputMaybe<Scalars['String']>;
@@ -1996,6 +2002,7 @@ export type UpdateUserInput = {
   position?: InputMaybe<Scalars['String']>;
   secondSurname?: InputMaybe<Scalars['String']>;
   type?: InputMaybe<UserTypes>;
+  typeWoker?: InputMaybe<TypeWorker>;
 };
 
 export type UpdateUserPasswordInput = {
@@ -2063,6 +2070,7 @@ export type User = {
   secondSurname?: Maybe<Scalars['String']>;
   status: UserStatusTypes;
   type: UserTypes;
+  typeWoker?: Maybe<TypeWorker>;
   updatedAt: Scalars['DateTime'];
   userRoles: Array<Role>;
   userRolesFx: Array<RoleFx>;
@@ -2347,7 +2355,7 @@ export type UsersQueryVariables = Exact<{
 }>;
 
 
-export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name?: string | null, middleName?: string | null, lastName?: string | null, secondSurname?: string | null, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, dateIssue?: any | null, legalRepresentativeIdentificationType?: UserDocumentTypes | null, legalRepresentativeIdentificationNumber?: string | null, phoneCountryCode?: string | null, phoneNumber?: string | null, address?: string | null, hasRural?: boolean | null, confirmationCode?: string | null, position?: string | null, status: UserStatusTypes, phoneVerification: boolean, emailVerification: boolean, type: UserTypes, fullName: string, city?: { __typename?: 'City', id: string, name: string } | null, department?: { __typename?: 'Department', id: string, name: string } | null, country?: { __typename?: 'Country', id: string, name: string } | null, userRoles: Array<{ __typename?: 'Role', id: string, name: string }>, userRolesFx: Array<{ __typename?: 'RoleFx', id: string }> }>, usersCount: { __typename?: 'MetadataPagination', currentPage?: number | null, itemsPerPage?: number | null, totalItems?: number | null, totalPages?: number | null } };
+export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name?: string | null, middleName?: string | null, lastName?: string | null, secondSurname?: string | null, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, dateIssue?: any | null, legalRepresentativeIdentificationType?: UserDocumentTypes | null, legalRepresentativeIdentificationNumber?: string | null, phoneCountryCode?: string | null, phoneNumber?: string | null, address?: string | null, hasRural?: boolean | null, confirmationCode?: string | null, position?: string | null, status: UserStatusTypes, phoneVerification: boolean, emailVerification: boolean, type: UserTypes, typeWoker?: TypeWorker | null, fullName: string, city?: { __typename?: 'City', id: string, name: string } | null, department?: { __typename?: 'Department', id: string, name: string } | null, country?: { __typename?: 'Country', id: string, name: string } | null, userRoles: Array<{ __typename?: 'Role', id: string, name: string }>, userRolesFx: Array<{ __typename?: 'RoleFx', id: string }> }>, usersCount: { __typename?: 'MetadataPagination', currentPage?: number | null, itemsPerPage?: number | null, totalItems?: number | null, totalPages?: number | null } };
 
 export type CreateUserMutationVariables = Exact<{
   createInput: CreateUserInput;
@@ -3610,6 +3618,7 @@ export const UsersDocument = gql`
     phoneVerification
     emailVerification
     type
+    typeWoker
     city {
       id
       name

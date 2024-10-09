@@ -1,5 +1,6 @@
 import { AppGuardLayout, MainLayout } from "@/components/Layouts";
 import { ClientsEditPage, ClientsPage, ContactClientsPage, HomePage, LoginPage, ParametersPage, UsersPage, VisitsPage } from "@/pages";
+import { CommissionsPage } from "@/pages/Commissions";
 import ReportsPage from "@/pages/Reports";
 import { VisitDetailPage } from "@/pages/Visits/Detalle";
 import CalendarPage from "@/pages/calendar";
@@ -67,6 +68,10 @@ export const appRouter = createBrowserRouter([
       {
         path: "contactsClient", // Ruta para el detalle de la visita con su ID
         element: <ContactClientsPage id="" />,
+      },
+      {
+        path: "commissions", // Ruta para el detalle de la visita con su ID
+        element: <CommissionsPage/>,
       }
     ]
   },

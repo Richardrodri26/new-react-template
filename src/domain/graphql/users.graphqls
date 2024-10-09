@@ -24,6 +24,7 @@ query Users($orderBy: [FindUsersOrderBy!], $where: FindUsersWhere, $pagination: 
     phoneVerification
     emailVerification
     type
+    typeWoker
     city {
       id
       name
