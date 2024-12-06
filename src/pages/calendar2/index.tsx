@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
+import timeGridPlugin from "@fullcalendar/timegrid";
 import dayjs from 'dayjs';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { OrderTypes, StatusVisitEnum, VisitComentStatusEnum, VisitComentTypeEnum, useUsersQuery, useVisitComentsQuery, useVisitsQuery } from '@/domain/graphql';
+import { OrderTypes, VisitComentStatusEnum, VisitComentTypeEnum, useUsersQuery, useVisitComentsQuery } from '@/domain/graphql';
 import ModalInfoCalendar from './modal/info.modal';
-import { UserSelect } from '../Clients/Modals/CreateClient';
-import { BasicFormProviderZod } from '@/components';
-import { useNavigate } from 'react-router-dom';
+import DateSelectModal from './modal/DateModal';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 
@@ -24,8 +24,10 @@ const initialMonth = dayjs(); // Mes inicial actual
 const CalendarPage2: React.FC = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [currentMonth, setCurrentMonth] = useState<dayjs.Dayjs>(initialMonth);
-  const [modalOpen, setModalOpen] = useState(false); // Estado para controlar la visibilidad del modal
+  const [modalOpen, setModalOpen] = useState(false); // Estado para controlar la visibilidad del modal de evento
+  const [dateModalOpen, setDateModalOpen] = useState(false); // Estado para controlar la visibilidad del modal de fecha
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null); // Estado para almacenar detalles del evento seleccionado
+  const [selectedDate, setSelectedDate] = useState<Date>(); // Estado para almacenar la fecha seleccionada
 
   const getFirstAndLastDayOfMonth = (date: dayjs.Dayjs, initial = false) => {
     const firstDay = date.startOf(initial ? 'years' : 'month').format('YYYY-MM-DD');
@@ -33,7 +35,7 @@ const CalendarPage2: React.FC = () => {
     return { firstDay, lastDay };
   };
 
-  const [selectedItem, setSelectedItem] = useState<string>("")
+  const [selectedItem, setSelectedItem] = useState<string>("");
 
   const colorCalendat = (status?: VisitComentStatusEnum | null): string => {
     switch (status) {
@@ -68,7 +70,7 @@ const CalendarPage2: React.FC = () => {
       const formattedEvents = data.visitComents.map((coment) => ({
         id: coment.id,
         idVisit: coment?.visit?.id,
-        title: coment?.visit?.client?.name || "",
+        title: coment.user.name + " - " + coment?.visit?.client?.name || "",
         date: dayjs(coment.date).format("YYYY-MM-DD HH:mm"),
         description: coment.description, // Agrega la descripción del evento si está disponible
         backgroundColor: colorCalendat(coment.status) // Asegurar formato ISO 8601
@@ -86,35 +88,42 @@ const CalendarPage2: React.FC = () => {
 
   const eventClick = (arg: any) => {
     const clickedEvent = events.find(event => event.id === arg.event.id);
-    // let confi = confirm(clickedEvent?.description)
     if (clickedEvent) {
       setSelectedEvent(clickedEvent);
       setModalOpen(true); // Abre el modal después de seleccionar el evento
     }
   };
 
-  const handleCloseModal = () => {
-    setModalOpen(false); // Cierra el modal
+  const handleDateClick = (dateInfo: DateClickArg) => {
+    console.log("index", dateInfo.date)
+    setSelectedDate(dateInfo.date); // Almacena la fecha seleccionada
+    setDateModalOpen(true); // Abre el nuevo modal
   };
 
-  const handleGo = (id: string) => {
+  const handleCloseEventModal = () => {
+    setModalOpen(false); // Cierra el modal de evento
+  };
 
-    // Lógica para redirigir o realizar alguna acción cuando se hace clic en "Ir"
+  const handleCloseDateModal = () => {
+    setDateModalOpen(false); // Cierra el modal de fecha
   };
 
   const refesh = (id: string) => {
-    refetch({
-      where: {
-        user: {
-          _eq: id
-        },
-        type: {
-          _contains: VisitComentTypeEnum.Commitments
-        },
-        date: {
-          _between: [firstDay, lastDay]
-        }
+    const where = {
+      user: {
+        _eq: id
       },
+      type: {
+        _contains: VisitComentTypeEnum.Commitments
+      },
+      date: {
+        _between: [firstDay, lastDay]
+      }
+    }
+    /*@ts-ignore*/
+    if(id == "TODOS") delete where.user
+    refetch({
+      where
     });
   };
 
@@ -136,33 +145,18 @@ const CalendarPage2: React.FC = () => {
 
     const users = data.users; // Ajusta según la estructura real de tu respuesta GraphQL
 
-    const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-      const selectedUserId = event.target.value;
-      refesh(selectedUserId);
-    };
-
     return (
       <>
-        {/* <div>
-          <label>Select a User:</label>
-          <select onChange={handleChange}>
-            <option value="">Select a user...</option>
-            {users.map((user) => (
-              <option key={user.id} value={user.id}>{user.name}</option>
-            ))}
-          </select>
-        </div> */}
-
-        <Label htmlFor='user'>Selecciona un usuario:</Label>
+        <Label htmlFor='user' className='text-center text-2xl font-bold'>Selecciona un usuario:</Label>
         <Select value={selectedItem} onValueChange={value => {setSelectedItem(value); refesh(value)}}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[280px]">
             <SelectValue placeholder="usuario" />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem key={"TODOS"} value='TODOS'>Seleccionar todos</SelectItem>
             {users.map((user) => (
-              <SelectItem key={user.id} value={user.id}>{user.name}</SelectItem>
+                <SelectItem key={user.id} value={user.id}>{`${user.name} ${user.lastName || ""}`.toLocaleUpperCase()}</SelectItem>
             ))}
-
           </SelectContent>
         </Select>
       </>
@@ -172,32 +166,44 @@ const CalendarPage2: React.FC = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Calendario de compromisos</CardTitle>
+        <CardTitle className='text-center text-4xl font-bold'>Calendario de compromisos</CardTitle>
         <CardDescription>
           <UserSelect />
         </CardDescription>
       </CardHeader>
       <CardContent>
         <FullCalendar
-          plugins={[dayGridPlugin]}
+          plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]} // Agrega los plugins necesarios
           initialView="dayGridMonth"
+          headerToolbar={{
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay' // Configura las vistas disponibles
+          }}
           height="auto"
           eventClick={eventClick}
-          events={events}
+          dateClick={handleDateClick} // Utiliza dateClick para manejar el clic en las fechas
           selectable={true}
+          events={events}
           datesSet={handleDatesSet}
+          locale={'es'}
         />
       </CardContent>
       <CardFooter>
         {/* Puedes agregar contenido adicional al footer si es necesario */}
       </CardFooter>
       <ModalInfoCalendar
-        title={selectedEvent?.title || ''}
-        date={selectedEvent?.date|| ''}
+        title={selectedEvent?.title || 'Evento'}
+        date={selectedEvent?.date || selectedDate?.toDateString() || ''}
         description={selectedEvent?.description || ''}
-        onClose={handleCloseModal}
+        onClose={handleCloseEventModal}
         isOpen={modalOpen}
         id={selectedEvent?.idVisit || ""}
+      />
+      <DateSelectModal
+        isOpen={dateModalOpen}
+        onClose={handleCloseDateModal}
+        selectedDate={selectedDate || new Date()}
       />
     </Card>
   );

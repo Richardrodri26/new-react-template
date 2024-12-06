@@ -4,7 +4,7 @@ import { BasicFormProviderZod, ButtonForm, RowForm } from '@/components'
 import { DialogHeader } from '@/components/ui/dialog'
 import { ComboboxForm, InputForm, SelectForm } from '@/composables'
 import { DepartmentAndMunicipality } from '@/composables/DepartmentAndMunicipality'
-import { User, UserDocumentTypes, UserTypes, useCreateClientMutation, useCreateUserMutation, useUpdateUserMutation } from '@/domain/graphql'
+import { TypeWorker, User, UserDocumentTypes, UserTypes, useCreateClientMutation, useCreateUserMutation, useUpdateUserMutation } from '@/domain/graphql'
 import { useShallowGeneralStore } from '@/domain/store/general.store'
 import { ToastyErrorGraph } from '@/lib/utils'
 import { apolloClient } from '@/main.config'
@@ -22,6 +22,7 @@ const createUserSchema = z.object({
   // password: z.string(),
   phoneNumber: z.string(),
   type: z.string(),
+  typeWoker: z.string().optional()
 })
 
 type createUserSchemaType = z.infer<typeof createUserSchema>;
@@ -56,6 +57,16 @@ const typesUserOptions: { key: string; value: string | number }[] = [
   },
 ]
 
+const typeUserWorker: { key: string; value: string | number }[] = [
+  {
+    key: TypeWorker.Externo,
+    value: "Externo"
+  },
+  {
+    key: TypeWorker.Interno,
+    value: "Interno"
+  }, 
+]
 export const UpdateUser = () => {
   const [updateUser] = useUpdateUserMutation();
   const [setModalStatus, modalStatus] = useShallowGeneralStore(state => [state.setModalStatus, state.modalStatus])
@@ -72,7 +83,8 @@ export const UpdateUser = () => {
             ...data,
             id: modalStatusContent?.id || "",
             identificationType: data.identificationType as UserDocumentTypes,
-            type: data.type as UserTypes
+            type: data.type as UserTypes,
+            typeWoker: data.typeWoker as TypeWorker
           }
         }
       });
@@ -105,6 +117,7 @@ export const UpdateUser = () => {
     name: modalStatusContent?.name,
     phoneNumber: modalStatusContent?.phoneNumber,
     type: modalStatusContent?.type,
+    typeWoker: modalStatusContent.typeWoker
   }
 
   return (
@@ -123,6 +136,7 @@ export const UpdateUser = () => {
 
         <RowForm>
           <SelectForm name='type' label={"Tipo de usuario"} options={typesUserOptions} placeholder='Selecciona un tipo de usuario' />
+          <SelectForm name='typeWoker' label={"Tipo de trabajador"} options={typeUserWorker} placeholder='Selecciona un tipo de trabajador' />
 
           <InputForm name='address' label={"Dirección del usuario"} />
           {/* <InputForm name='password' label={"Contraseña del usuario"} /> */}

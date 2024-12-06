@@ -1,6 +1,7 @@
 
 
 import { BasicFormProviderZod, ButtonForm, RowForm } from '@/components'
+import { TIPOS_VERTICALES } from '@/components/Utils/vertical'
 import { DialogHeader } from '@/components/ui/dialog'
 import { ComboboxForm, InputForm, SelectForm, SelectFormInterface } from '@/composables'
 import { DepartmentAndMunicipality } from '@/composables/DepartmentAndMunicipality'
@@ -23,7 +24,8 @@ const createClientSchema = z.object({
   descripcion: z.string(),
   telefono: z.string(),
   departmentId: z.string(),
-  cityId: z.string()
+  cityId: z.string(),
+  vertical: z.string().optional()
 })
 
 type createClientSchemaType = z.infer<typeof createClientSchema>;
@@ -109,6 +111,7 @@ export const CreateClient = () => {
           <InputForm name='numberDocument' label={"Número de documento"} placeholder='Ejemplo (123456789-0)' />
           <InputForm name='address' label={"Dirrecion"} />
           <SelectForm options={typeClientOptions} name={'type'} placeholder='Selecciona una opción' label={"Tipo de cliente"} />
+          <SelectForm options={TIPOS_VERTICALES} name={'vertical'} placeholder='Selecciona una opción' label={"Tipo de vertical"} />
         </RowForm>
 
         <RowForm>

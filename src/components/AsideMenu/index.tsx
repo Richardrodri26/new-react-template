@@ -1,9 +1,9 @@
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
-import { Package2, Home, ShoppingCart, Package, Users2, LineChart, Settings, Goal, PanelLeft, Calendar, PersonStanding, MapPinIcon, Bolt, Users } from "lucide-react"
+import { Package2, Home, ShoppingCart, Package, Users2, LineChart, Settings, Goal, PanelLeft, Calendar, PersonStanding, MapPinIcon, Bolt, Users, HandCoinsIcon } from "lucide-react"
 import { Fragment } from "react/jsx-runtime";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface IAsideMenuItem {
   title: string;
@@ -13,8 +13,13 @@ interface IAsideMenuItem {
 
 const asideMenuItems: IAsideMenuItem[] = [
   {
+    title: "Reportes",
+    url: "/dashboard/reports",
+    icon: <Home className="h-5 w-5" />
+  },
+  {
     title: "Visitas",
-    url: "/dashboard",
+    url: "/dashboard/visit",
     icon: <MapPinIcon className="h-5 w-5" />
   },
   {
@@ -37,6 +42,11 @@ const asideMenuItems: IAsideMenuItem[] = [
     url: "/dashboard/users",
     icon: <Users2 className="h-5 w-5" />
   },
+  {
+    title: "Comisiones",
+    url: "/dashboard/commissions",
+    icon: <HandCoinsIcon className="h-5 w-5" />
+  },
   // {
   //   title: "Contactos",
   //   url: "/dashboard/contactsClient",
@@ -47,21 +57,15 @@ const asideMenuItems: IAsideMenuItem[] = [
     url: "/dashboard/typeVisit",
     icon: <Bolt className="h-5 w-5"></Bolt>
   },
-  
-  {
-    title: "Reportes",
-    url: "/dashboard/reports",
-    icon: <LineChart className="h-5 w-5" />
-  },
 ]
 
 export const AsideMenu = () => {
-
+  const navigate = useNavigate()
   return (
     <aside className="min-w-14 flex-row border-r bg-background sm:flex">
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
         <Link
-          to="/dashboard"
+          to="/dashboard/visit"
           className="group flex px-2.5 h-9 min-w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:min-w-8 md:text-base"
         >
           <Home className="h-4 w-4 transition-all group-hover:scale-110" />

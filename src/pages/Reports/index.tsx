@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import dayjs from 'dayjs';
+import 'dayjs/locale/es';
 import {
   Select,
   SelectContent,
@@ -8,12 +9,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { ReportsHeader } from './Elements';
+import { GridPendingVisit } from './table/PendingTable';
 
 const ReportsPage: React.FC = () => {
   const [visitData, setVisitData] = useState([]);
   const [commentData, setCommentData] = useState([]);
-  const [selectedVisitMonth, setSelectedVisitMonth] = useState('');
-  const [selectedCommentMonth, setSelectedCommentMonth] = useState('');
+  const [selectedVisitMonth, setSelectedVisitMonth] = useState(`${dayjs().format('MM')}`);
+  const [selectedCommentMonth, setSelectedCommentMonth] = useState(`${dayjs().format('MM')}`);
   const months = [
     { value: '01', label: 'Enero' },
     { value: '02', label: 'Febrero' },
@@ -51,38 +54,43 @@ const ReportsPage: React.FC = () => {
 
   const handleVisitMonthChange = (month: string) => {
     setSelectedVisitMonth(month);
-    const startDate = `2024-${month}-01`;
-    const lastDayOfMonth = dayjs(`2024-${month}-01`).endOf('month').format('DD');
-    const endDate = `2024-${month}-${lastDayOfMonth}`;
+    const year = dayjs().year()
+    const startDate = `${year}-${month}-01`;
+    const lastDayOfMonth = dayjs(`${year}-${month}-01`).endOf('month').format('DD');
+    const endDate = `${year}-${month}-${lastDayOfMonth}`;
     fetchVisitData(startDate, endDate);
   };
 
   const handleCommentMonthChange = (month: string) => {
     setSelectedCommentMonth(month);
-    const startDate = `2024-${month}-01`;
-    const lastDayOfMonth = dayjs(`2024-${month}-01`).endOf('month').format('DD');
-    const endDate = `2024-${month}-${lastDayOfMonth}`;
+    const year = dayjs().year()
+    const startDate = `${year}-${month}-01`;
+    const lastDayOfMonth = dayjs(`${year}-${month}-01`).endOf('month').format('DD');
+    const endDate = `${year}-${month}-${lastDayOfMonth}`;
     fetchCommentData(startDate, endDate);
   };
 
   useEffect(() => {
+    const year = dayjs().year()
     // Load data for initial months (if needed)
     if (selectedVisitMonth) {
-      const startDate = `2024-${selectedVisitMonth}-01`;
-      const lastDayOfMonth = dayjs(`2024-${selectedVisitMonth}-01`).endOf('month').format('DD');
-      const endDate = `2024-${selectedVisitMonth}-${lastDayOfMonth}`;
+      const startDate = `${year}-${selectedVisitMonth}-01`;
+      const lastDayOfMonth = dayjs(`${year}-${selectedVisitMonth}-01`).endOf('month').format('DD');
+      const endDate = `${year}-${selectedVisitMonth}-${lastDayOfMonth}`;
       fetchVisitData(startDate, endDate);
     }
     if (selectedCommentMonth) {
-      const startDate = `2024-${selectedCommentMonth}-01`;
-      const lastDayOfMonth = dayjs(`2024-${selectedCommentMonth}-01`).endOf('month').format('DD');
-      const endDate = `2024-${selectedCommentMonth}-${lastDayOfMonth}`;
+      const startDate = `${year}-${selectedCommentMonth}-01`;
+      const lastDayOfMonth = dayjs(`${year}-${selectedCommentMonth}-01`).endOf('month').format('DD');
+      const endDate = `${year}-${selectedCommentMonth}-${lastDayOfMonth}`;
       fetchCommentData(startDate, endDate);
     }
   }, [selectedVisitMonth, selectedCommentMonth]);
 
   return (
-    <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <>
+    <ReportsHeader/>
+      <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
       <div className="bg-white overflow-hidden shadow rounded-lg mb-6">
         <div className="px-4 py-5 sm:p-6">
           <h2 className="text-lg font-medium text-gray-900 mb-4">Reporte de Visitas</h2>
@@ -93,7 +101,7 @@ const ReportsPage: React.FC = () => {
               </SelectTrigger>
               <SelectContent>
                 {months.map((item) => (
-                  <SelectItem key={item.value} value={item.value}>
+                  <SelectItem key={item.value} value={item.value} defaultChecked={dayjs().format('MM') == item.value ? true : false}>
                     {item.label}
                   </SelectItem>
                 ))}
@@ -183,7 +191,15 @@ const ReportsPage: React.FC = () => {
             </div>
         </div>
       </div>
+      <br />
+      <div className="bg-white overflow-hidden shadow rounded-lg">
+        <div className="px-4 py-5 sm:p-6">
+          <h2 className="text-lg font-medium text-gray-900 mb-4">Visitas sin responder</h2>
+          <GridPendingVisit></GridPendingVisit>
+        </div>
+      </div>
     </div>
+    </>
   );
 };
 

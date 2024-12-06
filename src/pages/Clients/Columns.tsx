@@ -22,7 +22,12 @@ export const clientsColumns = [
   columnHelperClients.accessor("address", {
     header: "Dirección"
   }),
-
+  columnHelperClients.accessor("department.name", {
+    header: "Departamento"
+  }),
+  columnHelperClients.accessor("city.name", {
+    header: "Municipio"
+  }),
   columnHelperClients.accessor("celular", {
     header: "Telefono"
   }),

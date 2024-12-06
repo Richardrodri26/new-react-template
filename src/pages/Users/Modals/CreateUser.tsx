@@ -4,7 +4,7 @@ import { BasicFormProviderZod, ButtonForm, RowForm } from '@/components'
 import { DialogHeader } from '@/components/ui/dialog'
 import { ComboboxForm, InputForm, SelectForm } from '@/composables'
 import { DepartmentAndMunicipality } from '@/composables/DepartmentAndMunicipality'
-import { UserDocumentTypes, UserTypes, useCreateClientMutation, useCreateUserMutation } from '@/domain/graphql'
+import { TypeWorker, UserDocumentTypes, UserTypes, useCreateClientMutation, useCreateUserMutation } from '@/domain/graphql'
 import { useShallowGeneralStore } from '@/domain/store/general.store'
 import { ToastyErrorGraph } from '@/lib/utils'
 import { apolloClient } from '@/main.config'
@@ -25,6 +25,7 @@ const createUserSchema = z.object({
   .regex(/[@$!%*?&]/, 'La contraseña debe tener al menos un carácter especial'),
   phoneNumber: z.string(),
   type: z.string(),
+  typeWoker: z.string().optional()
 })
 
 type createUserSchemaType = z.infer<typeof createUserSchema>;
@@ -58,7 +59,16 @@ const typesUserOptions: { key: string; value: string | number }[] = [
     value: "Basico"
   },
 ]
-
+const typeUserWorker: { key: string; value: string | number }[] = [
+  {
+    key: TypeWorker.Externo,
+    value: "Externo"
+  },
+  {
+    key: TypeWorker.Interno,
+    value: "Interno"
+  }, 
+]
 export const CreateUser = () => {
   const [createUser] = useCreateUserMutation();
   const [setModalStatus] = useShallowGeneralStore(state => [state.setModalStatus])
@@ -72,7 +82,8 @@ export const CreateUser = () => {
           createInput: {
             ...data,
             identificationType: data.identificationType as UserDocumentTypes,
-            type: data.type as UserTypes
+            type: data.type as UserTypes,
+            typeWoker: data.typeWoker as TypeWorker
           }
         }
       });
@@ -124,7 +135,7 @@ export const CreateUser = () => {
 
         <RowForm>
           <SelectForm name='type' label={"Tipo de usuario"} options={typesUserOptions} placeholder='Selecciona un tipo de usuario' />
-
+          <SelectForm name='typeWoker' label={"Tipo de trabajador"} options={typeUserWorker} placeholder='Selecciona un tipo de trabajador' />
           <InputForm name='address' label={"Dirección del usuario"} />
           <InputForm name="password" label="Nueva contraseña" type={showPassword ? "text" : "password"} />
               <span

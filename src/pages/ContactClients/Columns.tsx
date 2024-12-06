@@ -5,8 +5,10 @@ import useGeneral, { fireAlert } from "@/domain/store/general.store";
 import { ToastyErrorGraph } from "@/lib/utils";
 import { apolloClient } from "@/main.config";
 import { createColumnHelper } from '@tanstack/react-table'
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Trash, User } from "lucide-react";
 import { toast } from "sonner";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+
 
 const columnHelperClientsContact = createColumnHelper<ClientContact>();
 
@@ -73,24 +75,44 @@ export const clientsContactsColumns = [
         })
       }
 
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              aria-haspopup="true"
-              size="icon"
-              variant="ghost"
-            >
-              <MoreHorizontal className="h-4 w-4" />
-              <span className="sr-only">Toggle menu</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-            <DropdownMenuItem onClick={onEdit}>Editar</DropdownMenuItem>
-            <DropdownMenuItem onClick={onRemoveClient}>Eliminar</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+      return (        
+      <>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger> <User onClick={onEdit} /></TooltipTrigger>
+            <TooltipContent>
+              <p>Editar cliente</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger> <Trash className="text-red-500" onClick={onRemoveClient} /></TooltipTrigger>
+            <TooltipContent>
+              <p>Eliminar cliente</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+      </>
+        // <DropdownMenu>
+        //   <DropdownMenuTrigger asChild>
+        //     <Button
+        //       aria-haspopup="true"
+        //       size="icon"
+        //       variant="ghost"
+        //     >
+        //       <MoreHorizontal className="h-4 w-4" />
+        //       <span className="sr-only">Toggle menu</span>
+        //     </Button>
+        //   </DropdownMenuTrigger>
+        //   <DropdownMenuContent align="end">
+        //     <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+        //     <DropdownMenuItem onClick={onEdit}>Editar</DropdownMenuItem>
+        //     <DropdownMenuItem onClick={onRemoveClient}>Eliminar</DropdownMenuItem>
+        //   </DropdownMenuContent>
+        // </DropdownMenu>
       )
     }
   })

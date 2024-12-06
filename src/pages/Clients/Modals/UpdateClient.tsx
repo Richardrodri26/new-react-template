@@ -17,6 +17,7 @@ import { DataTableVisits } from '@/pages/Visits/Grids'
 import { visitsColumns } from '@/pages/Visits/Columns'
 import { PaginationTable } from '@/components/TableElements'
 import { useNavigate } from 'react-router-dom'
+import { TIPOS_VERTICALES } from '@/components/Utils/vertical'
 
 export const createClientSchema = z.object({
   celular: z.string(),
@@ -28,7 +29,8 @@ export const createClientSchema = z.object({
   cityId: z.string(),
   departmentId: z.string(),
   userId: z.string(),
-  descripcion: z.string().optional()
+  descripcion: z.string().optional(),
+  vertical:  z.string().optional()
 })
 
 export type createClientSchemaType = z.infer<typeof createClientSchema>;
@@ -109,7 +111,7 @@ export const UpdateClient = () => {
 
 
   }
-
+  console.log(modalStatusContent)
   const defaultValues = {
     departmentId: modalStatusContent?.department?.id,
     cityId: modalStatusContent?.city?.id,
@@ -121,6 +123,7 @@ export const UpdateClient = () => {
     userId: modalStatusContent?.user?.id,
     address: modalStatusContent?.address,
     descripcion: modalStatusContent?.descripcion,
+    vertical: modalStatusContent?.vertical,
     Prueba: "1",
   }
 
@@ -137,6 +140,7 @@ export const UpdateClient = () => {
           <InputForm name='numberDocument' label={"Número de documento"} />
           <InputForm name='address' label={"Dirrecion"} />
           <SelectForm options={typeClientOptions} name={'type'} placeholder='Selecciona una opción' label={"Tipo de cliente"} />
+          <SelectForm options={TIPOS_VERTICALES} name={'vertical'} placeholder='Selecciona una opción' label={"Tipo de vertical"} />
         </RowForm>
 
         <RowForm>

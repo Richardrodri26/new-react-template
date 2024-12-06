@@ -20,6 +20,12 @@ export const usersColumns = [
       <span>{`${row.original.name} ${row.original?.lastName || ""}`}</span>
     )
   }),
+  columnHelperUsers.accessor("typeWoker", {
+    header: "Ex / In",
+    cell: ({ row }) => (
+      <span>{`${row.original.typeWoker?.toLocaleUpperCase() || ""}`}</span>
+    )
+  }),
   columnHelperUsers.accessor("phoneNumber", {
     header: "Número de telefono"
   }),

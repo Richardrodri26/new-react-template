@@ -16,7 +16,7 @@ export function LoginPage() {
     const resLogin = await login(data);
 
     if(resLogin) {
-      navigate("/dashboard")
+      navigate("/dashboard/reports")
     }
 
   }
