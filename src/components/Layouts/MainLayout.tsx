@@ -34,34 +34,34 @@ export const AppGuardLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { loading } = useValidateUserTokenQuery({
-    variables: {
-      validateTokenInput: {
-        token: Cookies.get(import.meta.env.VITE_APP_KEY_COOKIE_SESSION) ?? "",
-      },
-    },
-    onCompleted: (data) => {
-      setLoginUser(data.validateUserToken as User);
-    },
-    onError: (error) => {
-      console.log("error", error);
-      navigate("/");
-      logout();
-    },
-    fetchPolicy: "network-only",
-  });
+  // const { loading } = useValidateUserTokenQuery({
+  //   variables: {
+  //     validateTokenInput: {
+  //       token: Cookies.get(import.meta.env.VITE_APP_KEY_COOKIE_SESSION) ?? "",
+  //     },
+  //   },
+  //   onCompleted: (data) => {
+  //     setLoginUser(data.validateUserToken as User);
+  //   },
+  //   onError: (error) => {
+  //     console.log("error", error);
+  //     navigate("/");
+  //     logout();
+  //   },
+  //   fetchPolicy: "network-only",
+  // });
 
-  if (loading)
-    return (
-      <div className="h-screen w-screen flex justify-center items-center flex-col">
-        <img src="/loading.svg" alt="" />
-        <span>Cargando recursos</span>
-      </div>
-    );
+  // if (loading)
+  //   return (
+  //     <div className="h-screen w-screen flex justify-center items-center flex-col">
+  //       <img src="/loading.svg" alt="" />
+  //       <span>Cargando recursos</span>
+  //     </div>
+  //   );
 
-  if (isLogged === false) return <Navigate to={"/"} />;
+  // if (isLogged === false) return <Navigate to={"/"} />;
 
-  if (isLogged)
+  if (true)
     return (
       <>
         {/* <Outlet />
@@ -69,7 +69,7 @@ export const AppGuardLayout = () => {
           <Navigate to={routerPaths.admin.path} />
         )} */}
 
-        <main className="flex min-h-screen w-full flex-col bg-muted/40">
+        <main className="flex min-h-screen w-full flex-row bg-muted/40">
 
           <AsideMenu />
           <div className="flex min-h-screen w-full flex-col bg-muted/40">
