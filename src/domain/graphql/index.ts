@@ -147,6 +147,18 @@ export type CreateDummyInput = {
   thirdField: Scalars['Float'];
 };
 
+export type CreateFletesInput = {
+  backComision: Scalars['Float'];
+  carrier: Scalars['String'];
+  carrierCell: Scalars['String'];
+  contactClient: Scalars['String'];
+  description: Scalars['String'];
+  numberDocument: Scalars['String'];
+  numberGuia: Scalars['String'];
+  oip: Scalars['Float'];
+  valueFlete: Scalars['Float'];
+};
+
 export type CreateGroupInput = {
   name: Scalars['String'];
   notificationConfigId?: InputMaybe<Scalars['ID']>;
@@ -391,6 +403,30 @@ export type EmailRecipient = {
   type: RecipientType;
 };
 
+export type FacturaPorClienteDto = {
+  tem_cedula?: InputMaybe<Scalars['String']>;
+  tem_fecha_desde?: InputMaybe<Scalars['String']>;
+  tem_fecha_hasta?: InputMaybe<Scalars['String']>;
+  tem_nomcli?: InputMaybe<Scalars['String']>;
+  tem_numdoc?: InputMaybe<Scalars['String']>;
+  tem_vended?: InputMaybe<Scalars['String']>;
+};
+
+export type FacturaResponseModel = {
+  __typename?: 'FacturaResponseModel';
+  TEM_CEDULA: Scalars['String'];
+  TEM_FECHA: Scalars['String'];
+  TEM_NOMCLI: Scalars['String'];
+  TEM_NUMDOC: Scalars['String'];
+  TEM_PORCENTAJE_UTILIDAD: Scalars['String'];
+  TEM_PREFIJ: Scalars['String'];
+  TEM_TIPMOV: Scalars['String'];
+  TEM_UTILIDAD: Scalars['String'];
+  TEM_VALCOS: Scalars['String'];
+  TEM_VENDED: Scalars['String'];
+  TEM_VENTA: Scalars['String'];
+};
+
 export type FileInfo = {
   __typename?: 'FileInfo';
   createdAt: Scalars['DateTime'];
@@ -477,6 +513,18 @@ export type FindDummyWhere = {
   type?: InputMaybe<FindDummyTypeWhere>;
 };
 
+export type FindFletesOrderBy = {
+  createdAt?: InputMaybe<OrderTypes>;
+};
+
+export type FindFletesWhere = {
+  _and?: InputMaybe<Array<FindFletesWhere>>;
+  _or?: InputMaybe<Array<FindFletesWhere>>;
+  description?: InputMaybe<StringFilter>;
+  name?: InputMaybe<StringFilter>;
+  status?: InputMaybe<StringFilter>;
+};
+
 export type FindUsersOrderBy = {
   createdAt?: InputMaybe<OrderTypes>;
   email?: InputMaybe<OrderTypes>;
@@ -531,6 +579,23 @@ export type FindVisitWhere = {
   dateVisit?: InputMaybe<DateFilter>;
   status?: InputMaybe<StringFilter>;
   user?: InputMaybe<StringFilter>;
+};
+
+export type Fletes = {
+  __typename?: 'Fletes';
+  backComision: Scalars['Float'];
+  carrier: Scalars['String'];
+  carrierCell: Scalars['String'];
+  contactClient: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  description: Scalars['String'];
+  id: Scalars['ID'];
+  numberDocument: Scalars['String'];
+  numberGuia: Scalars['String'];
+  oip: Scalars['Float'];
+  updatedAt: Scalars['DateTime'];
+  valueFlete: Scalars['Float'];
 };
 
 export type FunctionalityModel = {
@@ -601,6 +666,7 @@ export type Mutation = {
   createDocumentType: DocumentType;
   createDummiesX: Array<Dummy>;
   createDummy: Dummy;
+  createFletes: Fletes;
   createGroup: Group;
   createMultiKeyRegister: MultikeyRegister;
   createNotification: Notification;
@@ -624,6 +690,7 @@ export type Mutation = {
   removeClientContact: ClientContact;
   removeDocumentType: DocumentType;
   removeDummy: Dummy;
+  removeFletes: Fletes;
   removeGroup: Group;
   removeMultiKeyRegister: MultikeyRegister;
   removeNotification: Notification;
@@ -652,6 +719,7 @@ export type Mutation = {
   updateClientContact: ClientContact;
   updateDocumentType: DocumentType;
   updateDummy: Dummy;
+  updateFletes: Fletes;
   updateGroup: Group;
   updateMultiKeyRegister: MultikeyRegister;
   updateNotification: Notification;
@@ -708,6 +776,11 @@ export type MutationCreateDocumentTypeArgs = {
 
 export type MutationCreateDummyArgs = {
   createInput: CreateDummyInput;
+};
+
+
+export type MutationCreateFletesArgs = {
+  createInput: CreateFletesInput;
 };
 
 
@@ -817,6 +890,11 @@ export type MutationRemoveDocumentTypeArgs = {
 
 
 export type MutationRemoveDummyArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationRemoveFletesArgs = {
   id: Scalars['ID'];
 };
 
@@ -953,6 +1031,11 @@ export type MutationUpdateDocumentTypeArgs = {
 
 export type MutationUpdateDummyArgs = {
   updateInput: UpdateDummyInput;
+};
+
+
+export type MutationUpdateFletesArgs = {
+  updateInput: UpdateFletesInput;
 };
 
 
@@ -1184,6 +1267,9 @@ export type Profile = {
 export type Query = {
   __typename?: 'Query';
   Count: MetadataPagination;
+  Fletes: Fletes;
+  Fletess: Array<Fletes>;
+  FletessCount: MetadataPagination;
   NotificationGroup: NotificationGroup;
   NotificationGroups: Array<NotificationGroup>;
   NotificationGroupsCount: MetadataPagination;
@@ -1210,8 +1296,10 @@ export type Query = {
   dummy: Dummy;
   file: FileInfo;
   findAll: Array<UserKey>;
+  findAllFacturaCliente: Array<FacturaResponseModel>;
   findAllVisitDashboard: VisitDashboardModel;
   findOne: UserKey;
+  findOneFacturaClienteByCode: FindOneFacturaClienteByCode;
   functionalities: FunctionalityModel;
   group: Group;
   groups: Array<Group>;
@@ -1265,6 +1353,25 @@ export type QueryCountArgs = {
   orderBy?: InputMaybe<Array<FindUsersOrderBy>>;
   pagination?: InputMaybe<Pagination>;
   where?: InputMaybe<FindUsersWhere>;
+};
+
+
+export type QueryFletesArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryFletessArgs = {
+  orderBy?: InputMaybe<Array<FindFletesOrderBy>>;
+  pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindFletesWhere>;
+};
+
+
+export type QueryFletessCountArgs = {
+  orderBy?: InputMaybe<Array<FindFletesOrderBy>>;
+  pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindFletesWhere>;
 };
 
 
@@ -1416,8 +1523,18 @@ export type QueryFindAllArgs = {
 };
 
 
+export type QueryFindAllFacturaClienteArgs = {
+  input: FacturaPorClienteDto;
+};
+
+
 export type QueryFindOneArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryFindOneFacturaClienteByCodeArgs = {
+  code: Scalars['String'];
 };
 
 
@@ -1870,6 +1987,19 @@ export type UpdateDummyInput = {
   thirdField?: InputMaybe<Scalars['Float']>;
 };
 
+export type UpdateFletesInput = {
+  backComision?: InputMaybe<Scalars['Float']>;
+  carrier?: InputMaybe<Scalars['String']>;
+  carrierCell?: InputMaybe<Scalars['String']>;
+  contactClient?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']>;
+  id: Scalars['ID'];
+  numberDocument?: InputMaybe<Scalars['String']>;
+  numberGuia?: InputMaybe<Scalars['String']>;
+  oip?: InputMaybe<Scalars['Float']>;
+  valueFlete?: InputMaybe<Scalars['Float']>;
+};
+
 export type UpdateGroupInput = {
   id: Scalars['ID'];
   name?: InputMaybe<Scalars['String']>;
@@ -2193,6 +2323,12 @@ export type WssRecipient = {
   phonePrefix?: InputMaybe<Scalars['String']>;
 };
 
+export type FindOneFacturaClienteByCode = {
+  __typename?: 'findOneFacturaClienteByCode';
+  flete?: Maybe<Fletes>;
+  isFound: Scalars['Boolean'];
+};
+
 export type ValidateUserTokenQueryVariables = Exact<{
   validateTokenInput: ValidateTokenInput;
 }>;
@@ -2294,6 +2430,34 @@ export type CreateClientContactMutationVariables = Exact<{
 
 export type CreateClientContactMutation = { __typename?: 'Mutation', createClientContact: { __typename?: 'ClientContact', id: string, name: string } };
 
+export type FindAllFacturaClienteQueryVariables = Exact<{
+  input: FacturaPorClienteDto;
+}>;
+
+
+export type FindAllFacturaClienteQuery = { __typename?: 'Query', findAllFacturaCliente: Array<{ __typename?: 'FacturaResponseModel', TEM_CEDULA: string, TEM_NOMCLI: string, TEM_FECHA: string, TEM_TIPMOV: string, TEM_PREFIJ: string, TEM_NUMDOC: string, TEM_VENDED: string, TEM_VENTA: string, TEM_VALCOS: string, TEM_UTILIDAD: string, TEM_PORCENTAJE_UTILIDAD: string }> };
+
+export type FindOneFacturaClienteByCodeQueryVariables = Exact<{
+  code: Scalars['String'];
+}>;
+
+
+export type FindOneFacturaClienteByCodeQuery = { __typename?: 'Query', findOneFacturaClienteByCode: { __typename?: 'findOneFacturaClienteByCode', isFound: boolean, flete?: { __typename?: 'Fletes', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, numberDocument: string, description: string, valueFlete: number, oip: number, backComision: number, numberGuia: string, carrier: string, carrierCell: string, contactClient: string } | null } };
+
+export type CreateFletesMutationVariables = Exact<{
+  createInput: CreateFletesInput;
+}>;
+
+
+export type CreateFletesMutation = { __typename?: 'Mutation', createFletes: { __typename?: 'Fletes', id: string } };
+
+export type UpdateFletesMutationVariables = Exact<{
+  updateInput: UpdateFletesInput;
+}>;
+
+
+export type UpdateFletesMutation = { __typename?: 'Mutation', updateFletes: { __typename?: 'Fletes', id: string } };
+
 export type DepartmentsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2385,7 +2549,7 @@ export type VisitsQueryVariables = Exact<{
 }>;
 
 
-export type VisitsQuery = { __typename?: 'Query', visits: Array<{ __typename?: 'Visit', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, description: string, location?: string | null, dateVisit: any, status: StatusVisitEnum, isProyect: boolean, client: { __typename?: 'Client', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, numberDocument: string, email: string, telefono?: string | null, address?: string | null, type?: TypeClientEnum | null, vertical?: string | null, celular: string, city?: { __typename?: 'City', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, department?: { __typename?: 'Department', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, country?: { __typename?: 'Country', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null }, type: { __typename?: 'VisitType', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, description: string, status: VisitTypeStatusEnum }, user: { __typename?: 'User', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name?: string | null, middleName?: string | null, lastName?: string | null, secondSurname?: string | null, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, dateIssue?: any | null, legalRepresentativeIdentificationType?: UserDocumentTypes | null, legalRepresentativeIdentificationNumber?: string | null, phoneCountryCode?: string | null, phoneNumber?: string | null, address?: string | null, hasRural?: boolean | null, confirmationCode?: string | null, position?: string | null, status: UserStatusTypes, phoneVerification: boolean, emailVerification: boolean, type: UserTypes, fullName: string, userRoles: Array<{ __typename?: 'Role', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, description: string, defaultForType?: UserTypes | null, users?: Array<{ __typename?: 'User', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name?: string | null, middleName?: string | null, lastName?: string | null, secondSurname?: string | null, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, dateIssue?: any | null, legalRepresentativeIdentificationType?: UserDocumentTypes | null, legalRepresentativeIdentificationNumber?: string | null, phoneCountryCode?: string | null, phoneNumber?: string | null, address?: string | null, hasRural?: boolean | null, confirmationCode?: string | null, position?: string | null, status: UserStatusTypes, phoneVerification: boolean, emailVerification: boolean, type: UserTypes, fullName: string }> | null, roleFx: Array<{ __typename?: 'RoleFx', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, permission: string }> }>, userRolesFx: Array<{ __typename?: 'RoleFx', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, permission: string, role?: { __typename?: 'Role', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, description: string, defaultForType?: UserTypes | null } | null }> } }>, visitsCount: { __typename?: 'MetadataPagination', totalItems?: number | null, itemsPerPage?: number | null, totalPages?: number | null, currentPage?: number | null } };
+export type VisitsQuery = { __typename?: 'Query', visits: Array<{ __typename?: 'Visit', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, description: string, location?: string | null, dateVisit: any, status: StatusVisitEnum, isProyect: boolean, latitude?: string | null, longitude?: string | null, client: { __typename?: 'Client', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, numberDocument: string, email: string, telefono?: string | null, address?: string | null, type?: TypeClientEnum | null, vertical?: string | null, celular: string, city?: { __typename?: 'City', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, department?: { __typename?: 'Department', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, country?: { __typename?: 'Country', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null }, type: { __typename?: 'VisitType', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, description: string, status: VisitTypeStatusEnum }, user: { __typename?: 'User', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name?: string | null, middleName?: string | null, lastName?: string | null, secondSurname?: string | null, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, dateIssue?: any | null, legalRepresentativeIdentificationType?: UserDocumentTypes | null, legalRepresentativeIdentificationNumber?: string | null, phoneCountryCode?: string | null, phoneNumber?: string | null, address?: string | null, hasRural?: boolean | null, confirmationCode?: string | null, position?: string | null, status: UserStatusTypes, phoneVerification: boolean, emailVerification: boolean, type: UserTypes, fullName: string, userRoles: Array<{ __typename?: 'Role', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, description: string, defaultForType?: UserTypes | null, users?: Array<{ __typename?: 'User', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name?: string | null, middleName?: string | null, lastName?: string | null, secondSurname?: string | null, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, dateIssue?: any | null, legalRepresentativeIdentificationType?: UserDocumentTypes | null, legalRepresentativeIdentificationNumber?: string | null, phoneCountryCode?: string | null, phoneNumber?: string | null, address?: string | null, hasRural?: boolean | null, confirmationCode?: string | null, position?: string | null, status: UserStatusTypes, phoneVerification: boolean, emailVerification: boolean, type: UserTypes, fullName: string }> | null, roleFx: Array<{ __typename?: 'RoleFx', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, permission: string }> }>, userRolesFx: Array<{ __typename?: 'RoleFx', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, permission: string, role?: { __typename?: 'Role', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, description: string, defaultForType?: UserTypes | null } | null }> } }>, visitsCount: { __typename?: 'MetadataPagination', totalItems?: number | null, itemsPerPage?: number | null, totalPages?: number | null, currentPage?: number | null } };
 
 export type VisitTypesQueryVariables = Exact<{
   orderBy?: InputMaybe<Array<FindVisitTypeOrderBy> | FindVisitTypeOrderBy>;
@@ -3258,6 +3422,167 @@ export function useCreateClientContactMutation(baseOptions?: Apollo.MutationHook
 export type CreateClientContactMutationHookResult = ReturnType<typeof useCreateClientContactMutation>;
 export type CreateClientContactMutationResult = Apollo.MutationResult<CreateClientContactMutation>;
 export type CreateClientContactMutationOptions = Apollo.BaseMutationOptions<CreateClientContactMutation, CreateClientContactMutationVariables>;
+export const FindAllFacturaClienteDocument = gql`
+    query FindAllFacturaCliente($input: FacturaPorClienteDto!) {
+  findAllFacturaCliente(input: $input) {
+    TEM_CEDULA
+    TEM_NOMCLI
+    TEM_FECHA
+    TEM_TIPMOV
+    TEM_PREFIJ
+    TEM_NUMDOC
+    TEM_VENDED
+    TEM_VENTA
+    TEM_VALCOS
+    TEM_UTILIDAD
+    TEM_PORCENTAJE_UTILIDAD
+  }
+}
+    `;
+
+/**
+ * __useFindAllFacturaClienteQuery__
+ *
+ * To run a query within a React component, call `useFindAllFacturaClienteQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindAllFacturaClienteQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindAllFacturaClienteQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useFindAllFacturaClienteQuery(baseOptions: Apollo.QueryHookOptions<FindAllFacturaClienteQuery, FindAllFacturaClienteQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindAllFacturaClienteQuery, FindAllFacturaClienteQueryVariables>(FindAllFacturaClienteDocument, options);
+      }
+export function useFindAllFacturaClienteLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindAllFacturaClienteQuery, FindAllFacturaClienteQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindAllFacturaClienteQuery, FindAllFacturaClienteQueryVariables>(FindAllFacturaClienteDocument, options);
+        }
+export type FindAllFacturaClienteQueryHookResult = ReturnType<typeof useFindAllFacturaClienteQuery>;
+export type FindAllFacturaClienteLazyQueryHookResult = ReturnType<typeof useFindAllFacturaClienteLazyQuery>;
+export type FindAllFacturaClienteQueryResult = Apollo.QueryResult<FindAllFacturaClienteQuery, FindAllFacturaClienteQueryVariables>;
+export const FindOneFacturaClienteByCodeDocument = gql`
+    query FindOneFacturaClienteByCode($code: String!) {
+  findOneFacturaClienteByCode(code: $code) {
+    isFound
+    flete {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      numberDocument
+      description
+      valueFlete
+      oip
+      backComision
+      numberGuia
+      carrier
+      carrierCell
+      contactClient
+    }
+  }
+}
+    `;
+
+/**
+ * __useFindOneFacturaClienteByCodeQuery__
+ *
+ * To run a query within a React component, call `useFindOneFacturaClienteByCodeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindOneFacturaClienteByCodeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindOneFacturaClienteByCodeQuery({
+ *   variables: {
+ *      code: // value for 'code'
+ *   },
+ * });
+ */
+export function useFindOneFacturaClienteByCodeQuery(baseOptions: Apollo.QueryHookOptions<FindOneFacturaClienteByCodeQuery, FindOneFacturaClienteByCodeQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindOneFacturaClienteByCodeQuery, FindOneFacturaClienteByCodeQueryVariables>(FindOneFacturaClienteByCodeDocument, options);
+      }
+export function useFindOneFacturaClienteByCodeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindOneFacturaClienteByCodeQuery, FindOneFacturaClienteByCodeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindOneFacturaClienteByCodeQuery, FindOneFacturaClienteByCodeQueryVariables>(FindOneFacturaClienteByCodeDocument, options);
+        }
+export type FindOneFacturaClienteByCodeQueryHookResult = ReturnType<typeof useFindOneFacturaClienteByCodeQuery>;
+export type FindOneFacturaClienteByCodeLazyQueryHookResult = ReturnType<typeof useFindOneFacturaClienteByCodeLazyQuery>;
+export type FindOneFacturaClienteByCodeQueryResult = Apollo.QueryResult<FindOneFacturaClienteByCodeQuery, FindOneFacturaClienteByCodeQueryVariables>;
+export const CreateFletesDocument = gql`
+    mutation CreateFletes($createInput: CreateFletesInput!) {
+  createFletes(createInput: $createInput) {
+    id
+  }
+}
+    `;
+export type CreateFletesMutationFn = Apollo.MutationFunction<CreateFletesMutation, CreateFletesMutationVariables>;
+
+/**
+ * __useCreateFletesMutation__
+ *
+ * To run a mutation, you first call `useCreateFletesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateFletesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createFletesMutation, { data, loading, error }] = useCreateFletesMutation({
+ *   variables: {
+ *      createInput: // value for 'createInput'
+ *   },
+ * });
+ */
+export function useCreateFletesMutation(baseOptions?: Apollo.MutationHookOptions<CreateFletesMutation, CreateFletesMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateFletesMutation, CreateFletesMutationVariables>(CreateFletesDocument, options);
+      }
+export type CreateFletesMutationHookResult = ReturnType<typeof useCreateFletesMutation>;
+export type CreateFletesMutationResult = Apollo.MutationResult<CreateFletesMutation>;
+export type CreateFletesMutationOptions = Apollo.BaseMutationOptions<CreateFletesMutation, CreateFletesMutationVariables>;
+export const UpdateFletesDocument = gql`
+    mutation UpdateFletes($updateInput: UpdateFletesInput!) {
+  updateFletes(updateInput: $updateInput) {
+    id
+  }
+}
+    `;
+export type UpdateFletesMutationFn = Apollo.MutationFunction<UpdateFletesMutation, UpdateFletesMutationVariables>;
+
+/**
+ * __useUpdateFletesMutation__
+ *
+ * To run a mutation, you first call `useUpdateFletesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateFletesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateFletesMutation, { data, loading, error }] = useUpdateFletesMutation({
+ *   variables: {
+ *      updateInput: // value for 'updateInput'
+ *   },
+ * });
+ */
+export function useUpdateFletesMutation(baseOptions?: Apollo.MutationHookOptions<UpdateFletesMutation, UpdateFletesMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateFletesMutation, UpdateFletesMutationVariables>(UpdateFletesDocument, options);
+      }
+export type UpdateFletesMutationHookResult = ReturnType<typeof useUpdateFletesMutation>;
+export type UpdateFletesMutationResult = Apollo.MutationResult<UpdateFletesMutation>;
+export type UpdateFletesMutationOptions = Apollo.BaseMutationOptions<UpdateFletesMutation, UpdateFletesMutationVariables>;
 export const DepartmentsDocument = gql`
     query Departments {
   departments {
@@ -3800,6 +4125,8 @@ export const VisitsDocument = gql`
     dateVisit
     status
     isProyect
+    latitude
+    longitude
     client {
       id
       createdAt

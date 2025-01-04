@@ -9,6 +9,8 @@ query Visits($orderBy: [FindVisitOrderBy!], $where: FindVisitWhere, $pagination:
     dateVisit
     status
     isProyect
+    latitude
+    longitude
     client {
       id
       createdAt

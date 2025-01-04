@@ -5,7 +5,7 @@ import { TypeWorker, useUsersQuery } from "@/domain/graphql";
 import Lottie from "lottie-react";
 import loadingAnimations from '../../assets/animations/loading.json'
 // Componente de carga
-const Loader = () => (
+export const Loader = () => (
     <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100">
         <div className="flex flex-col items-center">
             <Lottie

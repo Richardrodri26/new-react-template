@@ -1,6 +1,7 @@
 import { AppGuardLayout, MainLayout } from "@/components/Layouts";
-import { ClientsEditPage, ClientsPage, ContactClientsPage, HomePage, LoginPage, ParametersPage, UsersPage, VisitsPage } from "@/pages";
+import { ClientsEditPage, ClientsPage, ContactClientsPage, FletesPage, HomePage, LoginPage, ParametersPage, UsersPage, VisitsPage } from "@/pages";
 import { CommissionsPage } from "@/pages/Commissions";
+import MapaApp from "@/pages/Mapa";
 import ReportsPage from "@/pages/Reports";
 import { VisitDetailPage } from "@/pages/Visits/Detalle";
 import { HomeBlog } from "@/pages/blog";
@@ -72,6 +73,10 @@ export const appRouter = createBrowserRouter([
       {
         path: "commissions", // Ruta para el detalle de la visita con su ID
         element: <CommissionsPage/>,
+      },
+      {
+        path: 'mapaApp',
+        element: <MapaApp/>
       }
     ]
   },
@@ -91,5 +96,14 @@ export const appRouter = createBrowserRouter([
   {
     path: 'forgot-password',
     element: <ForgotPasswordPage/>
+  },
+  {
+    path:"/fletes",
+    children: [
+      {
+        path: "",
+        element: <FletesPage/>
+      }
+    ]
   }
 ])
