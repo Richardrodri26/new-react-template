@@ -1,5 +1,5 @@
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
-import { Package2, Home, ShoppingCart, Package, Users2, LineChart, Settings, Goal, PanelLeft, Calendar, PersonStanding, MapPinIcon, Bolt, Users, HandCoinsIcon, Map } from "lucide-react"
+import { Package2, Home, ShoppingCart, Package, Users2, LineChart, Settings, Goal, PanelLeft, Calendar, PersonStanding, MapPinIcon, Bolt, Users, HandCoinsIcon, Map, Car } from "lucide-react"
 import { Fragment } from "react/jsx-runtime";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
@@ -52,11 +52,11 @@ const asideMenuItems: IAsideMenuItem[] = [
     url: "/dashboard/commissions",
     icon: <HandCoinsIcon className="h-5 w-5" />
   },
-  // {
-  //   title: "Contactos",
-  //   url: "/dashboard/contactsClient",
-  //   icon: <Users className="h-5 w-5" />
-  // },
+  {
+    title: "Fletes",
+    url: "/dashboard/fletes",
+    icon: <Car className="h-5 w-5" />
+  },
   {
     title: "Tipo de visita",
     url: "/dashboard/typeVisit",

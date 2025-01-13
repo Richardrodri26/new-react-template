@@ -412,21 +412,6 @@ export type FacturaPorClienteDto = {
   tem_vended?: InputMaybe<Scalars['String']>;
 };
 
-export type FacturaResponseModel = {
-  __typename?: 'FacturaResponseModel';
-  TEM_CEDULA: Scalars['String'];
-  TEM_FECHA: Scalars['String'];
-  TEM_NOMCLI: Scalars['String'];
-  TEM_NUMDOC: Scalars['String'];
-  TEM_PORCENTAJE_UTILIDAD: Scalars['String'];
-  TEM_PREFIJ: Scalars['String'];
-  TEM_TIPMOV: Scalars['String'];
-  TEM_UTILIDAD: Scalars['String'];
-  TEM_VALCOS: Scalars['String'];
-  TEM_VENDED: Scalars['String'];
-  TEM_VENTA: Scalars['String'];
-};
-
 export type FileInfo = {
   __typename?: 'FileInfo';
   createdAt: Scalars['DateTime'];
@@ -596,6 +581,32 @@ export type Fletes = {
   oip: Scalars['Float'];
   updatedAt: Scalars['DateTime'];
   valueFlete: Scalars['Float'];
+};
+
+export type FletesWithDocument = {
+  __typename?: 'FletesWithDocument';
+  CLI_CIUDAD?: Maybe<Scalars['String']>;
+  CL_DEPART?: Maybe<Scalars['String']>;
+  TEM_CEDULA?: Maybe<Scalars['String']>;
+  TEM_FECHA?: Maybe<Scalars['String']>;
+  TEM_NOMCLI?: Maybe<Scalars['String']>;
+  TEM_NUMDOC?: Maybe<Scalars['String']>;
+  TEM_PORCENTAJE_UTILIDAD?: Maybe<Scalars['String']>;
+  TEM_PREFIJ?: Maybe<Scalars['String']>;
+  TEM_TIPMOV?: Maybe<Scalars['String']>;
+  TEM_UTILIDAD?: Maybe<Scalars['String']>;
+  TEM_VALCOS?: Maybe<Scalars['String']>;
+  TEM_VENDED?: Maybe<Scalars['String']>;
+  TEM_VENTA?: Maybe<Scalars['String']>;
+  backComision?: Maybe<Scalars['Float']>;
+  carrier?: Maybe<Scalars['String']>;
+  carrierCell?: Maybe<Scalars['String']>;
+  contactClient?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  numberDocument?: Maybe<Scalars['String']>;
+  numberGuia?: Maybe<Scalars['String']>;
+  oip?: Maybe<Scalars['Float']>;
+  valueFlete?: Maybe<Scalars['Float']>;
 };
 
 export type FunctionalityModel = {
@@ -1296,7 +1307,7 @@ export type Query = {
   dummy: Dummy;
   file: FileInfo;
   findAll: Array<UserKey>;
-  findAllFacturaCliente: Array<FacturaResponseModel>;
+  findAllFacturaCliente: Array<FletesWithDocument>;
   findAllVisitDashboard: VisitDashboardModel;
   findOne: UserKey;
   findOneFacturaClienteByCode: FindOneFacturaClienteByCode;
@@ -2435,7 +2446,7 @@ export type FindAllFacturaClienteQueryVariables = Exact<{
 }>;
 
 
-export type FindAllFacturaClienteQuery = { __typename?: 'Query', findAllFacturaCliente: Array<{ __typename?: 'FacturaResponseModel', TEM_CEDULA: string, TEM_NOMCLI: string, TEM_FECHA: string, TEM_TIPMOV: string, TEM_PREFIJ: string, TEM_NUMDOC: string, TEM_VENDED: string, TEM_VENTA: string, TEM_VALCOS: string, TEM_UTILIDAD: string, TEM_PORCENTAJE_UTILIDAD: string }> };
+export type FindAllFacturaClienteQuery = { __typename?: 'Query', findAllFacturaCliente: Array<{ __typename?: 'FletesWithDocument', numberDocument?: string | null, description?: string | null, valueFlete?: number | null, oip?: number | null, backComision?: number | null, numberGuia?: string | null, carrier?: string | null, carrierCell?: string | null, contactClient?: string | null, TEM_CEDULA?: string | null, TEM_NOMCLI?: string | null, TEM_FECHA?: string | null, TEM_TIPMOV?: string | null, TEM_PREFIJ?: string | null, TEM_NUMDOC?: string | null, TEM_VENDED?: string | null, TEM_VENTA?: string | null, TEM_VALCOS?: string | null, TEM_UTILIDAD?: string | null, TEM_PORCENTAJE_UTILIDAD?: string | null, CL_DEPART?: string | null, CLI_CIUDAD?: string | null }> };
 
 export type FindOneFacturaClienteByCodeQueryVariables = Exact<{
   code: Scalars['String'];
@@ -3425,6 +3436,15 @@ export type CreateClientContactMutationOptions = Apollo.BaseMutationOptions<Crea
 export const FindAllFacturaClienteDocument = gql`
     query FindAllFacturaCliente($input: FacturaPorClienteDto!) {
   findAllFacturaCliente(input: $input) {
+    numberDocument
+    description
+    valueFlete
+    oip
+    backComision
+    numberGuia
+    carrier
+    carrierCell
+    contactClient
     TEM_CEDULA
     TEM_NOMCLI
     TEM_FECHA
@@ -3436,6 +3456,8 @@ export const FindAllFacturaClienteDocument = gql`
     TEM_VALCOS
     TEM_UTILIDAD
     TEM_PORCENTAJE_UTILIDAD
+    CL_DEPART
+    CLI_CIUDAD
   }
 }
     `;

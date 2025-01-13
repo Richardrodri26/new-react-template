@@ -17,12 +17,16 @@ import {
   BitcoinIcon,
   Activity,
   Trash2,
+  Home,
 } from "lucide-react";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "@/components/ui/modal";
-import { FacturaResponseModel, FindOneFacturaClienteByCode, Fletes, useCreateFletesMutation, useFindAllFacturaClienteQuery, useFindOneFacturaClienteByCodeLazyQuery, useUpdateFletesMutation } from "@/domain/graphql";
+import { FletesWithDocument, FindOneFacturaClienteByCode, Fletes, useCreateFletesMutation, useFindAllFacturaClienteQuery, useFindOneFacturaClienteByCodeLazyQuery, useUpdateFletesMutation } from "@/domain/graphql";
 import { Loader } from "../Commissions";
 import { update } from "lodash";
 import { ToastyErrorGraph } from "@/lib/utils";
+import { Select } from "@/components/ui/select";
+import SelectInput from "@mui/material/Select/SelectInput";
+import { number } from "yup";
 
 interface Factura {
   id: string;
@@ -37,7 +41,8 @@ interface Factura {
   costoEnvio?: number; // Este campo puede ser opcional o requerido
 }
 
-const formatCurrency = (amount: number | string): string => {
+const formatCurrency = (amount: number | string | null | undefined): string => {
+  if(!amount) return '0'
   const numericAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
   return new Intl.NumberFormat("es-CO", {
     style: "currency",
@@ -58,7 +63,7 @@ const convertirACantidad = (str: string)  =>{
 }
 
 export const FletesPage: React.FC = () => {
-  const [facturaSeleccionada, setFacturaSeleccionada] = useState<FacturaResponseModel | null>(null);
+  const [facturaSeleccionada, setFacturaSeleccionada] = useState<FletesWithDocument | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [refetchLoading, setrefetchLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -75,8 +80,8 @@ export const FletesPage: React.FC = () => {
   });
   const [filtro, setFiltro] = useState<string>("");
   const [filtroSeleccionado, setFiltroSeleccionado] = useState(""); // Para el select
-  const [fechaInicio, setFechaInicio] = useState(dayjs('2024-01-31').startOf('month').format('YYYY-MM-DD'));
-  const [fechaFin, setFechaFin] = useState(dayjs('2024-01-31').endOf('month').format('YYYY-MM-DD'));
+  const [fechaInicio, setFechaInicio] = useState(dayjs().startOf('month').format('YYYY-MM-DD'));
+  const [fechaFin, setFechaFin] = useState(dayjs().endOf('month').format('YYYY-MM-DD'));
   const [dataFletes, setDataFletes] = useState<FindOneFacturaClienteByCode | undefined>(undefined); // Estado para el costo de envío
   const {data, loading, refetch} = useFindAllFacturaClienteQuery({
     variables: {
@@ -89,12 +94,12 @@ export const FletesPage: React.FC = () => {
   const [findOneFlete] = useFindOneFacturaClienteByCodeLazyQuery()
   const [createFlete] = useCreateFletesMutation();
   const [updateFlete] = useUpdateFletesMutation()
-  const handleOpenModal = async (factura: FacturaResponseModel) => {
+  const handleOpenModal = async (factura: FletesWithDocument) => {
     setFacturaSeleccionada(factura);
     toast.info('Cargando información de fletes...');
 
     const { data } = await findOneFlete({
-      variables: { code: factura.TEM_NUMDOC },
+      variables: { code: factura.TEM_NUMDOC || ''},
       fetchPolicy: 'no-cache'
     });
 
@@ -230,7 +235,7 @@ export const FletesPage: React.FC = () => {
     toast.success('Flete guardado correctamente');
     handleClose();
   };
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, field: string) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>, field: string) => {
     setFormData(prevData => ({
       ...prevData,
       [field]: e.target.value,
@@ -350,6 +355,8 @@ export const FletesPage: React.FC = () => {
                 <Eye size={20} />
               </button>
               <h2 className="text-xl font-semibold mb-4">{factura.TEM_PREFIJ + '-' +  factura.TEM_NUMDOC}</h2>
+              <h3 className="text-xl font-semibold mb-4">{!!factura?.valueFlete ? 'SI TIENE' : 'NO TIENE'}</h3>
+              
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-gray-600">
@@ -362,12 +369,15 @@ export const FletesPage: React.FC = () => {
                     <Clipboard className="inline mr-2" size={20} /> Cliente: {factura.TEM_NOMCLI}
                   </p>
                   <p className="text-gray-600">
+                    <Home className="inline mr-2" size={20} /> Ciudad: {factura.CLI_CIUDAD}
+                  </p>
+                  <p className="text-gray-600">
                     <Activity className="inline mr-2" size={20} /> Tipo M: {factura.TEM_TIPMOV}
                   </p>
                 </div>
                 <div>
                   <p className="text-gray-600">
-                    <DollarSign className="inline mr-2" size={20} /> Valor costo: {formatCurrency(factura.TEM_VALCOS)}
+                    <DollarSign className="inline mr-2" size={20} /> Valor costo: {formatCurrency(factura?.TEM_VALCOS)}
                   </p>
                   <p className="text-gray-600">
                     <BitcoinIcon className="inline mr-2" size={20} /> Valor Utilidad: {formatCurrency(factura.TEM_UTILIDAD)}
@@ -377,6 +387,9 @@ export const FletesPage: React.FC = () => {
                   </p>
                   <p className="text-gray-600">
                     <Percent className="inline mr-2" size={20} /> Utilidad {factura.TEM_PORCENTAJE_UTILIDAD}%
+                  </p>
+                  <p className="text-gray-600">
+                    <Percent className="inline mr-2" size={20} /> Utilidad Real {((Number(factura?.TEM_VENTA || 0) - (Number(factura?.TEM_VALCOS || 0) - Number(factura.oip || 0) + Number(factura.backComision || 0) + Number(factura.valueFlete || 0))) * 100 / Number(factura?.TEM_VENTA || 0)).toFixed(2)}%
                   </p>
                 </div>
               </div>
@@ -491,14 +504,22 @@ export const FletesPage: React.FC = () => {
                         />
                       </div>
                       <div className="col-span-2">
-                        <label className="text-sm font-bold text-gray-700">Transportista</label>
-                        <input
-                          type="text"
-                          className="border p-2 rounded-md w-full"
-                          placeholder="Transportista"
-                          value={formData.carrier}
+                        {/* <label className="text-sm font-bold text-gray-700">Transportista</label> */}
+                        <select
                           onChange={(e) => handleInputChange(e, 'carrier')}
-                        />
+                          value={formData.carrier}
+                          
+                          
+                          // className="border p-2 rounded-md w-full"
+                          // placeholder="Transportista"
+                        >
+                          <option value="">Selecciona un transportista</option>
+                          <option value="TCC">TCC</option>
+                          <option value="SERVIENTREGA">Servientrega</option>
+                          <option value="ENVIA">Envia</option>
+                          <option value="CHEVALIER">Chevalier</option>
+                          <option value="TRANSCEL">Transcel</option>
+                        </select>
                       </div>
                       <div className="col-span-2">
                         <label className="text-sm font-bold text-gray-700">Teléfono Transportista</label>

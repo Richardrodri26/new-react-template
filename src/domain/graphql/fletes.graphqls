@@ -1,5 +1,14 @@
 query FindAllFacturaCliente($input: FacturaPorClienteDto!) {
   findAllFacturaCliente(input: $input) {
+    numberDocument
+    description
+    valueFlete
+    oip
+    backComision
+    numberGuia
+    carrier
+    carrierCell
+    contactClient
     TEM_CEDULA
     TEM_NOMCLI
     TEM_FECHA
@@ -11,6 +20,8 @@ query FindAllFacturaCliente($input: FacturaPorClienteDto!) {
     TEM_VALCOS
     TEM_UTILIDAD
     TEM_PORCENTAJE_UTILIDAD
+    CL_DEPART
+    CLI_CIUDAD
   }
 }
 query FindOneFacturaClienteByCode($code: String!) {

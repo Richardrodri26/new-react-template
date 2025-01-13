@@ -1,6 +1,7 @@
 import { AppGuardLayout, MainLayout } from "@/components/Layouts";
 import { ClientsEditPage, ClientsPage, ContactClientsPage, FletesPage, HomePage, LoginPage, ParametersPage, UsersPage, VisitsPage } from "@/pages";
 import { CommissionsPage } from "@/pages/Commissions";
+import FletesPageAdmin from "@/pages/Fletes/admin/fletesPage";
 import MapaApp from "@/pages/Mapa";
 import ReportsPage from "@/pages/Reports";
 import { VisitDetailPage } from "@/pages/Visits/Detalle";
@@ -73,6 +74,10 @@ export const appRouter = createBrowserRouter([
       {
         path: "commissions", // Ruta para el detalle de la visita con su ID
         element: <CommissionsPage/>,
+      },
+      {
+        path: "fletes", // Ruta para el detalle de la visita con su ID
+        element: <FletesPageAdmin/>,
       },
       {
         path: 'mapaApp',
