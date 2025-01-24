@@ -41,6 +41,7 @@
     "@radix-ui/react-tooltip": "^1.0.7",
     "@react-google-maps/api": "^2.19.3",
     "@tanstack/react-table": "^8.17.3",
+    "antd": "^5.23.2",
     "axios": "^1.7.2",
     "chart.js": "^4.4.3",
     "class-variance-authority": "^0.7.0",

@@ -11,12 +11,15 @@ import {
 } from '@/components/ui/select';
 import { ReportsHeader } from './Elements';
 import { GridPendingVisit } from './table/PendingTable';
+import { useFindUtilidadRealQuery } from '@/domain/graphql';
+import PresupuestoTable from './table/presupuesto';
 
 const ReportsPage: React.FC = () => {
   const [visitData, setVisitData] = useState([]);
   const [commentData, setCommentData] = useState([]);
   const [selectedVisitMonth, setSelectedVisitMonth] = useState(`${dayjs().format('MM')}`);
   const [selectedCommentMonth, setSelectedCommentMonth] = useState(`${dayjs().format('MM')}`);
+
   const months = [
     { value: '01', label: 'Enero' },
     { value: '02', label: 'Febrero' },
@@ -198,7 +201,15 @@ const ReportsPage: React.FC = () => {
           <GridPendingVisit></GridPendingVisit>
         </div>
       </div>
+      <div className="bg-white overflow-hidden shadow rounded-lg">
+        <div className="px-4 py-5 sm:p-6">
+          <h2 className="text-lg font-medium text-gray-900 mb-4">Visitas sin responder</h2>
+          <PresupuestoTable/>
+        </div>
+      </div>
     </div>
+    
+    
     </>
   );
 };

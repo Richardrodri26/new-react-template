@@ -54,3 +54,27 @@ mutation UpdateFletes($updateInput: UpdateFletesInput!) {
     id
   }
 }
+
+query FindUtilidadReal($input: findUtilidadRealInput!) {
+  findUtilidadReal(input: $input) {
+    trabajadores {
+      number_document
+      nombre
+      venta
+      costo
+      flete
+      comision
+      oip
+      utilidadReal
+      utilidadPorcentaje
+      utilidad
+      porcentaje
+      totalVendido
+      presupuesto
+    }
+    grupo {
+      utilidad
+      utilidad_porcentaje
+    }
+  }
+}

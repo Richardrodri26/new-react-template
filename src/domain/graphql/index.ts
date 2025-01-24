@@ -1311,6 +1311,7 @@ export type Query = {
   findAllVisitDashboard: VisitDashboardModel;
   findOne: UserKey;
   findOneFacturaClienteByCode: FindOneFacturaClienteByCode;
+  findUtilidadReal: UtilidadRealModel;
   functionalities: FunctionalityModel;
   group: Group;
   groups: Array<Group>;
@@ -1546,6 +1547,11 @@ export type QueryFindOneArgs = {
 
 export type QueryFindOneFacturaClienteByCodeArgs = {
   code: Scalars['String'];
+};
+
+
+export type QueryFindUtilidadRealArgs = {
+  input: FindUtilidadRealInput;
 };
 
 
@@ -2340,6 +2346,40 @@ export type FindOneFacturaClienteByCode = {
   isFound: Scalars['Boolean'];
 };
 
+export type FindUtilidadRealInput = {
+  endDate: Scalars['String'];
+  startDate: Scalars['String'];
+};
+
+export type FindUtilidadRealModel = {
+  __typename?: 'findUtilidadRealModel';
+  utilidad: Scalars['Float'];
+  utilidad_porcentaje: Scalars['Float'];
+};
+
+export type UtilidadRealModel = {
+  __typename?: 'utilidadRealModel';
+  grupo: FindUtilidadRealModel;
+  trabajadores: Array<UtilidadRealTModel>;
+};
+
+export type UtilidadRealTModel = {
+  __typename?: 'utilidadRealTModel';
+  comision: Scalars['Float'];
+  costo: Scalars['Float'];
+  flete: Scalars['Float'];
+  nombre: Scalars['String'];
+  number_document: Scalars['String'];
+  oip: Scalars['Float'];
+  porcentaje: Scalars['Float'];
+  presupuesto: Scalars['String'];
+  totalVendido: Scalars['String'];
+  utilidad: Scalars['Float'];
+  utilidadPorcentaje: Scalars['Float'];
+  utilidadReal: Scalars['Float'];
+  venta: Scalars['Float'];
+};
+
 export type ValidateUserTokenQueryVariables = Exact<{
   validateTokenInput: ValidateTokenInput;
 }>;
@@ -2468,6 +2508,13 @@ export type UpdateFletesMutationVariables = Exact<{
 
 
 export type UpdateFletesMutation = { __typename?: 'Mutation', updateFletes: { __typename?: 'Fletes', id: string } };
+
+export type FindUtilidadRealQueryVariables = Exact<{
+  input: FindUtilidadRealInput;
+}>;
+
+
+export type FindUtilidadRealQuery = { __typename?: 'Query', findUtilidadReal: { __typename?: 'utilidadRealModel', trabajadores: Array<{ __typename?: 'utilidadRealTModel', number_document: string, nombre: string, venta: number, costo: number, flete: number, comision: number, oip: number, utilidadReal: number, utilidadPorcentaje: number, utilidad: number, porcentaje: number, totalVendido: string, presupuesto: string }>, grupo: { __typename?: 'findUtilidadRealModel', utilidad: number, utilidad_porcentaje: number } } };
 
 export type DepartmentsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -3605,6 +3652,59 @@ export function useUpdateFletesMutation(baseOptions?: Apollo.MutationHookOptions
 export type UpdateFletesMutationHookResult = ReturnType<typeof useUpdateFletesMutation>;
 export type UpdateFletesMutationResult = Apollo.MutationResult<UpdateFletesMutation>;
 export type UpdateFletesMutationOptions = Apollo.BaseMutationOptions<UpdateFletesMutation, UpdateFletesMutationVariables>;
+export const FindUtilidadRealDocument = gql`
+    query FindUtilidadReal($input: findUtilidadRealInput!) {
+  findUtilidadReal(input: $input) {
+    trabajadores {
+      number_document
+      nombre
+      venta
+      costo
+      flete
+      comision
+      oip
+      utilidadReal
+      utilidadPorcentaje
+      utilidad
+      porcentaje
+      totalVendido
+      presupuesto
+    }
+    grupo {
+      utilidad
+      utilidad_porcentaje
+    }
+  }
+}
+    `;
+
+/**
+ * __useFindUtilidadRealQuery__
+ *
+ * To run a query within a React component, call `useFindUtilidadRealQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindUtilidadRealQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindUtilidadRealQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useFindUtilidadRealQuery(baseOptions: Apollo.QueryHookOptions<FindUtilidadRealQuery, FindUtilidadRealQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindUtilidadRealQuery, FindUtilidadRealQueryVariables>(FindUtilidadRealDocument, options);
+      }
+export function useFindUtilidadRealLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindUtilidadRealQuery, FindUtilidadRealQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindUtilidadRealQuery, FindUtilidadRealQueryVariables>(FindUtilidadRealDocument, options);
+        }
+export type FindUtilidadRealQueryHookResult = ReturnType<typeof useFindUtilidadRealQuery>;
+export type FindUtilidadRealLazyQueryHookResult = ReturnType<typeof useFindUtilidadRealLazyQuery>;
+export type FindUtilidadRealQueryResult = Apollo.QueryResult<FindUtilidadRealQuery, FindUtilidadRealQueryVariables>;
 export const DepartmentsDocument = gql`
     query Departments {
   departments {
