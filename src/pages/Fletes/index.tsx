@@ -18,6 +18,11 @@ import {
   Activity,
   Trash2,
   Home,
+  CarIcon,
+  CircleSlashedIcon,
+  BackpackIcon,
+  Backpack,
+  Expand,
 } from "lucide-react";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "@/components/ui/modal";
 import { FletesWithDocument, FindOneFacturaClienteByCode, Fletes, useCreateFletesMutation, useFindAllFacturaClienteQuery, useFindOneFacturaClienteByCodeLazyQuery, useUpdateFletesMutation } from "@/domain/graphql";
@@ -372,7 +377,10 @@ export const FletesPage: React.FC = () => {
                     <Home className="inline mr-2" size={20} /> Ciudad: {factura.CLI_CIUDAD}
                   </p>
                   <p className="text-gray-600">
-                    <Activity className="inline mr-2" size={20} /> Tipo M: {factura.TEM_TIPMOV}
+                    <CarIcon className="inline mr-2" size={20} /> Flete: {formatCurrency(factura.valueFlete || 0)}
+                  </p>
+                  <p className="text-gray-600">
+                    <Expand className="inline mr-2" size={20} /> Back Comision: {formatCurrency(factura.backComision || 0)}
                   </p>
                 </div>
                 <div>
@@ -390,6 +398,9 @@ export const FletesPage: React.FC = () => {
                   </p>
                   <p className="text-gray-600">
                     <Percent className="inline mr-2" size={20} /> Utilidad Real {((Number(factura?.TEM_VENTA || 0) - (Number(factura?.TEM_VALCOS || 0) - Number(factura.oip || 0) + Number(factura.backComision || 0) + Number(factura.valueFlete || 0))) * 100 / Number(factura?.TEM_VENTA || 0)).toFixed(2)}%
+                  </p>
+                  <p className="text-gray-600">
+                    <CircleSlashedIcon className="inline mr-2" size={20} /> OIP {formatCurrency(factura.oip)}
                   </p>
                 </div>
               </div>

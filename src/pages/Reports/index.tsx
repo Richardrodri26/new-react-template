@@ -13,6 +13,7 @@ import { ReportsHeader } from './Elements';
 import { GridPendingVisit } from './table/PendingTable';
 import { useFindUtilidadRealQuery } from '@/domain/graphql';
 import PresupuestoTable from './table/presupuesto';
+import VentasTable from './table/marcasVenta';
 
 const ReportsPage: React.FC = () => {
   const [visitData, setVisitData] = useState([]);
@@ -201,12 +202,21 @@ const ReportsPage: React.FC = () => {
           <GridPendingVisit></GridPendingVisit>
         </div>
       </div>
+      <br />
       <div className="bg-white overflow-hidden shadow rounded-lg">
         <div className="px-4 py-5 sm:p-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">Visitas sin responder</h2>
+          <h2 className="text-lg font-medium text-gray-900 mb-4">Utlidad real</h2>
           <PresupuestoTable/>
         </div>
       </div>
+      <br />
+      <div className="bg-white overflow-hidden shadow rounded-lg">
+        <div className="px-4 py-5 sm:p-6">
+          <h2 className="text-lg font-medium text-gray-900 mb-4">Ventas por Marca</h2>
+          <VentasTable />
+        </div>
+      </div>
+      
     </div>
     
     

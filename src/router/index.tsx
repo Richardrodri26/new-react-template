@@ -2,7 +2,9 @@ import { AppGuardLayout, MainLayout } from "@/components/Layouts";
 import { ClientsEditPage, ClientsPage, ContactClientsPage, FletesPage, HomePage, LoginPage, ParametersPage, UsersPage, VisitsPage } from "@/pages";
 import { CommissionsPage } from "@/pages/Commissions";
 import FletesPageAdmin from "@/pages/Fletes/admin/fletesPage";
+import { ComisionByUserPage } from "@/pages/Fletes/comisionByUser";
 import MapaApp from "@/pages/Mapa";
+import { CommissionsConfigPage } from "@/pages/Parameters/comision";
 import ReportsPage from "@/pages/Reports";
 import { VisitDetailPage } from "@/pages/Visits/Detalle";
 import { HomeBlog } from "@/pages/blog";
@@ -42,6 +44,14 @@ export const appRouter = createBrowserRouter([
       {
         path: "parameters",
         element: <ParametersPage />
+      },
+      {
+        path: "parameters-comision",
+        element: <CommissionsConfigPage />
+      },
+      {
+        path: "comision-by-user",
+        element: <ComisionByUserPage />
       },
       {
         path: "clients",

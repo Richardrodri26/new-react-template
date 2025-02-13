@@ -95,6 +95,78 @@ export type CodeRecoverPasswordInput = {
   email: Scalars['String'];
 };
 
+export type CommissionColumn = {
+  __typename?: 'CommissionColumn';
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  id: Scalars['ID'];
+  maxProfit: Scalars['Float'];
+  minProfit: Scalars['Float'];
+  name: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+  values: Array<CommissionValue>;
+};
+
+export type CommissionColumnInput = {
+  maxProfit: Scalars['Float'];
+  minProfit: Scalars['Float'];
+  name: Scalars['String'];
+};
+
+export type CommissionRange = {
+  __typename?: 'CommissionRange';
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  id: Scalars['ID'];
+  max: Scalars['Float'];
+  min: Scalars['Float'];
+  updatedAt: Scalars['DateTime'];
+  values: Array<CommissionValue>;
+};
+
+export type CommissionRangeInput = {
+  max: Scalars['Float'];
+  min: Scalars['Float'];
+};
+
+export type CommissionTable = {
+  __typename?: 'CommissionTable';
+  columns: Array<CommissionColumn>;
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  id: Scalars['ID'];
+  month: Scalars['String'];
+  ranges: Array<CommissionRange>;
+  sellerType: TypeWorker;
+  updatedAt: Scalars['DateTime'];
+  values: Array<CommissionValue>;
+};
+
+export type CommissionTableInput = {
+  columns: Array<CommissionColumnInput>;
+  month: Scalars['String'];
+  ranges: Array<CommissionRangeInput>;
+  sellerType: TypeWorker;
+  values: Array<CommissionValueInput>;
+};
+
+export type CommissionValue = {
+  __typename?: 'CommissionValue';
+  column: CommissionColumn;
+  commissionPercentage: Scalars['Float'];
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  id: Scalars['ID'];
+  range: CommissionRange;
+  updatedAt: Scalars['DateTime'];
+};
+
+export type CommissionValueInput = {
+  columnId: Scalars['ID'];
+  commissionPercentage: Scalars['Float'];
+  rangeId: Scalars['ID'];
+};
+
 export type Country = {
   __typename?: 'Country';
   code: Scalars['Int'];
@@ -673,6 +745,7 @@ export type Mutation = {
   create: RoleFx;
   createClient: Client;
   createClientContact: ClientContact;
+  createCommissionTable: CommissionTable;
   createDefaultRoles: Array<Role>;
   createDocumentType: DocumentType;
   createDummiesX: Array<Dummy>;
@@ -728,6 +801,7 @@ export type Mutation = {
   update: NotificationGroup;
   updateClient: Client;
   updateClientContact: ClientContact;
+  updateCommissionTable: CommissionTable;
   updateDocumentType: DocumentType;
   updateDummy: Dummy;
   updateFletes: Fletes;
@@ -777,6 +851,11 @@ export type MutationCreateClientArgs = {
 
 export type MutationCreateClientContactArgs = {
   createInput: CreateClientContactInput;
+};
+
+
+export type MutationCreateCommissionTableArgs = {
+  input: CommissionTableInput;
 };
 
 
@@ -1032,6 +1111,12 @@ export type MutationUpdateClientArgs = {
 
 export type MutationUpdateClientContactArgs = {
   updateInput: UpdateClientContactInput;
+};
+
+
+export type MutationUpdateCommissionTableArgs = {
+  id: Scalars['String'];
+  input: CommissionTableInput;
 };
 
 
@@ -1313,6 +1398,8 @@ export type Query = {
   findOneFacturaClienteByCode: FindOneFacturaClienteByCode;
   findUtilidadReal: UtilidadRealModel;
   functionalities: FunctionalityModel;
+  getCommissionTableById: CommissionTable;
+  getCommissionTableLast?: Maybe<CommissionTable>;
   group: Group;
   groups: Array<Group>;
   groupsCount: MetadataPagination;
@@ -1552,6 +1639,11 @@ export type QueryFindOneFacturaClienteByCodeArgs = {
 
 export type QueryFindUtilidadRealArgs = {
   input: FindUtilidadRealInput;
+};
+
+
+export type QueryGetCommissionTableByIdArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -2441,6 +2533,18 @@ export type VisitComentsQueryVariables = Exact<{
 
 export type VisitComentsQuery = { __typename?: 'Query', visitComents: Array<{ __typename?: 'VisitComent', status?: VisitComentStatusEnum | null, type: VisitComentTypeEnum, id: string, description: string, createdAt: any, date?: any | null, user: { __typename?: 'User', name?: string | null }, visit: { __typename?: 'Visit', id: string, client: { __typename?: 'Client', name: string } } }> };
 
+export type CreateCommissionTableMutationVariables = Exact<{
+  input: CommissionTableInput;
+}>;
+
+
+export type CreateCommissionTableMutation = { __typename?: 'Mutation', createCommissionTable: { __typename?: 'CommissionTable', id: string, month: string, sellerType: TypeWorker, ranges: Array<{ __typename?: 'CommissionRange', id: string, min: number, max: number }>, columns: Array<{ __typename?: 'CommissionColumn', id: string, name: string, minProfit: number, maxProfit: number }>, values: Array<{ __typename?: 'CommissionValue', id: string, commissionPercentage: number, range: { __typename?: 'CommissionRange', id: string }, column: { __typename?: 'CommissionColumn', id: string } }> } };
+
+export type GetCommissionTableLastQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCommissionTableLastQuery = { __typename?: 'Query', getCommissionTableLast?: { __typename?: 'CommissionTable', id: string, month: string, sellerType: TypeWorker, ranges: Array<{ __typename?: 'CommissionRange', id: string, min: number, max: number }>, columns: Array<{ __typename?: 'CommissionColumn', id: string, name: string, minProfit: number, maxProfit: number }>, values: Array<{ __typename?: 'CommissionValue', id: string, commissionPercentage: number, column: { __typename?: 'CommissionColumn', id: string }, range: { __typename?: 'CommissionRange', id: string } }> } | null };
+
 export type ClientContactsQueryVariables = Exact<{
   orderBy?: InputMaybe<Array<FindClientContactOrderBy> | FindClientContactOrderBy>;
   pagination?: InputMaybe<Pagination>;
@@ -3249,6 +3353,119 @@ export function useVisitComentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type VisitComentsQueryHookResult = ReturnType<typeof useVisitComentsQuery>;
 export type VisitComentsLazyQueryHookResult = ReturnType<typeof useVisitComentsLazyQuery>;
 export type VisitComentsQueryResult = Apollo.QueryResult<VisitComentsQuery, VisitComentsQueryVariables>;
+export const CreateCommissionTableDocument = gql`
+    mutation CreateCommissionTable($input: CommissionTableInput!) {
+  createCommissionTable(input: $input) {
+    id
+    month
+    sellerType
+    ranges {
+      id
+      min
+      max
+    }
+    columns {
+      id
+      name
+      minProfit
+      maxProfit
+    }
+    values {
+      id
+      commissionPercentage
+      range {
+        id
+      }
+      column {
+        id
+      }
+    }
+  }
+}
+    `;
+export type CreateCommissionTableMutationFn = Apollo.MutationFunction<CreateCommissionTableMutation, CreateCommissionTableMutationVariables>;
+
+/**
+ * __useCreateCommissionTableMutation__
+ *
+ * To run a mutation, you first call `useCreateCommissionTableMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCommissionTableMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCommissionTableMutation, { data, loading, error }] = useCreateCommissionTableMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateCommissionTableMutation(baseOptions?: Apollo.MutationHookOptions<CreateCommissionTableMutation, CreateCommissionTableMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateCommissionTableMutation, CreateCommissionTableMutationVariables>(CreateCommissionTableDocument, options);
+      }
+export type CreateCommissionTableMutationHookResult = ReturnType<typeof useCreateCommissionTableMutation>;
+export type CreateCommissionTableMutationResult = Apollo.MutationResult<CreateCommissionTableMutation>;
+export type CreateCommissionTableMutationOptions = Apollo.BaseMutationOptions<CreateCommissionTableMutation, CreateCommissionTableMutationVariables>;
+export const GetCommissionTableLastDocument = gql`
+    query getCommissionTableLast {
+  getCommissionTableLast {
+    id
+    month
+    sellerType
+    ranges {
+      id
+      min
+      max
+    }
+    columns {
+      id
+      name
+      minProfit
+      maxProfit
+    }
+    values {
+      id
+      commissionPercentage
+      column {
+        id
+      }
+      range {
+        id
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetCommissionTableLastQuery__
+ *
+ * To run a query within a React component, call `useGetCommissionTableLastQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCommissionTableLastQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCommissionTableLastQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetCommissionTableLastQuery(baseOptions?: Apollo.QueryHookOptions<GetCommissionTableLastQuery, GetCommissionTableLastQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCommissionTableLastQuery, GetCommissionTableLastQueryVariables>(GetCommissionTableLastDocument, options);
+      }
+export function useGetCommissionTableLastLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCommissionTableLastQuery, GetCommissionTableLastQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCommissionTableLastQuery, GetCommissionTableLastQueryVariables>(GetCommissionTableLastDocument, options);
+        }
+export type GetCommissionTableLastQueryHookResult = ReturnType<typeof useGetCommissionTableLastQuery>;
+export type GetCommissionTableLastLazyQueryHookResult = ReturnType<typeof useGetCommissionTableLastLazyQuery>;
+export type GetCommissionTableLastQueryResult = Apollo.QueryResult<GetCommissionTableLastQuery, GetCommissionTableLastQueryVariables>;
 export const ClientContactsDocument = gql`
     query ClientContacts($orderBy: [FindClientContactOrderBy!], $pagination: Pagination, $where: FindClientContactWhere) {
   clientContacts(orderBy: $orderBy, pagination: $pagination, where: $where) {

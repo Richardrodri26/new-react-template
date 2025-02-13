@@ -1,0 +1,56 @@
+mutation CreateCommissionTable($input: CommissionTableInput!) {
+    createCommissionTable(input: $input) {
+      id
+      month
+      sellerType
+      ranges {
+        id
+        min
+        max
+      }
+      columns {
+        id
+        name
+        minProfit
+        maxProfit
+      }
+      values {
+        id
+        commissionPercentage
+        range {
+          id
+        }
+        column {
+          id
+        }
+      }
+    }
+  }
+  query getCommissionTableLast {
+    getCommissionTableLast {
+      id
+      month
+      sellerType
+      ranges {
+        id
+        min
+        max
+      }
+      columns {
+        id
+        name
+        minProfit
+        maxProfit
+      }
+      values {
+        id
+        commissionPercentage
+        column {
+          id
+        }
+        range {
+          id
+        }
+      }
+    }
+  }
