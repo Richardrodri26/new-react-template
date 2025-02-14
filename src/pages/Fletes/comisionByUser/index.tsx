@@ -48,7 +48,13 @@ export const ComisionByUserPage = () => {
         const vendedorData = usersByCedula.get(vendedor);
         const totalVendido = facturas.reduce((sum, factura) => sum + parseFloat(factura.TEM_VENTA || 0), 0);
         const totalCosto = facturas.reduce((sum, factura) => sum + parseFloat(factura.TEM_VALCOS || 0), 0);
-        const utlidad = totalVendido - totalCosto;
+        const totalFlete = facturas.reduce((sum, factura) => sum + parseFloat(factura.valueFlete || 0), 0);
+        const totalOip = facturas.reduce((sum, factura) => sum + parseFloat(factura.oip || 0), 0);
+        const totalBack = facturas.reduce((sum, factura) => sum + parseFloat(factura.backComision || 0), 0);
+        console.log(totalVendido,totalCosto,totalFlete,totalOip,totalBack)
+        // const utlidad = (1 - ((totalCosto + totalFlete + totalBack - totalOip) / totalVendido)) * 100;
+        const utlidad = totalVendido - (totalCosto - totalOip + totalBack + totalFlete)
+       
         const utilidadPorcentaje = totalVendido !== 0 ? (utlidad / totalVendido) * 100 : 0;
         const type = vendedorData?.typeWoker === TypeWorker.Interno ? 'interno' : 'externo';
         
@@ -145,10 +151,12 @@ export const ComisionByUserPage = () => {
             <thead className="bg-gray-200 text-gray-700">
               <tr>
                 <th className="border border-gray-300 px-4 py-2">Cliente</th>
+                <th className="border border-gray-300 px-4 py-2">Factura</th>
+                <th className="border border-gray-300 px-4 py-2">Fecha</th>
                 <th className="border border-gray-300 px-4 py-2">Valor Costo</th>
                 <th className="border border-gray-300 px-4 py-2">Valor Venta</th>
-                <th className="border border-gray-300 px-4 py-2">Utilidad</th>
-                <th className="border border-gray-300 px-4 py-2">Utilidad %</th>
+                <th className="border border-gray-300 px-4 py-2">Utilidad Real</th>
+                <th className="border border-gray-300 px-4 py-2">Utilidad Real (%)</th>
                 <th className="border border-gray-300 px-4 py-2">Flete</th>
                 <th className="border border-gray-300 px-4 py-2">OIP</th>
                 <th className="border border-gray-300 px-4 py-2">Back Comisión</th>
@@ -158,10 +166,12 @@ export const ComisionByUserPage = () => {
               {result.facturas.map((factura: any, facturaIndex: number) => (
                 <tr key={facturaIndex} className="hover:bg-gray-50">
                   <td className="border border-gray-300 px-4 py-2">{factura.TEM_NOMCLI}</td>
+                  <td className="border border-gray-300 px-4 py-2">{factura.TEM_NUMDOC}</td>
+                  <td className="border border-gray-300 px-4 py-2">{factura.TEM_FECHA?.split('T')[0]}</td>
                   <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(factura.TEM_VALCOS || 0))}</td>
                   <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(factura.TEM_VENTA || 0))}</td>
-                  <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(factura.TEM_UTILIDAD || 0))}</td>
-                  <td className="border border-gray-300 px-4 py-2">{factura.TEM_PORCENTAJE_UTILIDAD || 0}</td>
+                  <td className="border border-gray-300 px-4 py-2">{formatCurrency((Number(factura?.TEM_VENTA || 0) - (Number(factura?.TEM_VALCOS || 0) - Number(factura.oip || 0) + Number(factura.backComision || 0) + Number(factura.valueFlete || 0))))}</td>
+                  <td className="border border-gray-300 px-4 py-2">{((Number(factura?.TEM_VENTA || 0) - (Number(factura?.TEM_VALCOS || 0) - Number(factura.oip || 0) + Number(factura.backComision || 0) + Number(factura.valueFlete || 0))) * 100 / Number(factura?.TEM_VENTA || 0)).toFixed(2)|| 0}</td>
                   <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(factura.valueFlete || 0))}</td>
                   <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(factura.oip || 0))}</td>
                   <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(factura.backComision || 0))}</td>

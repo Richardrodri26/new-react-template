@@ -172,17 +172,17 @@ const MapaApp = () => {
                     <ZoomControl position="topright" />
 
                     {/* Línea de ruta */}
-                    <Polyline positions={routers?.map(x => x.coordinate)} color="blue" weight={4} opacity={0.7} />
+                    {/* <Polyline positions={routers?.map(x => x.coordinate)} color="blue" weight={4} opacity={0.7} /> */}
 
                     {/* Marcadores de las visitas */}
-                    {routers?.map((coordinate, index) => (
+                    {/* {routers?.map((coordinate, index) => (
                       <Marker key={index} position={coordinate.coordinate}>
                         <Tooltip direction="top" offset={[0, -10]} opacity={1} permanent>
                           {`Visita  #${index + 1}`}
                         </Tooltip>
                         <Popup>{`${coordinate.name}`}</Popup>
                       </Marker>
-                    ))}
+                    ))} */}
                   </MapContainer>
               }
             </AccordionDetails>

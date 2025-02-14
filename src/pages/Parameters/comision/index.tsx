@@ -22,6 +22,7 @@ export const CommissionsConfigPage = () => {
   const [columns, setColumns] = useState<ColumnData[]>([]);
   const [data, setData] = useState<TableData[]>([]);
   const [saleAmount, setSaleAmount] = useState(""); // Monto de venta a validar
+  const [comment, setComment] = useState(""); // Monto de venta a validar
   const [profitPercentage, setProfitPercentage] = useState(""); // Porcentaje de utilidad a validar
   const [result, setResult] = useState<string | null>(null); // Resultado de validación
   const [loading, setLoading] = useState(false); // Estado de carga
@@ -31,6 +32,7 @@ export const CommissionsConfigPage = () => {
     const tableState = { 
       tipo: type,
       mes: month,
+      comment,
       columns, 
       data 
     };
@@ -75,6 +77,7 @@ export const CommissionsConfigPage = () => {
           const data = JSON.parse(result.jsonData);
           setColumns(data.columns);
           setData(data.data);
+          setComment(data.comment)
           if (!type) setType(data.tipo); // Solo se actualiza si 'type' está vacío
           if (!month) setMonth(data.mes); // Solo se actualiza si 'month' está vacío
         } catch (error) {
@@ -287,6 +290,14 @@ export const CommissionsConfigPage = () => {
             )}
           </tbody>
         </table>
+      </div>
+      <div className="verflow-x-auto bg-gray-100 p-4 rounded-lg shadow">
+        <textarea 
+          placeholder="Comentario..."
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          className="border border-gray-300 p-2 w-full"
+        />
       </div>
 
       {/* Validación del porcentaje de ganancia */}
