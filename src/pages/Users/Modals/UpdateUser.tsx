@@ -11,6 +11,7 @@ import { apolloClient } from '@/main.config'
 import React from 'react'
 import { toast } from 'sonner'
 import { z } from 'zod'
+import UserManagementTable from './userTableManagen'
 
 const createUserSchema = z.object({
   address: z.string(),
@@ -22,7 +23,8 @@ const createUserSchema = z.object({
   // password: z.string(),
   phoneNumber: z.string(),
   type: z.string(),
-  typeWoker: z.string().optional()
+  typeWoker: z.string().optional(),
+  valueTransport: z.string().optional()
 })
 
 type createUserSchemaType = z.infer<typeof createUserSchema>;
@@ -84,7 +86,8 @@ export const UpdateUser = () => {
             id: modalStatusContent?.id || "",
             identificationType: data.identificationType as UserDocumentTypes,
             type: data.type as UserTypes,
-            typeWoker: data.typeWoker as TypeWorker
+            typeWoker: data.typeWoker as TypeWorker,
+            valueTransport: data.valueTransport ? Number(data.valueTransport) : undefined
           }
         }
       });
@@ -117,9 +120,10 @@ export const UpdateUser = () => {
     name: modalStatusContent?.name,
     phoneNumber: modalStatusContent?.phoneNumber,
     type: modalStatusContent?.type,
-    typeWoker: modalStatusContent.typeWoker
+    typeWoker: modalStatusContent.typeWoker,
+    valueTransport: modalStatusContent.valueTransport?.toString() || undefined
   }
-
+  console.log(modalStatusContent)
   return (
     <>
       <DialogHeader >
@@ -147,8 +151,15 @@ export const UpdateUser = () => {
           {/* <DepartmentAndMunicipality currentIdDepartment='departmentId' currentIdMunicipalities='cityId' /> */}
           <InputForm name='email' label={"Correo electronico"} />
           <InputForm name='phoneNumber' label={"Telefono celular"} />
+          <InputForm name='valueTransport' label={"Valor de rodamiento"} type='number'/>
+          
           {/* <ComboboxForm label={"Prueba"} name='Prueba' options={[{ label: "prueba 1", value: "1" }, { label: "prueba 2", value: "2" }]} /> */}
         </RowForm>
+        {/* {
+          modalStatusContent && (
+            <UserManagementTable users={modalStatusContent as any} key={modalStatus?.id} />
+          )
+        } */}
 
         <ButtonForm>
           Actualizar

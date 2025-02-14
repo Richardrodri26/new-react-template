@@ -24,7 +24,15 @@ query Users($orderBy: [FindUsersOrderBy!], $where: FindUsersWhere, $pagination: 
     phoneVerification
     emailVerification
     type
+    valueTransport
     typeWoker
+    subordinates {
+      id
+      fullName
+      email
+      identificationType
+      identificationNumber
+    }
     city {
       id
       name
@@ -43,7 +51,6 @@ query Users($orderBy: [FindUsersOrderBy!], $where: FindUsersWhere, $pagination: 
     }
     userRolesFx {
       id
-      
     }
     fullName
   }
@@ -74,5 +81,16 @@ mutation UpdateUser($updateInput: UpdateUserInput!) {
     id
     fullName
     lastName
+  }
+}
+
+mutation AssignSubordinate($managerId: String!, $subordinateId: String!) {
+  assignSubordinate(managerId: $managerId, subordinateId: $subordinateId) {
+    id
+  }
+}
+mutation RemoveSubordinate($managerId: String!, $subordinateId: String!) {
+  removeSubordinate(managerId: $managerId, subordinateId: $subordinateId) {
+    id
   }
 }

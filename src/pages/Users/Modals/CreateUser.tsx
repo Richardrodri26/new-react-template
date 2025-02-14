@@ -25,7 +25,8 @@ const createUserSchema = z.object({
   .regex(/[@$!%*?&]/, 'La contraseña debe tener al menos un carácter especial'),
   phoneNumber: z.string(),
   type: z.string(),
-  typeWoker: z.string().optional()
+  typeWoker: z.string().optional(),
+  valueTransport: z.string().optional()
 })
 
 type createUserSchemaType = z.infer<typeof createUserSchema>;
@@ -83,7 +84,8 @@ export const CreateUser = () => {
             ...data,
             identificationType: data.identificationType as UserDocumentTypes,
             type: data.type as UserTypes,
-            typeWoker: data.typeWoker as TypeWorker
+            typeWoker: data.typeWoker as TypeWorker,
+            valueTransport: data.valueTransport ? Number(data.valueTransport) : undefined
           }
         }
       });
@@ -155,6 +157,7 @@ export const CreateUser = () => {
           {/* <DepartmentAndMunicipality currentIdDepartment='departmentId' currentIdMunicipalities='cityId' /> */}
           <InputForm name='email' label={"Correo electronico"} />
           <InputForm name='phoneNumber' label={"Telefono celular"} />
+          <InputForm name='valueTransport' label={"Valor de rodamiento"} type='number'/>
           {/* <ComboboxForm label={"Prueba"} name='Prueba' options={[{ label: "prueba 1", value: "1" }, { label: "prueba 2", value: "2" }]} /> */}
         </RowForm>
 

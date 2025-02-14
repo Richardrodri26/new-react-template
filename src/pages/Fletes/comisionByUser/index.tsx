@@ -1,86 +1,70 @@
-import { TypeWorker, useFindAllFacturaClienteQuery, User, useUsersQuery } from "@/domain/graphql";
-import { findCommission } from "@/lib/utils";
+import { useState, useMemo, useEffect } from "react";
+import { Calendar, Reply, Search } from "lucide-react";
 import { Loader } from "@/pages/Commissions";
 import { formatCurrency } from "@/pages/Reports/table/marcasVenta";
 import dayjs from "dayjs";
-import { Calendar, Reply, Search } from "lucide-react";
-import { useState, useMemo, useEffect } from "react";
+import axios from "axios";
+import { UsuarioFacturas } from "../interface";
+import { axiosRest } from "@/domain/api.config";
+import DataTable from "./tableComision";
 
 export const ComisionByUserPage = () => {
   const [fechaInicio, setFechaInicio] = useState(dayjs().startOf("month").format("YYYY-MM-DD"));
   const [fechaFin, setFechaFin] = useState(dayjs().endOf("month").format("YYYY-MM-DD"));
   const [loadingTable, setLoading] = useState(false); // Estado de carga
-  const [commissionResults, setCommissionResults] = useState<any[]>([]);
-  const { data, loading, refetch } = useFindAllFacturaClienteQuery({
-    variables: { input: { tem_fecha_desde: fechaInicio, tem_fecha_hasta: fechaFin } }
-  });
-  const { data: usersData, loading: loadingUsers } = useUsersQuery({
-        variables: {
-            pagination: {
-                skip: 0,
-                take: 999
-            },
-        }
-    });
-    const usersByCedula = useMemo(() => {
-        const map = new Map<string, User>();
-        usersData?.users.forEach((user) => {
-            map.set(user.identificationNumber || "Sin Vendedor" , user as User);
-        });
-        return map;
-        }, [usersData]);
-  const groupedData = useMemo(() => {
-    const grouped: Record<string, any[]> = {};
+  const [loadingTableComision, setLoadingComision] = useState(false); // Estado de carga
+  const [commissionResults, setCommissionResults] = useState<UsuarioFacturas[]>([]);
+  const [dataComisionTable, setdataComisionTable] = useState<string>();
+  const [dataComisionTableExterno, setdataComisionTableExterno] = useState<string>();
+  const [showModal, setShowModal] = useState(false); // Estado para mostrar el modal
 
-    data?.findAllFacturaCliente.forEach((item: any) => {
-      const vendedor = item.TEM_VENDED || "Sin Vendedor";
-      if (!grouped[vendedor]) grouped[vendedor] = [];
-      grouped[vendedor].push(item);
-    });
+  const fetchComisionesTableInterno = async () => {
+    setLoadingComision(true);
+    try {
+      const response = await axiosRest.get(`/commissions/getConfigurationByTypeMonth/interno/${dayjs(fechaInicio).month() + 1}`);
+      setdataComisionTable(response.data.jsonData);
+    } catch (error) {
+      console.error("Error fetching comisiones:", error);
+    } finally {
+      setLoadingComision(false);
+    }
+  };
 
-    return grouped;
-  }, [data]);
+  const fetchComisionesTableExterno = async () => {
+    setLoadingComision(true);
+    try {
+      const response = await axiosRest.get(`/commissions/getConfigurationByTypeMonth/externo/${dayjs(fechaInicio).month() + 1}`);
+      setdataComisionTableExterno(response.data.jsonData);
+    } catch (error) {
+      console.error("Error fetching comisiones:", error);
+    } finally {
+      setLoadingComision(false);
+    }
+  };
+
+  const fetchComisiones = async () => {
+    setLoading(true);
+    try {
+      const response = await axiosRest.get(`/fletes/totalizados/${fechaInicio}/${fechaFin}`);
+      setCommissionResults(response.data);
+    } catch (error) {
+      console.error("Error fetching comisiones:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true)
-      const results = [];
-      for (const [vendedor, facturas] of Object.entries(groupedData)) {
-        const vendedorData = usersByCedula.get(vendedor);
-        const totalVendido = facturas.reduce((sum, factura) => sum + parseFloat(factura.TEM_VENTA || 0), 0);
-        const totalCosto = facturas.reduce((sum, factura) => sum + parseFloat(factura.TEM_VALCOS || 0), 0);
-        const totalFlete = facturas.reduce((sum, factura) => sum + parseFloat(factura.valueFlete || 0), 0);
-        const totalOip = facturas.reduce((sum, factura) => sum + parseFloat(factura.oip || 0), 0);
-        const totalBack = facturas.reduce((sum, factura) => sum + parseFloat(factura.backComision || 0), 0);
-        console.log(totalVendido,totalCosto,totalFlete,totalOip,totalBack)
-        // const utlidad = (1 - ((totalCosto + totalFlete + totalBack - totalOip) / totalVendido)) * 100;
-        const utlidad = totalVendido - (totalCosto - totalOip + totalBack + totalFlete)
-       
-        const utilidadPorcentaje = totalVendido !== 0 ? (utlidad / totalVendido) * 100 : 0;
-        const type = vendedorData?.typeWoker === TypeWorker.Interno ? 'interno' : 'externo';
-        
-        // Aquí hacemos el await de la función findCommission
-        const totalPagar = await findCommission(totalVendido, Number(utilidadPorcentaje.toFixed(2)), type, dayjs(fechaInicio).locale('es').format('MMMM'));
+    if (fechaInicio && fechaFin) {
+      fetchComisiones();
+      fetchComisionesTableInterno();
+      fetchComisionesTableExterno();
+    }
+  }, [fechaInicio, fechaFin]);
 
-        // Guardamos los resultados
-        results.push({
-          vendedor,
-          vendedorData,
-          totalVendido,
-          totalCosto,
-          utilidadPorcentaje,
-          facturas,
-          totalPagar
-        });
-      }
-      setLoading(false)
-      setCommissionResults(results);
-    };
-
-    fetchData();
-  }, [groupedData, usersByCedula]); 
   return (
     <div className="p-6">
-      <Reply to={'/dashboard/parameters'} className="text-2xl font-bold text-gray-800 mb-4"/>
+      <Reply to={'/dashboard/parameters'} className="text-2xl font-bold text-gray-800 mb-4" />
       <h2 className="text-2xl font-bold text-gray-800 mb-4">Comisiones por Vendedor</h2>
 
       {/* Filtros por fecha */}
@@ -115,75 +99,121 @@ export const ComisionByUserPage = () => {
       </div>
 
       <button
-        onClick={() => refetch()}
+        onClick={fetchComisiones}
         className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center gap-2"
       >
         <Search size={20} />
         Buscar
       </button>
 
-      { 
-        loading || loadingTable 
-        ?
-        <Loader/>
-        :
-        <>
-                {/* Tablas por vendedor */}
-      <div className="mt-6 space-y-8">
-      {commissionResults.map((result, index) => (
-        <div key={index} className="bg-gray-100 p-4 rounded-lg shadow">
-          <h3 className="text-xl font-bold text-gray-800 mb-2">
-            Vendedor: {result.vendedorData?.fullName}
-          </h3>
-          <h4 className="text-xl font-bold text-gray-800 mb-2">
-            Total Vendido: <span className="text-gray-600">{formatCurrency(result.totalVendido)}</span>
-          </h4>
-          <h4 className="text-xl font-bold text-gray-800 mb-2">
-            Total Costo: <span className="text-gray-600">{formatCurrency(result.totalCosto)}</span>
-          </h4>
-          <h4 className="text-xl font-bold text-gray-800 mb-2">
-            Utilidad : <span className="text-gray-600">{result.utilidadPorcentaje.toFixed(2)}</span>
-          </h4>
-          <h4 className="text-xl font-bold text-gray-800 mb-2">
-            Total a Pagar: <span className="text-gray-600">{result.totalPagar}</span>
-          </h4>
-          <table className="w-full border-collapse border border-gray-300">
-            <thead className="bg-gray-200 text-gray-700">
-              <tr>
-                <th className="border border-gray-300 px-4 py-2">Cliente</th>
-                <th className="border border-gray-300 px-4 py-2">Factura</th>
-                <th className="border border-gray-300 px-4 py-2">Fecha</th>
-                <th className="border border-gray-300 px-4 py-2">Valor Costo</th>
-                <th className="border border-gray-300 px-4 py-2">Valor Venta</th>
-                <th className="border border-gray-300 px-4 py-2">Utilidad Real</th>
-                <th className="border border-gray-300 px-4 py-2">Utilidad Real (%)</th>
-                <th className="border border-gray-300 px-4 py-2">Flete</th>
-                <th className="border border-gray-300 px-4 py-2">OIP</th>
-                <th className="border border-gray-300 px-4 py-2">Back Comisión</th>
-              </tr>
-            </thead>
-            <tbody>
-              {result.facturas.map((factura: any, facturaIndex: number) => (
-                <tr key={facturaIndex} className="hover:bg-gray-50">
-                  <td className="border border-gray-300 px-4 py-2">{factura.TEM_NOMCLI}</td>
-                  <td className="border border-gray-300 px-4 py-2">{factura.TEM_NUMDOC}</td>
-                  <td className="border border-gray-300 px-4 py-2">{factura.TEM_FECHA?.split('T')[0]}</td>
-                  <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(factura.TEM_VALCOS || 0))}</td>
-                  <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(factura.TEM_VENTA || 0))}</td>
-                  <td className="border border-gray-300 px-4 py-2">{formatCurrency((Number(factura?.TEM_VENTA || 0) - (Number(factura?.TEM_VALCOS || 0) - Number(factura.oip || 0) + Number(factura.backComision || 0) + Number(factura.valueFlete || 0))))}</td>
-                  <td className="border border-gray-300 px-4 py-2">{((Number(factura?.TEM_VENTA || 0) - (Number(factura?.TEM_VALCOS || 0) - Number(factura.oip || 0) + Number(factura.backComision || 0) + Number(factura.valueFlete || 0))) * 100 / Number(factura?.TEM_VENTA || 0)).toFixed(2)|| 0}</td>
-                  <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(factura.valueFlete || 0))}</td>
-                  <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(factura.oip || 0))}</td>
-                  <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(factura.backComision || 0))}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {/* Botón flotante para abrir el modal */}
+      <button
+        onClick={() => setShowModal(true)}
+        className="fixed bottom-6 right-6 bg-black text-white p-4 rounded-full shadow-lg hover:bg-gray-800"
+      >
+        <Search size={24} />
+      </button>
+
+      {/* Modal con las dos tablas */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-4xl w-full">
+            <button
+              onClick={() => setShowModal(false)}
+              className="absolute top-2 right-2 text-black text-2xl"
+            >
+              &times;
+            </button>
+            <h3 className="text-xl font-bold text-gray-800 mb-4">Comisiones Interno y Externo</h3>
+            <div className="space-y-4">
+              {dataComisionTable && (
+                <DataTable jsonString={dataComisionTable} key={dataComisionTable} />
+              )}
+              {dataComisionTableExterno && (
+                <DataTable jsonString={dataComisionTableExterno} key={dataComisionTableExterno} />
+              )}
+            </div>
+            <button onClick={() => setShowModal(false)} className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+              Cerrar
+            </button>
+          </div>
         </div>
-      ))}
-      </div>
-        </>
-      }
+      )}
+
+      {loadingTable ? (
+        <Loader />
+      ) : (
+        <div className="mt-6 space-y-8">
+          {commissionResults?.map((result, index) => (
+            <div key={index} className="bg-gray-100 p-4 rounded-lg shadow">
+              <h3 className="text-xl font-bold text-gray-800 mb-2">
+                Vendedor: {result.user ? result.user?.name + ' ' + result.user?.lastName + ' - ' + result.user.typeWoker?.toUpperCase() : 'VENDEDOR NO ESTA EN EL SELLE'}
+              </h3>
+              <h3 className="text-xl font-bold text-gray-800 mb-2">
+                Tota de rodamiento: {formatCurrency(result.totalizado.totalRodamiento)}
+              </h3>
+              {
+               /*@ts-ignore*/
+                result.user.__subordinates__ && result.user.__subordinates__?.length > 0 && (
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">
+                    Tiene a cargo a: {
+                      /*@ts-ignore*/
+                    result.user.__subordinates__.map(subordinate => subordinate.name).join(', ')}
+                  </h3>
+                )
+              }
+
+              <table className="w-full border-collapse border border-gray-300">
+                <thead className="bg-gray-200 text-gray-700">
+                  <tr>
+                    <th className="border border-gray-300 px-4 py-2">Cliente</th>
+                    <th className="border border-gray-300 px-4 py-2">Factura</th>
+                    <th className="border border-gray-300 px-4 py-2">Fecha</th>
+                    <th className="border border-gray-300 px-4 py-2">Valor Costo</th>
+                    <th className="border border-gray-300 px-4 py-2">Valor Venta</th>
+                    <th className="border border-gray-300 px-4 py-2">Utilidad Real</th>
+                    <th className="border border-gray-300 px-4 py-2">Utilidad Real (%)</th>
+                    <th className="border border-gray-300 px-4 py-2">Flete</th>
+                    <th className="border border-gray-300 px-4 py-2">OIP</th>
+                    <th className="border border-gray-300 px-4 py-2">Back Comisión</th>
+                    <th className="border border-gray-300 px-4 py-2">Comisión</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr key={index + 'totalizado'}>
+                    <td className="border border-gray-300 px-4 py-2">TOTAL</td>
+                    <td className="border border-gray-300 px-4 py-2"></td>
+                    <td className="border border-gray-300 px-4 py-2"></td>
+                    <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.totalizado.totalCosto || 0))}</td>
+                    <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.totalizado.totalVendido || 0))}</td>
+                    <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.totalizado.utilidad || 0))}</td>
+                    <td className="border border-gray-300 px-4 py-2">{result.totalizado.utilidadPorcentaje}</td>
+                    <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.totalizado.totalFlete || 0))}</td>
+                    <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.totalizado.totalOip || 0))}</td>
+                    <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.totalizado.totalBack || 0))}</td>
+                    <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.totalizado.totalComision || 0))}</td>
+                  </tr>
+                  {result.facturasValide.map((factura, facturaIndex: number) => (
+                    <tr key={facturaIndex} className="hover:bg-gray-50">
+                      <td className="border border-gray-300 px-4 py-2">{factura.clienteNombre}</td>
+                      <td className="border border-gray-300 px-4 py-2">{factura.numeroFactura}</td>
+                      <td className="border border-gray-300 px-4 py-2">{factura.fecha?.split('T')[0]}</td>
+                      <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(factura.valorCosto || 0))}</td>
+                      <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(factura.valorVenta || 0))}</td>
+                      <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(factura.utilidadReal || 0))}</td>
+                      <td className="border border-gray-300 px-4 py-2">{Number(factura.utilidadRealPorcentaje || 0)}</td>
+                      <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(factura.valorFlete || 0))}</td>
+                      <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(factura.valorOip || 0))}</td>
+                      <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(factura.valorBack || 0))}</td>
+                      <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(factura.comision || 0))}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
