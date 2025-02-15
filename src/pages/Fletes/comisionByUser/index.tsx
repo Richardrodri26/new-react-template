@@ -170,6 +170,7 @@ export const ComisionByUserPage = () => {
                     <th className="border border-gray-300 px-4 py-2">Factura</th>
                     <th className="border border-gray-300 px-4 py-2">Fecha</th>
                     <th className="border border-gray-300 px-4 py-2">Valor Costo</th>
+                    <th className="border border-gray-300 px-4 py-2">Valor Costo Real</th>
                     <th className="border border-gray-300 px-4 py-2">Valor Venta</th>
                     <th className="border border-gray-300 px-4 py-2">Utilidad Real</th>
                     <th className="border border-gray-300 px-4 py-2">Utilidad Real (%)</th>
@@ -180,14 +181,36 @@ export const ComisionByUserPage = () => {
                   </tr>
                 </thead>
                 <tbody>
+                {
+                  result.externo 
+                    && (
+                      <>
+                        <tr key={index + 'grupo'}>
+                          <td className="border border-gray-300 px-4 py-2">TOTAL GRUPO</td>
+                          <td className="border border-gray-300 px-4 py-2"></td>
+                          <td className="border border-gray-300 px-4 py-2"></td>
+                          <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.externo.totalCostoGrupo  || 0))}</td>
+                          <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.externo.totalCostoRealGrupo  || 0))}</td>
+                          <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.externo.totalVentasGrupo  || 0))}</td>
+                          <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.externo.utilidadReal  || 0))}</td>
+                          <td className="border border-gray-300 px-4 py-2">{result.externo.utilidadRealPorcentaje.toFixed(2)}</td>
+                          <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.externo.totalFleteGrupo  || 0))}</td>
+                          <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.externo.totalOipGrupo  || 0))}</td>
+                          <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.externo.totalBackComisionGrupo  || 0))}</td>
+                          <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.externo.comision || 0))}</td>
+                        </tr>
+                      </>
+                    )
+                  }
                   <tr key={index + 'totalizado'}>
                     <td className="border border-gray-300 px-4 py-2">TOTAL</td>
                     <td className="border border-gray-300 px-4 py-2"></td>
                     <td className="border border-gray-300 px-4 py-2"></td>
                     <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.totalizado.totalCosto || 0))}</td>
+                    <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.totalizado.totalCostoReal || 0))}</td>
                     <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.totalizado.totalVendido || 0))}</td>
                     <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.totalizado.utilidad || 0))}</td>
-                    <td className="border border-gray-300 px-4 py-2">{result.totalizado.utilidadPorcentaje}</td>
+                    <td className="border border-gray-300 px-4 py-2">{result.totalizado.utilidadPorcentaje.toFixed(2)}</td>
                     <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.totalizado.totalFlete || 0))}</td>
                     <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.totalizado.totalOip || 0))}</td>
                     <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.totalizado.totalBack || 0))}</td>
@@ -199,9 +222,10 @@ export const ComisionByUserPage = () => {
                       <td className="border border-gray-300 px-4 py-2">{factura.numeroFactura}</td>
                       <td className="border border-gray-300 px-4 py-2">{factura.fecha?.split('T')[0]}</td>
                       <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(factura.valorCosto || 0))}</td>
+                      <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(factura.valorCostoReal || 0))}</td>
                       <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(factura.valorVenta || 0))}</td>
                       <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(factura.utilidadReal || 0))}</td>
-                      <td className="border border-gray-300 px-4 py-2">{Number(factura.utilidadRealPorcentaje || 0)}</td>
+                      <td className="border border-gray-300 px-4 py-2">{Number(factura.utilidadRealPorcentaje.toFixed(2) || 0)}</td>
                       <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(factura.valorFlete || 0))}</td>
                       <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(factura.valorOip || 0))}</td>
                       <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(factura.valorBack || 0))}</td>

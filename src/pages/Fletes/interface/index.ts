@@ -5,6 +5,7 @@ interface FacturaValida {
     numeroFactura: string;
     fecha: string;  // ISO 8601 date string
     valorCosto: number;
+    valorCostoReal: number;
     valorVenta: number;
     utilidadReal: number;
     utilidadRealPorcentaje: number;
@@ -23,12 +24,25 @@ interface Totalizado {
     utilidad: number;
     utilidadPorcentaje: number;
     totalComision: number;
+    totalCostoReal: number;
     totalRodamiento: number;
 }
-
+interface Interno {
+    totalVentasGrupo: number;
+    totalCostoGrupo: number;
+    comisionTable: number;
+    comision: number;
+    totalFleteGrupo: number;
+    totalOipGrupo: number;
+    totalBackComisionGrupo: number;
+    totalCostoRealGrupo: number;
+    utilidadReal: number;
+    utilidadRealPorcentaje: number
+}
 export interface UsuarioFacturas {
-    user: User;
+    user?: User;
     facturasValide: FacturaValida[];
     totalizado: Totalizado;
+    externo?: Interno
 }
   

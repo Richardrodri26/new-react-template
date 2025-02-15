@@ -225,7 +225,7 @@ export const CommissionsConfigPage = () => {
           >
             <option value="" selected >SELECIONE UNA OPCIÓN</option>
             {["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"].map((m, index) => (
-              <option key={index} value={m}>{m.charAt(0).toUpperCase() + m.slice(1)}</option>
+              <option key={index} value={index + 1}>{m.charAt(0).toUpperCase() + m.slice(1)}</option>
             ))}
           </select>
         </div>
