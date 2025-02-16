@@ -154,7 +154,7 @@ export const ComisionByUserPage = () => {
               </h3>
               {
                /*@ts-ignore*/
-                result.user.__subordinates__ && result.user.__subordinates__?.length > 0 && (
+                result.user?.__subordinates__ && result.user?.__subordinates__?.length > 0 && (
                   <h3 className="text-xl font-bold text-gray-800 mb-2">
                     Tiene a cargo a: {
                       /*@ts-ignore*/
@@ -197,7 +197,7 @@ export const ComisionByUserPage = () => {
                           <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.externo.totalFleteGrupo  || 0))}</td>
                           <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.externo.totalOipGrupo  || 0))}</td>
                           <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.externo.totalBackComisionGrupo  || 0))}</td>
-                          <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.externo.comision || 0))}</td>
+                          <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.externo.comision || 0)) + ` (${result.externo?.comisionTable}%)`}</td>
                         </tr>
                       </>
                     )

@@ -14,6 +14,7 @@ import { GridPendingVisit } from './table/PendingTable';
 import { useFindUtilidadRealQuery } from '@/domain/graphql';
 import PresupuestoTable from './table/presupuesto';
 import VentasTable from './table/marcasVenta';
+import FacturasTable from './table/comisionTotal';
 
 const ReportsPage: React.FC = () => {
   const [visitData, setVisitData] = useState([]);
@@ -148,6 +149,9 @@ const ReportsPage: React.FC = () => {
                   ))}
                 </tbody>
               </table>
+            </div>
+            <div>
+              <FacturasTable />
             </div>
         </div>
       </div>
