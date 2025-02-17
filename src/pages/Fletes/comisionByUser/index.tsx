@@ -197,7 +197,7 @@ export const ComisionByUserPage = () => {
                           <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.externo.totalFleteGrupo  || 0))}</td>
                           <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.externo.totalOipGrupo  || 0))}</td>
                           <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.externo.totalBackComisionGrupo  || 0))}</td>
-                          <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.externo.comision || 0)) + ` (${result.externo?.comisionTable}%)`}</td>
+                          <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.externo.comision || 0)) + ` (${result.externo?.comisionTable || 0}%)`}</td>
                         </tr>
                       </>
                     )
@@ -214,7 +214,7 @@ export const ComisionByUserPage = () => {
                     <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.totalizado.totalFlete || 0))}</td>
                     <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.totalizado.totalOip || 0))}</td>
                     <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.totalizado.totalBack || 0))}</td>
-                    <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.totalizado.totalComision || 0))}</td>
+                    <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.totalizado.totalComision || 0)) + ` (${result.totalizado?.comisionTable || 0}%)`}</td>
                   </tr>
                   {result.facturasValide.map((factura, facturaIndex: number) => (
                     <tr key={facturaIndex} className="hover:bg-gray-50">

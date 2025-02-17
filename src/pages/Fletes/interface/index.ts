@@ -26,6 +26,7 @@ interface Totalizado {
     totalComision: number;
     totalCostoReal: number;
     totalRodamiento: number;
+    comisionTable: number;
 }
 interface Interno {
     totalVentasGrupo: number;

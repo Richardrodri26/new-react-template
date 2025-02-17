@@ -66,8 +66,9 @@ const FacturasTable  = () => {
             <th className="border px-4 py-2">Usuario</th>
             <th className="border px-4 py-2">Venta</th>
             <th className="border px-4 py-2">Utilidad Real</th>
+            <th className="border px-4 py-2">Comisión (%)</th>
             <th className="border px-4 py-2">Comisión</th>
-            <th className="border px-4 py-2">Valor Transporte</th>
+            <th className="border px-4 py-2">Subsidio rodamiento</th>
           </tr>
         </thead>
         {commissionResults.map((usuario, index) => {
@@ -80,9 +81,10 @@ const FacturasTable  = () => {
                       (
                         <>
                           <tr key={index} className="text-center">
-                            <td className="border px-4 py-2">{user?.name || "Usuario desconocido"}</td>
+                            <td className="border px-4 py-2">{user ? user?.name + ' ' + user?.lastName : "Usuario desconocido"}</td>
                             <td className="border px-4 py-2">{formatCurrency(externo.totalVentasGrupo)}</td>
                             <td className="border px-4 py-2">{(externo.utilidadRealPorcentaje.toFixed(2))}</td>
+                            <td className="border px-4 py-2">{(externo.comisionTable)}</td>
                             <td className="border px-4 py-2">{formatCurrency(externo.comision)}</td>
                             <td className="border px-4 py-2">{0}</td>
                           </tr>
@@ -92,9 +94,10 @@ const FacturasTable  = () => {
                       (
                       <>
                         <tr key={index} className="text-center">
-                          <td className="border px-4 py-2">{user?.name || "Usuario desconocido"}</td>
+                          <td className="border px-4 py-2">{user ? user?.name + ' ' + user?.lastName : "Usuario desconocido"}</td>
                           <td className="border px-4 py-2">{formatCurrency(totalizado.totalVendido)}</td>
                           <td className="border px-4 py-2">{(totalizado.utilidadPorcentaje.toFixed(2))}</td>
+                          <td className="border px-4 py-2">{(totalizado.comisionTable)}</td>
                           <td className="border px-4 py-2">{formatCurrency(totalizado.totalComision)}</td>
                           <td className="border px-4 py-2">{formatCurrency(totalizado.totalRodamiento)}</td>
                         </tr>

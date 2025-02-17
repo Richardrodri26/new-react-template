@@ -83,11 +83,11 @@ export const appRouter = createBrowserRouter([
       },
       {
         path: "commissions", // Ruta para el detalle de la visita con su ID
-        element: <CommissionsPage/>,
+        element: <ComisionByUserPage/>,
       },
       {
         path: "fletes", // Ruta para el detalle de la visita con su ID
-        element: <FletesPageAdmin/>,
+        element: <FletesPage/>,
       },
       {
         path: 'mapaApp',
