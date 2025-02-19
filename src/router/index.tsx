@@ -2,6 +2,7 @@ import { AppGuardLayout, MainLayout } from "@/components/Layouts";
 import { ClientsEditPage, ClientsPage, ContactClientsPage, FletesPage, HomePage, LoginPage, ParametersPage, UsersPage, VisitsPage } from "@/pages";
 import { CommissionsPage } from "@/pages/Commissions";
 import FletesPageAdmin from "@/pages/Fletes/admin/fletesPage";
+import FletesPageBodega from "@/pages/Fletes/bodega";
 import { ComisionByUserPage } from "@/pages/Fletes/comisionByUser";
 import MapaApp from "@/pages/Mapa";
 import { CommissionsConfigPage } from "@/pages/Parameters/comision";
@@ -117,7 +118,7 @@ export const appRouter = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <FletesPage/>
+        element: <FletesPageBodega/>
       }
     ]
   }

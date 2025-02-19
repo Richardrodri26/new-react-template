@@ -80,7 +80,7 @@ const FacturasTable  = () => {
                       ?
                       (
                         <>
-                          <tr key={index} className="text-center">
+                          <tr key={index} className="text-left">
                             <td className="border px-4 py-2">{user ? user?.name + ' ' + user?.lastName : "Usuario desconocido"}</td>
                             <td className="border px-4 py-2">{formatCurrency(externo.totalVentasGrupo)}</td>
                             <td className="border px-4 py-2">{(externo.utilidadRealPorcentaje.toFixed(2))}</td>
@@ -93,7 +93,7 @@ const FacturasTable  = () => {
                       :
                       (
                       <>
-                        <tr key={index} className="text-center">
+                        <tr key={index} className="text-left">
                           <td className="border px-4 py-2">{user ? user?.name + ' ' + user?.lastName : "Usuario desconocido"}</td>
                           <td className="border px-4 py-2">{formatCurrency(totalizado.totalVendido)}</td>
                           <td className="border px-4 py-2">{(totalizado.utilidadPorcentaje.toFixed(2))}</td>
