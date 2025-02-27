@@ -34,7 +34,7 @@ const VentasTable: React.FC = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ["ventas"],
     queryFn: async () => {
-      const res = await fetch("http://intranet.cytech.net.co:3003/some/marcas/agrupadas");
+      const res = await fetch(`${import.meta.env.VITE_APP_MICRO_GRAPH}some/marcas/agrupadas`);
       if (!res.ok) throw new Error("Error al obtener datos");
       return res.json();
     },
@@ -80,7 +80,7 @@ const VentasTable: React.FC = () => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto mt-8 p-5">
+    <div>
       {/* ✅ Título y Configuración */}
       <div className="flex justify-between items-center mb-5">
         <button
@@ -95,7 +95,21 @@ const VentasTable: React.FC = () => {
       {showConfig && (
         <div className="bg-gray-100 p-3 rounded mb-5 shadow">
           <h3 className="text-lg font-semibold mb-2">Seleccionar marcas:</h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+          <button
+            onClick={() => {
+              if (hiddenBrands.length === 0) {
+                // Si todas están seleccionadas, ocultar todas
+                setHiddenBrands(Object.keys(data));
+              } else {
+                // Si alguna está oculta, mostrar todas
+                setHiddenBrands([]);
+              }
+            }}
+            className="mb-3 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-700 transition"
+          >
+            {hiddenBrands.length === 0 ? "Deseleccionar Todos" : "Seleccionar Todos"}
+          </button>
+          <div className="grid grid-cols-12 md:grid-cols-12 gap-12">
             {Object.keys(data).map((marca) => (
               <label key={marca} className="flex items-center gap-2">
                 <input
@@ -115,8 +129,9 @@ const VentasTable: React.FC = () => {
         </div>
       )}
 
+
       {/* ✅ Tabla de Ventas */}
-      <div className="overflow-x-auto">
+      <div>
         <table className="w-full border-collapse border border-gray-300 shadow-lg bg-white">
           <thead>
             <tr className="bg-gray-200 text-gray-700">

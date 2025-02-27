@@ -2,11 +2,15 @@ import { axiosRest } from "@/domain/api.config";
 import { UsuarioFacturas } from "@/pages/Fletes/interface";
 import dayjs from "dayjs";
 import { Calendar } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { formatCurrency } from "./marcasVenta";
+import { Loader } from "@/pages/Commissions";
 
+interface ResumenCardsProps {
+  setUtilidad: React.Dispatch<React.SetStateAction<number>>;
+}
 
-const FacturasTable  = () => {
+const FacturasTable: React.FC<ResumenCardsProps>  = memo(({setUtilidad}) => {
   const [loadingTable, setLoading] = useState(false); // Estado de carga
   const [commissionResults, setCommissionResults] = useState<UsuarioFacturas[]>([]);
   const [fechaInicio, setFechaInicio] = useState(dayjs().startOf("month").format("YYYY-MM-DD"));
@@ -22,6 +26,35 @@ const FacturasTable  = () => {
       setLoading(false);
     }
   };
+  useEffect(() => {
+    if (commissionResults.length > 0) {
+      calculeTotalizado();
+    }
+  }, [commissionResults]); 
+  const calculeTotalizado = () => {
+    const totalVentido = commissionResults.reduce((sum, factura) => sum + Number(factura.totalizado.totalVendido || 0), 0);
+    const totalCosto = commissionResults.reduce((sum, factura) => sum + Number(factura.totalizado.totalCosto || 0), 0);
+    const totalCostoReal = commissionResults.reduce((sum, factura) => sum + Number(factura.totalizado.totalCostoReal || 0), 0);
+    const totalFlete = commissionResults.reduce((sum, factura) => sum + Number(factura.totalizado.totalFlete || 0), 0);
+    const totalOip = commissionResults.reduce((sum, factura) => sum + Number(factura.totalizado.totalOip || 0), 0);
+    const totalBack = commissionResults.reduce((sum, factura) => sum + Number(factura.totalizado.totalBack || 0), 0);
+  
+    const utlidad = totalVentido - (totalCosto - totalOip + totalBack + totalFlete);
+    const utilidadPorcentaje = +(totalVentido !== 0 ? (utlidad / totalVentido) * 100 : 0).toFixed(2);
+  
+    // Logs detallados para depuración
+    console.log("🔹 Total Vendido:", totalVentido);
+    console.log("🔹 Total Costo:", totalCosto);
+    console.log("🔹 Total Costo Real:", totalCostoReal);
+    console.log("🔹 Total Flete:", totalFlete);
+    console.log("🔹 Total OIP:", totalOip);
+    console.log("🔹 Total Back:", totalBack);
+    console.log("🔹 Utilidad Calculada:", utlidad);
+    console.log("🔹 Utilidad %:", utilidadPorcentaje);
+  
+    setUtilidad(utilidadPorcentaje);
+  };
+  
   useEffect(() => {
     if (fechaInicio && fechaFin) {
       fetchComisiones();
@@ -71,6 +104,17 @@ const FacturasTable  = () => {
             <th className="border px-4 py-2">Subsidio rodamiento</th>
           </tr>
         </thead>
+        {
+          loadingTable && (
+            <div className="animate-pulse space-y-4 p-5">
+              <tr className="text-left">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="h-10 bg-gray-200 rounded"></div>
+              ))}
+              </tr>
+          </div>
+          )
+        }
         {commissionResults.map((usuario, index) => {
             const { user, facturasValide, totalizado, externo } = usuario;
             return (
@@ -111,6 +155,6 @@ const FacturasTable  = () => {
       </div>
     </div>
   );
-};
+});
 
 export default FacturasTable;
