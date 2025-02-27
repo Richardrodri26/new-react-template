@@ -37,7 +37,7 @@ export default function EstadisticasVentas() {
   useEffect(() => {
     const fetchVentas = async () => {
       try {
-        const url = `http://localhost:3002/fletes/getVentasXZonaYvendedor/${startDate}/${endDate}`;
+        const url = `${import.meta.env.VITE_APP_GRAPH}fletes/getVentasXZonaYvendedor/${startDate}/${endDate}`;
         const { data } = await axios.get<Venta[]>(url);
         setVentas(data);
       } catch (error) {
