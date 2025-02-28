@@ -14,11 +14,12 @@ import { GridPendingVisit } from './table/PendingTable';
 import { useFindUtilidadRealQuery } from '@/domain/graphql';
 import PresupuestoTable from './table/presupuesto';
 import VentasTable from './table/marcasVenta';
-import FacturasTable from './table/comisionTotal';
-import { BarChart, BarChart2, Map, ShoppingCart, Users } from 'lucide-react';
+import { BarChart, BarChart2, Brain, Map, Percent, ShoppingCart, Users } from 'lucide-react';
 import VentasCharts from './statistic';
 import ResumenCards from './components/ResumenCards';
 import EstadisticasVentas from './statistic/zona-vendedor';
+import TablaIVA from './table/ivaIdeaBimestre';
+import FacturasTable from './table/comisionTotal';
 
 const ReportsPage: React.FC = () => {
   const [visitData, setVisitData] = useState([]);
@@ -207,13 +208,6 @@ const ReportsPage: React.FC = () => {
       </>
     )
   }
-  const ProgressVentaTabs = () => {
-    return (
-      <div>
-        <FacturasTable key={'jfbh'} setUtilidad={setUtilidad}/>
-      </div> 
-    )
-  }
   const AnaliticaTabs = () => {
     return (
       <>
@@ -231,27 +225,35 @@ const ReportsPage: React.FC = () => {
       </div>
     )
   }
+  const IvaIdealBiMestre = () => {
+    return (
+      <>
+        <TablaIVA/>
+      </>
+    )
+  }
   const tabs = [
     { id: "progress", label: "Progresos Ventas", icon: BarChart },
     { id: "seller", label: "Seller", icon: Users },
     { id: "brands", label: "Ventas por Marcas", icon: ShoppingCart },
     { id: "statisc", label: "Estadistica", icon: BarChart2},
     { id: "zona", label: "Zona", icon: Map},
+    { id: "iva", label: "BI.", icon: Brain},
   ];
   
   return (
     <>
       <ReportsHeader/>
       <ResumenCards utilidad={utilidad} />
-      <div className="flex border-b border-gray-300">
+      <div className="flex items-end gap-1 bg-gray-100 p-1 rounded-t-lg">
         {tabs.map(({ id, label, icon: Icon }) => (
           <button
             key={id}
             onClick={() => setActiveTab(id)}
-            className={`flex items-center gap-2 px-4 py-2 border-b-2 transition-all duration-300 ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-t-lg border border-b-0 transition-all duration-300 ${
               activeTab === id
-                ? "border-blue-500 text-blue-500"
-                : "border-transparent text-gray-600 hover:text-blue-500"
+                ? "bg-white border-gray-300 text-blue-500 shadow-sm"
+                : "bg-gray-200 border-transparent text-gray-600 hover:bg-gray-300"
             }`}
           >
             <Icon className="w-5 h-5" />
@@ -259,18 +261,19 @@ const ReportsPage: React.FC = () => {
           </button>
         ))}
       </div>
-      {activeTab === "progress" && <ProgressVentaTabs />}
+      {activeTab === "progress" && <FacturasTable />}
       {activeTab === "seller" && <SellerTabas />}
       {activeTab === "brands" && <VentasXmarcasTabs/>}
       {activeTab === "statisc" && <AnaliticaTabs/>}
       {activeTab === "zona" && <EstadisticasVentas/>}
+      {activeTab === "iva" && <IvaIdealBiMestre/>}
     </>
   );
 };
 
 export default ReportsPage;
 
-function calculatePercentageColor(percentage: number): string {
+export function calculatePercentageColor(percentage: number): string {
   if (percentage >= 80) {
     return 'bg-green-500';
   } else if (percentage >= 60) {

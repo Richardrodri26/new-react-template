@@ -131,13 +131,13 @@ const VentasTable: React.FC = () => {
 
 
       {/* ✅ Tabla de Ventas */}
-      <div>
-        <table className="w-full border-collapse border border-gray-300 shadow-lg bg-white">
-          <thead>
-            <tr className="bg-gray-200 text-gray-700">
-              <th className="border border-gray-300 p-2">Marca</th>
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200 border border-gray-300 rounded-lg">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Marca</th>
               {Object.values(mesesInglesAEspanol).map((mes) => (
-                <th key={mes} className="border border-gray-300 p-2">{mes}</th>
+                <th key={mes} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{mes}</th>
               ))}
             </tr>
           </thead>
@@ -145,8 +145,8 @@ const VentasTable: React.FC = () => {
             {Object.entries(data)
               .filter(([marca]) => !hiddenBrands.includes(marca))
               .map(([marca, ventas]) => (
-                <tr key={marca} className="odd:bg-gray-50 even:bg-white">
-                  <td className="border border-gray-300 p-2 font-semibold">{marca}</td>
+                <tr key={marca} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap">{marca}</td>
                   {Object.entries(mesesInglesAEspanol).map(([mesIngles, mesEspanol]) => {
                     const ventaMes = (ventas as any[]).find((v) => mesesInglesAEspanol[v.MES] === mesEspanol);
                     return (

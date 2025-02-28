@@ -2,15 +2,17 @@ import React, { useEffect, useState } from "react";
 import { DollarSign, Calendar, ShoppingCart, Percent } from "lucide-react";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
+import { formatCurrency } from "../table/marcasVenta";
 interface ResumenCardsProps {
   utilidad: number;
 }
 // API Base
-const API_BASE_URL = `${import.meta.env.VITE_APP_MICRO_GRAPH}ventas`;
+const API_BASE_URL = `${import.meta.env.VITE_APP_GRAPH}fletes/ventasAgrupadasXmes`;
 
-const ResumenCards:  React.FC<ResumenCardsProps> = ({ utilidad }) => {
+const ResumenCards:  React.FC<ResumenCardsProps> = () => {
   const [precioDolar, setPrecioDolar] = useState<number | null>(null);
   const [totalVentas, setTotalVentas] = useState<number | null>(null);
+  const [utilidad, setUtilidad] = useState<number | null>(null);
   const [porcentajeUtilidad, setPorcentajeUtilidad] = useState<number | null>(
     null
   );
@@ -25,9 +27,13 @@ const ResumenCards:  React.FC<ResumenCardsProps> = ({ utilidad }) => {
         setPrecioDolar(dataDolar?.[0].valor || 0);
 
         // Datos desde la API de ventas
-        const resVentas = await fetch(`${API_BASE_URL}/actual`);
+        const resVentas = await fetch(`${API_BASE_URL}`);
         const dataVentas = await resVentas.json();
-        setTotalVentas(dataVentas[0].TOTAL);
+        const mesActual = new Date().getMonth() + 1; // Mes actual (1-12)
+        const mesData = dataVentas.find((mes: any) => parseInt(mes.numero_mes) === mesActual);
+
+        setTotalVentas(mesData?.venta || 0);
+        setUtilidad(mesData?.utilidad_porcentaje || 0)
 
         // const resUtilidad = await fetch(`${API_BASE_URL}/utilidad`);
         // const dataUtilidad = await resUtilidad.json();
@@ -65,7 +71,7 @@ const ResumenCards:  React.FC<ResumenCardsProps> = ({ utilidad }) => {
         <ShoppingCart className="text-yellow-500 w-10 h-10 mr-4" />
         <div>
           <h3 className="text-gray-600 text-sm">Ventas del Mes</h3>
-          <p className="text-xl font-bold">{totalVentas ? `$${totalVentas}` : "Cargando..."}</p>
+          <p className="text-xl font-bold">{totalVentas ? `${formatCurrency(+totalVentas)}` : "Cargando..."}</p>
         </div>
       </div>
 

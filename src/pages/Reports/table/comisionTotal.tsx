@@ -5,16 +5,22 @@ import { Calendar } from "lucide-react";
 import React, { memo, useEffect, useState } from "react";
 import { formatCurrency } from "./marcasVenta";
 import { Loader } from "@/pages/Commissions";
+import { calculatePercentageColor } from "..";
 
-interface ResumenCardsProps {
-  setUtilidad: React.Dispatch<React.SetStateAction<number>>;
+function convertirANumero(valor: string | null) {
+  if(!valor) return 0;
+  // Eliminar las comas y convertir a número
+  return parseFloat(valor.replace(/,/g, ''));
 }
 
-const FacturasTable: React.FC<ResumenCardsProps>  = memo(({setUtilidad}) => {
+
+
+const FacturasTable: React.FC = memo(() => {
   const [loadingTable, setLoading] = useState(false); // Estado de carga
   const [commissionResults, setCommissionResults] = useState<UsuarioFacturas[]>([]);
   const [fechaInicio, setFechaInicio] = useState(dayjs().startOf("month").format("YYYY-MM-DD"));
   const [fechaFin, setFechaFin] = useState(dayjs().endOf("month").format("YYYY-MM-DD"));
+
   const fetchComisiones = async () => {
     setLoading(true);
     try {
@@ -26,11 +32,17 @@ const FacturasTable: React.FC<ResumenCardsProps>  = memo(({setUtilidad}) => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchComisiones();
+  }, [fechaInicio, fechaFin]);  // Dependencias ajustadas a fechas
+
   useEffect(() => {
     if (commissionResults.length > 0) {
       calculeTotalizado();
     }
-  }, [commissionResults]); 
+  }, [commissionResults]); // Solo se ejecuta cuando commissionResults cambia
+
   const calculeTotalizado = () => {
     const totalVentido = commissionResults.reduce((sum, factura) => sum + Number(factura.totalizado.totalVendido || 0), 0);
     const totalCosto = commissionResults.reduce((sum, factura) => sum + Number(factura.totalizado.totalCosto || 0), 0);
@@ -38,11 +50,10 @@ const FacturasTable: React.FC<ResumenCardsProps>  = memo(({setUtilidad}) => {
     const totalFlete = commissionResults.reduce((sum, factura) => sum + Number(factura.totalizado.totalFlete || 0), 0);
     const totalOip = commissionResults.reduce((sum, factura) => sum + Number(factura.totalizado.totalOip || 0), 0);
     const totalBack = commissionResults.reduce((sum, factura) => sum + Number(factura.totalizado.totalBack || 0), 0);
-  
+
     const utlidad = totalVentido - (totalCosto - totalOip + totalBack + totalFlete);
     const utilidadPorcentaje = +(totalVentido !== 0 ? (utlidad / totalVentido) * 100 : 0).toFixed(2);
-  
-    // Logs detallados para depuración
+
     console.log("🔹 Total Vendido:", totalVentido);
     console.log("🔹 Total Costo:", totalCosto);
     console.log("🔹 Total Costo Real:", totalCostoReal);
@@ -51,19 +62,12 @@ const FacturasTable: React.FC<ResumenCardsProps>  = memo(({setUtilidad}) => {
     console.log("🔹 Total Back:", totalBack);
     console.log("🔹 Utilidad Calculada:", utlidad);
     console.log("🔹 Utilidad %:", utilidadPorcentaje);
-  
-    setUtilidad(utilidadPorcentaje);
   };
-  
-  useEffect(() => {
-    if (fechaInicio && fechaFin) {
-      fetchComisiones();
-    }
-  }, [fechaInicio, fechaFin]);
+
   return (
     <div className="p-4 bg-white shadow-md rounded-lg">
-            {/* Filtros por fecha */}
-            <div className="flex gap-4 mb-6">
+      {/* Filtros por fecha */}
+      <div className="flex gap-4 mb-6">
         <div className="flex flex-col">
           <label className="font-semibold text-gray-700" htmlFor="fechaInicio">Fecha Inicio</label>
           <div className="flex items-center gap-2">
@@ -92,66 +96,79 @@ const FacturasTable: React.FC<ResumenCardsProps>  = memo(({setUtilidad}) => {
           </div>
         </div>
       </div>
-      <div className="mb-6">
-      <table className="min-w-full bg-white border border-gray-300">
-        <thead>
-          <tr className="bg-gray-200 text-gray-700">
-            <th className="border px-4 py-2">Usuario</th>
-            <th className="border px-4 py-2">Venta</th>
-            <th className="border px-4 py-2">Utilidad Real</th>
-            <th className="border px-4 py-2">Comisión (%)</th>
-            <th className="border px-4 py-2">Comisión</th>
-            <th className="border px-4 py-2">Subsidio rodamiento</th>
-          </tr>
-        </thead>
-        {
-          loadingTable && (
+
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200 border border-gray-300 rounded-lg">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="x-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuario</th>
+              <th className="x-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Venta</th>
+              <th className="x-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Presupuesto</th>
+              <th className="x-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Presupuesto en %</th>
+              <th className="x-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Utilidad Real</th>
+              <th className="x-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Comisión (%)</th>
+              <th className="x-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Comisión</th>
+              <th className="x-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subsidio rodamiento</th>
+            </tr>
+          </thead>
+          {loadingTable && (
             <div className="animate-pulse space-y-4 p-5">
               <tr className="text-left">
-              {[...Array(5)].map((_, i) => (
-                <div key={i} className="h-10 bg-gray-200 rounded"></div>
-              ))}
+                {[...Array(5)].map((_, i) => (
+                  <div key={i} className="h-10 bg-gray-200 rounded"></div>
+                ))}
               </tr>
-          </div>
-          )
-        }
-        {commissionResults.map((usuario, index) => {
-            const { user, facturasValide, totalizado, externo } = usuario;
+            </div>
+          )}
+          {commissionResults.map((usuario, index) => {
+            const { user, facturasValide, totalizado, externo, presupuesto } = usuario;
             return (
-                  <tbody>
-                    {
-                      externo
-                      ?
-                      (
-                        <>
-                          <tr key={index} className="text-left">
-                            <td className="border px-4 py-2">{user ? user?.name + ' ' + user?.lastName : "Usuario desconocido"}</td>
-                            <td className="border px-4 py-2">{formatCurrency(externo.totalVentasGrupo)}</td>
-                            <td className="border px-4 py-2">{(externo.utilidadRealPorcentaje.toFixed(2))}</td>
-                            <td className="border px-4 py-2">{(externo.comisionTable)}</td>
-                            <td className="border px-4 py-2">{formatCurrency(externo.comision)}</td>
-                            <td className="border px-4 py-2">{0}</td>
-                          </tr>
-                        </>
-                      )
-                      :
-                      (
-                      <>
-                        <tr key={index} className="text-left">
-                          <td className="border px-4 py-2">{user ? user?.name + ' ' + user?.lastName : "Usuario desconocido"}</td>
-                          <td className="border px-4 py-2">{formatCurrency(totalizado.totalVendido)}</td>
-                          <td className="border px-4 py-2">{(totalizado.utilidadPorcentaje.toFixed(2))}</td>
-                          <td className="border px-4 py-2">{(totalizado.comisionTable)}</td>
-                          <td className="border px-4 py-2">{formatCurrency(totalizado.totalComision)}</td>
-                          <td className="border px-4 py-2">{formatCurrency(totalizado.totalRodamiento)}</td>
-                        </tr>
-                      </>
-                      )
-                    }
-                  </tbody>
+              <tbody key={index}>
+                {externo ? (
+                  <tr className="text-left">
+                    <td className="px-6 py-4 whitespace-nowrap">{user ? user?.name + ' ' + user?.lastName : "Usuario desconocido"}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(externo.totalVentasGrupo)}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(presupuesto?.PRESUPUESTO || 0)}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="w-full h-4 bg-gray-200 rounded-md">
+                        <div
+                          className={`h-full ${calculatePercentageColor(
+                            (externo?.totalVentasGrupo / convertirANumero(presupuesto?.PRESUPUESTO)) * 100 || 0
+                          )} rounded-md`}
+                          style={{ width: `${((externo?.totalVentasGrupo / convertirANumero(presupuesto?.PRESUPUESTO)) * 100 || 0) > 100 ? 100 :((externo?.totalVentasGrupo / convertirANumero(presupuesto?.PRESUPUESTO)) * 100 || 0) }%` }}
+                        ></div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">{(externo.utilidadRealPorcentaje.toFixed(2))}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{(externo.comisionTable)}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(externo.comision)}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{0}</td>
+                  </tr>
+                ) : (
+                  <tr className="text-left">
+                    <td className="px-6 py-4 whitespace-nowrap">{user ? user?.name + ' ' + user?.lastName : "Usuario desconocido"}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(totalizado.totalVendido)}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(presupuesto?.PRESUPUESTO || 0)}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="w-full h-4 bg-gray-200 rounded-md">
+                        <div
+                          className={`h-full ${calculatePercentageColor(
+                            (totalizado?.totalVendido / convertirANumero(presupuesto?.PRESUPUESTO)) * 100 || 0
+                          )} rounded-md`}
+                          style={{ width: `${((totalizado?.totalVendido / convertirANumero(presupuesto?.PRESUPUESTO)) * 100 || 0) > 100 ? 100 : ((totalizado?.totalVendido / convertirANumero(presupuesto?.PRESUPUESTO)) * 100 || 0)  }%` }}
+                        ></div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">{(totalizado.utilidadPorcentaje.toFixed(2))}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{(totalizado.comisionTable)}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(totalizado.totalComision)}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(totalizado.totalRodamiento)}</td>
+                  </tr>
+                )}
+              </tbody>
             );
           })}
-      </table>
+        </table>
       </div>
     </div>
   );

@@ -44,6 +44,7 @@ export interface UsuarioFacturas {
     user?: User;
     facturasValide: FacturaValida[];
     totalizado: Totalizado;
-    externo?: Interno
+    externo?: Interno,
+    presupuesto?: any
 }
   

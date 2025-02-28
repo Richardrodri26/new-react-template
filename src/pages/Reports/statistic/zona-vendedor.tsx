@@ -15,7 +15,8 @@ import {
 } from "chart.js";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"; // Importar el componente Select
+import { Checkbox } from "@/components/ui/checkbox"; // Importar el componente Checkbox
+import { Button } from "@/components/ui/button";
 
 // Registrar módulos de Chart.js
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend);
@@ -32,7 +33,7 @@ export default function EstadisticasVentas() {
   const [startDate, setStartDate] = useState(dayjs().startOf("month").format("YYYY-MM-DD"));
   const [endDate, setEndDate] = useState(dayjs().format("YYYY-MM-DD"));
   const [ventas, setVentas] = useState<Venta[]>([]);
-  const [zonaSeleccionada, setZonaSeleccionada] = useState<string>("Todas"); // Estado para la zona seleccionada
+  const [zonasSeleccionadas, setZonasSeleccionadas] = useState<string[]>([]); // Estado para las zonas seleccionadas
 
   useEffect(() => {
     const fetchVentas = async () => {
@@ -64,7 +65,7 @@ export default function EstadisticasVentas() {
   // 2️⃣ Agrupar ventas por trabajador y zona
   const ventasPorZonaYTrabajador = ventas.reduce<Record<string, Record<string, number>>>((acc, venta) => {
     if (!acc[venta.departamento]) acc[venta.departamento] = {};
-    const trabajador = `${venta.name} ${venta.lastName}`;
+    const trabajador = venta.name ? `${venta.name} ${venta.lastName}` : 'No esta en seller';
     acc[venta.departamento][trabajador] = (acc[venta.departamento][trabajador] || 0) + Number(venta.venta);
     return acc;
   }, {});
@@ -80,19 +81,21 @@ export default function EstadisticasVentas() {
     return `#${toHex(red)}${toHex(green)}${toHex(blue)}`;
   };
 
-  // 🗂️ Filtrar datos según la zona seleccionada
-  const zonasDisponibles = ["Todas", ...Object.keys(ventasPorZona)]; // Agregar "Todas" como opción
-  const ventasFiltradas = zonaSeleccionada === "Todas"
-    ? ventas // Mostrar todas las ventas si no se selecciona una zona
-    : ventas.filter((venta) => venta.departamento === zonaSeleccionada); // Filtrar por zona seleccionada
+  // 🗂️ Filtrar datos según las zonas seleccionadas
+  const zonasDisponibles = Object.keys(ventasPorZona);
+  const ventasFiltradas = zonasSeleccionadas.length === 0
+    ? ventas // Mostrar todas las ventas si no se selecciona ninguna zona
+    : ventas.filter((venta) => zonasSeleccionadas.includes(venta.departamento)); // Filtrar por zonas seleccionadas
 
   // 📊 Datos para gráfico de líneas (Comparación de ventas por zona)
   const dataLine = {
-    labels: zonaSeleccionada === "Todas" ? Object.keys(ventasPorZona) : [zonaSeleccionada],
+    labels: zonasSeleccionadas.length === 0 ? zonasDisponibles : zonasSeleccionadas,
     datasets: [
       {
         label: "Ventas por Zona",
-        data: zonaSeleccionada === "Todas" ? Object.values(ventasPorZona) : [ventasPorZona[zonaSeleccionada] || 0],
+        data: zonasSeleccionadas.length === 0
+          ? Object.values(ventasPorZona)
+          : zonasSeleccionadas.map((zona) => ventasPorZona[zona] || 0),
         borderColor: "rgba(75, 192, 192, 1)",
         backgroundColor: "rgba(75, 192, 192, 1)",
         tension: 0.3,
@@ -102,7 +105,7 @@ export default function EstadisticasVentas() {
   };
 
   // 📊 Datos para gráfico de barras (Comparación de trabajadores en cada zona)
-  const zonaLabels = zonaSeleccionada === "Todas" ? Object.keys(ventasPorZonaYTrabajador) : [zonaSeleccionada];
+  const zonaLabels = zonasSeleccionadas.length === 0 ? zonasDisponibles : zonasSeleccionadas;
   const trabajadoresUnicos = new Set<string>();
 
   Object.values(ventasPorZonaYTrabajador).forEach((trabajadores) => {
@@ -120,6 +123,22 @@ export default function EstadisticasVentas() {
     datasets: datasetsBar,
   };
 
+  // Manejar cambios en los checkboxes
+  const handleZonaChange = (zona: string) => {
+    setZonasSeleccionadas((prev) =>
+      prev.includes(zona)
+        ? prev.filter((z) => z !== zona) // Desmarcar la zona
+        : [...prev, zona] // Marcar la zona
+    );
+  };
+  const seleccionarTodasLasZonas = () => {
+    setZonasSeleccionadas(zonasDisponibles);
+  };
+
+  // Deseleccionar todas las zonas
+  const deseleccionarTodasLasZonas = () => {
+    setZonasSeleccionadas([]);
+  };
   return (
     <div className="p-6">
       {/* Filtros de Fecha y Zona */}
@@ -132,20 +151,24 @@ export default function EstadisticasVentas() {
           <label className="block text-sm font-medium mb-1">Fecha Fin</label>
           <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
         </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">Zona</label>
-          <Select value={zonaSeleccionada} onValueChange={(value) => setZonaSeleccionada(value)}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Selecciona una zona" />
-            </SelectTrigger>
-            <SelectContent>
-              {zonasDisponibles.map((zona) => (
-                <SelectItem key={zona} value={zona}>
-                  {zona}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+      </div>
+      <div className="flex gap-4 mb-6">
+        {/* <label className="block text-sm font-medium mb-1">Zonas</label> */}
+        <div className="flex gap-2 mt-2">
+            <Button onClick={seleccionarTodasLasZonas}>Seleccionar Todas</Button>
+            <Button onClick={deseleccionarTodasLasZonas}>Deseleccionar Todas</Button>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {zonasDisponibles.map((zona) => (
+            <div key={zona} className="flex items-center gap-2">
+              <Checkbox
+                id={zona}
+                checked={zonasSeleccionadas.includes(zona)}
+                onCheckedChange={() => handleZonaChange(zona)}
+              />
+              <label htmlFor={zona}>{zona}</label>
+            </div>
+          ))}
         </div>
       </div>
 

@@ -11,6 +11,9 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import dayjs from "dayjs";
+import 'dayjs/locale/es'; // Importamos el idioma español
+import { formatCurrency } from "../table/marcasVenta";
 
 // Registrar los módulos de Chart.js
 ChartJS.register(
@@ -34,7 +37,19 @@ const VentasCharts: React.FC = () => {
     { ANO: string; TOTAL: number }[]
   >([]);
   const [ventasAnioActual, setVentasAnioActual] = useState<
-    { MES: string; TOTAL: number }[]
+    {
+      ANO: string;
+      TOTAL: number;
+      venta: string;
+      costo: string;
+      oip: string;
+      flete: string;
+      back: string;
+      utilidad: string;
+      utilidad_porcentaje: string;
+      nombre_mes: string;
+      numero_mes: string;
+    }[]
   >([]);
 
   // Obtener datos de la API
@@ -49,7 +64,9 @@ const VentasCharts: React.FC = () => {
         const data2 = await res2.json();
         setVentasAnteriores(data2);
 
-        const res3 = await fetch(`${API_BASE_URL}/mes-actual`);
+        const res3 = await fetch(
+          `${import.meta.env.VITE_APP_GRAPH}fletes/ventasAgrupadasXmes`
+        );
         const data3 = await res3.json();
         setVentasAnioActual(data3);
       } catch (error) {
@@ -60,9 +77,15 @@ const VentasCharts: React.FC = () => {
     fetchData();
   }, []);
 
+  // Función para obtener el nombre del mes en español
+  const obtenerNombreMes = (numeroMes: string) => {
+    // Usamos Day.js para obtener el nombre del mes en español
+    return dayjs().locale('es').month(Number(numeroMes) - 1).format('MMMM');
+  };
+
   // Datos para los gráficos
   const years = ventasAnterioresMismoMes.map((v) => v.ANO);
-  
+
   // Gráfico 1: Ventas Años Anteriores (Mismo Mes)
   const dataMismoMes = {
     labels: years,
@@ -91,14 +114,34 @@ const VentasCharts: React.FC = () => {
 
   // Gráfico 3: Ventas Año Actual
   const dataActual = {
-    labels: ventasAnioActual.map((v) => v.MES),
+    labels: ventasAnioActual.map((v) => `${obtenerNombreMes(v.numero_mes)} (${formatCurrency(+v.venta)})`),
     datasets: [
       {
         label: "Ventas Año Actual",
-        data: ventasAnioActual.map((v) => v.TOTAL),
+        data: ventasAnioActual.map((v) => (v.venta)),
         backgroundColor: "rgba(54, 162, 235, 0.5)",
       },
     ],
+  };
+
+  const options = {
+    responsive: true,
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: function (tooltipItem: any) {
+            const data = ventasAnioActual[tooltipItem.dataIndex];
+            const mes = obtenerNombreMes(data.numero_mes); // Usamos Day.js para el mes
+            const venta = formatCurrency(+data.venta);
+            const costo = formatCurrency(+data.costo);
+            const utilidad = formatCurrency(+data.utilidad);
+            const utilidadPorcentaje = data.utilidad_porcentaje;
+
+            return `${mes}: \nVenta: ${venta} \nCosto: ${costo} \nUtilidad: ${utilidad} \nUtilidad %: ${utilidadPorcentaje}`;
+          },
+        },
+      },
+    },
   };
 
   return (
@@ -106,19 +149,19 @@ const VentasCharts: React.FC = () => {
       {/* Gráfico 1: Ventas Años Anteriores (Mismo Mes) */}
       <div className="bg-white p-4 rounded-xl shadow">
         <h2 className="text-lg font-bold text-center mb-3">Ventas Mismo Mes</h2>
-        <Line data={dataMismoMes} />
+        <Bar data={dataMismoMes} />
       </div>
 
       {/* Gráfico 2: Ventas Años Anteriores (Acumuladas) */}
       <div className="bg-white p-4 rounded-xl shadow">
-        <h2 className="text-lg font-bold text-center mb-3">Ventas Anteriores</h2>
+        <h2 className="text-lg font-bold text-center mb-3">Ventas Acumuladas hasta ahora</h2>
         <Bar data={dataAnteriores} />
       </div>
 
       {/* Gráfico 3: Ventas Año Actual */}
       <div className="bg-white p-4 rounded-xl shadow">
         <h2 className="text-lg font-bold text-center mb-3">Ventas Año Actual</h2>
-        <Bar data={dataActual} />
+        <Bar data={dataActual} options={options} />
       </div>
     </div>
   );
