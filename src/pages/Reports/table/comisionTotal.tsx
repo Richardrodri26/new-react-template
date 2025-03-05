@@ -52,7 +52,7 @@ const FacturasTable: React.FC = memo(() => {
     const totalBack = commissionResults.reduce((sum, factura) => sum + Number(factura.totalizado.totalBack || 0), 0);
 
     const utlidad = totalVentido - (totalCosto - totalOip + totalBack + totalFlete);
-    const utilidadPorcentaje = +(totalVentido !== 0 ? (utlidad / totalVentido) * 100 : 0).toFixed(2);
+    const utilidadPorcentaje = +(totalVentido !== 0 ? (utlidad / totalVentido) * 100 : 0)?.toFixed(2);
 
     console.log("🔹 Total Vendido:", totalVentido);
     console.log("🔹 Total Costo:", totalCosto);
@@ -139,7 +139,7 @@ const FacturasTable: React.FC = memo(() => {
                         ></div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">{(externo.utilidadRealPorcentaje.toFixed(2))}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{(externo.utilidadRealPorcentaje?.toFixed(2))}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{(externo.comisionTable)}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(externo.comision)}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{0}</td>
@@ -159,7 +159,7 @@ const FacturasTable: React.FC = memo(() => {
                         ></div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">{(totalizado.utilidadPorcentaje.toFixed(2))}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{(totalizado.utilidadPorcentaje?.toFixed(2))}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{(totalizado.comisionTable)}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(totalizado.totalComision)}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(totalizado.totalRodamiento)}</td>

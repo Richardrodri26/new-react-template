@@ -78,7 +78,7 @@ const PresupuestoTable = () => {
       title: "Utilidad Porcentaje",
       dataIndex: "utilidadPorcentaje",
       key: "utilidadPorcentaje",
-      render: (value: number) => `${value.toFixed(2)}%`,
+      render: (value: number) => `${value?.toFixed(2)}%`,
     },
     {
       title: "Venta",
