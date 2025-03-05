@@ -193,7 +193,7 @@ export const ComisionByUserPage = () => {
                           <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.externo.totalCostoRealGrupo  || 0))}</td>
                           <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.externo.totalVentasGrupo  || 0))}</td>
                           <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.externo.utilidadReal  || 0))}</td>
-                          <td className="border border-gray-300 px-4 py-2">{result.externo.utilidadRealPorcentaje.toFixed(2)}</td>
+                          <td className="border border-gray-300 px-4 py-2">{result.externo.utilidadRealPorcentaje?.toFixed(2)}</td>
                           <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.externo.totalFleteGrupo  || 0))}</td>
                           <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.externo.totalOipGrupo  || 0))}</td>
                           <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.externo.totalBackComisionGrupo  || 0))}</td>
@@ -210,7 +210,7 @@ export const ComisionByUserPage = () => {
                     <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.totalizado.totalCostoReal || 0))}</td>
                     <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.totalizado.totalVendido || 0))}</td>
                     <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.totalizado.utilidad || 0))}</td>
-                    <td className="border border-gray-300 px-4 py-2">{result.totalizado.utilidadPorcentaje.toFixed(2)}</td>
+                    <td className="border border-gray-300 px-4 py-2">{result.totalizado.utilidadPorcentaje?.toFixed(2)}</td>
                     <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.totalizado.totalFlete || 0))}</td>
                     <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.totalizado.totalOip || 0))}</td>
                     <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(result.totalizado.totalBack || 0))}</td>
@@ -225,7 +225,7 @@ export const ComisionByUserPage = () => {
                       <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(factura.valorCostoReal || 0))}</td>
                       <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(factura.valorVenta || 0))}</td>
                       <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(factura.utilidadReal || 0))}</td>
-                      <td className="border border-gray-300 px-4 py-2">{Number(factura.utilidadRealPorcentaje.toFixed(2) || 0)}</td>
+                      <td className="border border-gray-300 px-4 py-2">{Number(factura.utilidadRealPorcentaje?.toFixed(2) || 0)}</td>
                       <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(factura.valorFlete || 0))}</td>
                       <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(factura.valorOip || 0))}</td>
                       <td className="border border-gray-300 px-4 py-2">{formatCurrency(Number(factura.valorBack || 0))}</td>
