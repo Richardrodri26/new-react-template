@@ -116,6 +116,7 @@ const TablaConceptos: React.FC = () => {
       if(response.data?.crearConcepto){
         let conceptoGuardado = response.data?.crearConcepto
         conceptoGuardado.valores = JSON.parse(conceptoGuardado.valores)
+        /*@ts-ignore*/
         setConceptos([...conceptos, conceptoGuardado]);
         setNuevoConcepto('');
         toast.success('actualizado con exíto')
