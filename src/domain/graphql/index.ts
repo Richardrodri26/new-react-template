@@ -17,6 +17,14 @@ export type Scalars = {
   ValidatePassword: any;
 };
 
+export type ActualizarConceptoDto = {
+  editable?: InputMaybe<Scalars['Boolean']>;
+  esSuma?: InputMaybe<Scalars['Boolean']>;
+  id: Scalars['String'];
+  nombre?: InputMaybe<Scalars['String']>;
+  valores?: InputMaybe<Scalars['String']>;
+};
+
 export type AddAndRemoveRoleInput = {
   roleId: Scalars['String'];
   userId: Scalars['String'];
@@ -95,6 +103,18 @@ export type CodeRecoverPasswordInput = {
   email: Scalars['String'];
 };
 
+export type ConceptoTable = {
+  __typename?: 'ConceptoTable';
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  editable?: Maybe<Scalars['Boolean']>;
+  esSuma: Scalars['Boolean'];
+  id: Scalars['ID'];
+  nombre: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+  valores: Scalars['String'];
+};
+
 export type Country = {
   __typename?: 'Country';
   code: Scalars['Int'];
@@ -103,6 +123,13 @@ export type Country = {
   id: Scalars['ID'];
   name: Scalars['String'];
   updatedAt: Scalars['DateTime'];
+};
+
+export type CrearConceptoDto = {
+  editable?: InputMaybe<Scalars['Boolean']>;
+  esSuma: Scalars['Boolean'];
+  nombre: Scalars['String'];
+  valores: Scalars['String'];
 };
 
 export type CreateAndRemoveRoleFxInput = {
@@ -672,6 +699,7 @@ export type Mutation = {
   addUserRole: User;
   assignSubordinate: User;
   codeConfirmation: User;
+  crearConcepto: ConceptoTable;
   create: RoleFx;
   createClient: Client;
   createClientContact: ClientContact;
@@ -695,6 +723,7 @@ export type Mutation = {
   createVisit: Visit;
   createVisitComent: VisitComent;
   createVisitType: VisitType;
+  eliminarConcepto: Scalars['String'];
   enableAndDisableDoubleVerification: Scalars['String'];
   i18nTest: Scalars['String'];
   recoverPassword: Scalars['String'];
@@ -731,6 +760,7 @@ export type Mutation = {
   update: NotificationGroup;
   updateClient: Client;
   updateClientContact: ClientContact;
+  updateConcepto: ConceptoTable;
   updateDocumentType: DocumentType;
   updateDummy: Dummy;
   updateFletes: Fletes;
@@ -771,6 +801,11 @@ export type MutationAssignSubordinateArgs = {
 
 export type MutationCodeConfirmationArgs = {
   createInput: CodeConfirmationInput;
+};
+
+
+export type MutationCrearConceptoArgs = {
+  data: CrearConceptoDto;
 };
 
 
@@ -876,6 +911,11 @@ export type MutationCreateVisitComentArgs = {
 
 export type MutationCreateVisitTypeArgs = {
   createInput: CreateVisitTypeInput;
+};
+
+
+export type MutationEliminarConceptoArgs = {
+  eliminarConceptoDto: Scalars['String'];
 };
 
 
@@ -1047,6 +1087,11 @@ export type MutationUpdateClientArgs = {
 
 export type MutationUpdateClientContactArgs = {
   updateInput: UpdateClientContactInput;
+};
+
+
+export type MutationUpdateConceptoArgs = {
+  actualizarConceptoDto: ActualizarConceptoDto;
 };
 
 
@@ -2589,6 +2634,27 @@ export type CreateParameterMutationVariables = Exact<{
 
 export type CreateParameterMutation = { __typename?: 'Mutation', createParameter: { __typename?: 'Parameter', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, codigo: string, descripcion: string, type: TypeParameterEnum, valueInt?: number | null, valueString?: string | null, valueDate?: any | null, valueFile?: { __typename?: 'FileInfo', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, fileName: string, fileExtension: string, fileMode: FileModes, fileMongoId: string, url: string } | null } };
 
+export type CrearConceptoMutationVariables = Exact<{
+  data: CrearConceptoDto;
+}>;
+
+
+export type CrearConceptoMutation = { __typename?: 'Mutation', crearConcepto: { __typename?: 'ConceptoTable', id: string, nombre: string, esSuma: boolean, editable?: boolean | null, valores: string } };
+
+export type UpdateConceptoMutationVariables = Exact<{
+  actualizarConceptoDto: ActualizarConceptoDto;
+}>;
+
+
+export type UpdateConceptoMutation = { __typename?: 'Mutation', updateConcepto: { __typename?: 'ConceptoTable', id: string, nombre: string, esSuma: boolean, editable?: boolean | null, valores: string } };
+
+export type EliminarConceptoMutationVariables = Exact<{
+  eliminarConceptoDto: Scalars['String'];
+}>;
+
+
+export type EliminarConceptoMutation = { __typename?: 'Mutation', eliminarConcepto: string };
+
 export type UsersQueryVariables = Exact<{
   orderBy?: InputMaybe<Array<FindUsersOrderBy> | FindUsersOrderBy>;
   where?: InputMaybe<FindUsersWhere>;
@@ -4080,6 +4146,111 @@ export function useCreateParameterMutation(baseOptions?: Apollo.MutationHookOpti
 export type CreateParameterMutationHookResult = ReturnType<typeof useCreateParameterMutation>;
 export type CreateParameterMutationResult = Apollo.MutationResult<CreateParameterMutation>;
 export type CreateParameterMutationOptions = Apollo.BaseMutationOptions<CreateParameterMutation, CreateParameterMutationVariables>;
+export const CrearConceptoDocument = gql`
+    mutation CrearConcepto($data: CrearConceptoDto!) {
+  crearConcepto(data: $data) {
+    id
+    nombre
+    esSuma
+    editable
+    valores
+  }
+}
+    `;
+export type CrearConceptoMutationFn = Apollo.MutationFunction<CrearConceptoMutation, CrearConceptoMutationVariables>;
+
+/**
+ * __useCrearConceptoMutation__
+ *
+ * To run a mutation, you first call `useCrearConceptoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCrearConceptoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [crearConceptoMutation, { data, loading, error }] = useCrearConceptoMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCrearConceptoMutation(baseOptions?: Apollo.MutationHookOptions<CrearConceptoMutation, CrearConceptoMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CrearConceptoMutation, CrearConceptoMutationVariables>(CrearConceptoDocument, options);
+      }
+export type CrearConceptoMutationHookResult = ReturnType<typeof useCrearConceptoMutation>;
+export type CrearConceptoMutationResult = Apollo.MutationResult<CrearConceptoMutation>;
+export type CrearConceptoMutationOptions = Apollo.BaseMutationOptions<CrearConceptoMutation, CrearConceptoMutationVariables>;
+export const UpdateConceptoDocument = gql`
+    mutation UpdateConcepto($actualizarConceptoDto: ActualizarConceptoDto!) {
+  updateConcepto(actualizarConceptoDto: $actualizarConceptoDto) {
+    id
+    nombre
+    esSuma
+    editable
+    valores
+  }
+}
+    `;
+export type UpdateConceptoMutationFn = Apollo.MutationFunction<UpdateConceptoMutation, UpdateConceptoMutationVariables>;
+
+/**
+ * __useUpdateConceptoMutation__
+ *
+ * To run a mutation, you first call `useUpdateConceptoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateConceptoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateConceptoMutation, { data, loading, error }] = useUpdateConceptoMutation({
+ *   variables: {
+ *      actualizarConceptoDto: // value for 'actualizarConceptoDto'
+ *   },
+ * });
+ */
+export function useUpdateConceptoMutation(baseOptions?: Apollo.MutationHookOptions<UpdateConceptoMutation, UpdateConceptoMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateConceptoMutation, UpdateConceptoMutationVariables>(UpdateConceptoDocument, options);
+      }
+export type UpdateConceptoMutationHookResult = ReturnType<typeof useUpdateConceptoMutation>;
+export type UpdateConceptoMutationResult = Apollo.MutationResult<UpdateConceptoMutation>;
+export type UpdateConceptoMutationOptions = Apollo.BaseMutationOptions<UpdateConceptoMutation, UpdateConceptoMutationVariables>;
+export const EliminarConceptoDocument = gql`
+    mutation EliminarConcepto($eliminarConceptoDto: String!) {
+  eliminarConcepto(eliminarConceptoDto: $eliminarConceptoDto)
+}
+    `;
+export type EliminarConceptoMutationFn = Apollo.MutationFunction<EliminarConceptoMutation, EliminarConceptoMutationVariables>;
+
+/**
+ * __useEliminarConceptoMutation__
+ *
+ * To run a mutation, you first call `useEliminarConceptoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEliminarConceptoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [eliminarConceptoMutation, { data, loading, error }] = useEliminarConceptoMutation({
+ *   variables: {
+ *      eliminarConceptoDto: // value for 'eliminarConceptoDto'
+ *   },
+ * });
+ */
+export function useEliminarConceptoMutation(baseOptions?: Apollo.MutationHookOptions<EliminarConceptoMutation, EliminarConceptoMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<EliminarConceptoMutation, EliminarConceptoMutationVariables>(EliminarConceptoDocument, options);
+      }
+export type EliminarConceptoMutationHookResult = ReturnType<typeof useEliminarConceptoMutation>;
+export type EliminarConceptoMutationResult = Apollo.MutationResult<EliminarConceptoMutation>;
+export type EliminarConceptoMutationOptions = Apollo.BaseMutationOptions<EliminarConceptoMutation, EliminarConceptoMutationVariables>;
 export const UsersDocument = gql`
     query Users($orderBy: [FindUsersOrderBy!], $where: FindUsersWhere, $pagination: Pagination) {
   users(orderBy: $orderBy, where: $where, pagination: $pagination) {

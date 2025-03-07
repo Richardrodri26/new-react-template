@@ -8,6 +8,7 @@ interface ApiResponse {
   success: boolean;
   number: string;
   data: {
+    DistributorName: string;
     DistLoc: string;
     DistLocCountry: string;
     CommScopePart: string;

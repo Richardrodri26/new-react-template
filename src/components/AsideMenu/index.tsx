@@ -89,8 +89,8 @@ export const AsideMenu = () => {
           className="group flex px-2.5 h-9 min-w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:min-w-8 md:text-base"
         >
           <Home className="h-4 w-4 transition-all group-hover:scale-110" />
-          <p>SELLER</p>
-          <span className="sr-only">Seller</span>
+          {/* <p>SELLER</p> */}
+          {/* <span className="sr-only">Seller</span> */}
         </Link>
         {
           asideMenuItems.map((item) => (
@@ -104,8 +104,8 @@ export const AsideMenu = () => {
                     >
                       {/* <Home className="h-5 w-5" /> */}
                       {item.icon}
-                      {item.title}
-                      <span className="sr-only">{item.title}</span>
+                      {/* {item.title} */}
+                      {/* <span className="sr-only">{item.title}</span> */}
                     </Link>
                   </TooltipTrigger>
                   <TooltipContent side="right">{item.title}</TooltipContent>

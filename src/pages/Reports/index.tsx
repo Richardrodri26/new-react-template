@@ -20,6 +20,7 @@ import ResumenCards from './components/ResumenCards';
 import EstadisticasVentas from './statistic/zona-vendedor';
 import TablaIVA from './table/ivaIdeaBimestre';
 import FacturasTable from './table/comisionTotal';
+import Contabilidad from '../excel';
 
 const ReportsPage: React.FC = () => {
   const [visitData, setVisitData] = useState([]);
@@ -229,6 +230,7 @@ const ReportsPage: React.FC = () => {
     return (
       <>
         <TablaIVA/>
+        <Contabilidad />
       </>
     )
   }

@@ -4,6 +4,7 @@ import * as XLSX from 'xlsx';
 import { obtenerDatos, obtenerTRM } from './service';
 
 interface DatosTabla {
+  DistributorName: string;
   DistLoc: string;
   DistLocCountry: string;
   CommScopePart: string;
@@ -119,6 +120,7 @@ const TablaPaginada: React.FC = () => {
               <table className="min-w-full bg-white border border-gray-200">
                 <thead>
                   <tr className="bg-gray-100">
+                    <th className="py-2 px-4 border-b">DistributorName</th>
                     <th className="py-2 px-4 border-b">DistLoc</th>
                     <th className="py-2 px-4 border-b">DistLocCountry</th>
                     <th className="py-2 px-4 border-b">CommScopePart</th>
@@ -132,6 +134,7 @@ const TablaPaginada: React.FC = () => {
                 <tbody>
                   {itemsActuales.map((item, index) => (
                     <tr key={index} className="hover:bg-gray-50">
+                      <td className="py-2 px-4 border-b">{item.DistributorName}</td>
                       <td className="py-2 px-4 border-b">{item.DistLoc}</td>
                       <td className="py-2 px-4 border-b">{item.DistLocCountry}</td>
                       <td className="py-2 px-4 border-b">{item.CommScopePart}</td>
