@@ -3,6 +3,7 @@ import { DollarSign, Calendar, ShoppingCart, Percent } from "lucide-react";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 import { formatCurrency } from "../table/marcasVenta";
+import { useFindAllFacturaClienteQuery } from "@/domain/graphql";
 interface ResumenCardsProps {
   utilidad: number;
 }
@@ -16,7 +17,16 @@ const ResumenCards:  React.FC<ResumenCardsProps> = () => {
   const [porcentajeUtilidad, setPorcentajeUtilidad] = useState<number | null>(
     null
   );
-
+  const [fechaInicio, setFechaInicio] = useState(dayjs().startOf('month').format('YYYY-MM-DD'));
+  const [fechaFin, setFechaFin] = useState(dayjs().endOf('month').format('YYYY-MM-DD'));
+  const {data, loading, refetch} = useFindAllFacturaClienteQuery({
+    variables: {
+      input: {
+        tem_fecha_desde: fechaInicio,
+        tem_fecha_hasta: fechaFin
+      }
+    }
+  })
   // Obtener datos de la API
   useEffect(() => {
     const fetchData = async () => {
@@ -24,7 +34,7 @@ const ResumenCards:  React.FC<ResumenCardsProps> = () => {
         // Precio del dólar desde una API externa (Ejemplo: mindicador.cl)
         const resDolar = await fetch(`https://www.datos.gov.co/resource/mcec-87by.json?vigenciahasta=${dayjs().format('YYYY-MM-DD')}`);
         const dataDolar = await resDolar.json();
-        setPrecioDolar(dataDolar?.[0].valor || 0);
+        setPrecioDolar(dataDolar?.[0]?.valor || 0);
 
         // Datos desde la API de ventas
         const resVentas = await fetch(`${API_BASE_URL}`);
@@ -45,7 +55,28 @@ const ResumenCards:  React.FC<ResumenCardsProps> = () => {
 
     fetchData();
   }, []);
-
+  // useEffect(() => {
+  //   const interval = setInterval(async () => {
+  //     const { data: newData } = await refetch();
+  //     if (newData?.findAllFacturaCliente) {
+  //       const newTotalVentas = newData.findAllFacturaCliente.reduce(
+  //         (acc, factura) => acc + (Number(factura?.TEM_VENTA || 0)),
+  //         0
+  //       );
+  //       if(newTotalVentas > (totalVentas || 0)){
+  //         const resVentas = await fetch(`${API_BASE_URL}`);
+  //         const dataVentas = await resVentas.json();
+  //         const mesActual = new Date().getMonth() + 1; // Mes actual (1-12)
+  //         const mesData = dataVentas.find((mes: any) => parseInt(mes.numero_mes) === mesActual);
+  //         setUtilidad(mesData?.utilidad_porcentaje || 0)
+  //         setTotalVentas(newTotalVentas);
+  //       }
+  //     }
+  //   }, 60000); // Ejecuta cada minuto
+  
+  //   return () => clearInterval(interval); // Limpieza del intervalo
+  // }, [refetch]);
+  
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-6">
       {/* Card 1: Precio del Dólar */}
