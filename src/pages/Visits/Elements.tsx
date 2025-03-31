@@ -54,7 +54,7 @@ export const VisitHeader = () => {
             className="overflow-hidden rounded-full"
           >
             <img
-              src="/sell-icon.jpeg"
+              src="/cytech.png"
               width={36}
               height={36}
               alt="Avatar"

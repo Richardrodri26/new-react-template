@@ -30,6 +30,15 @@ export type AddAndRemoveRoleInput = {
   userId: Scalars['String'];
 };
 
+export type AddReferenciaToProyectoInput = {
+  marcaId: Scalars['String'];
+  observacion?: InputMaybe<Scalars['String']>;
+  proyectoId: Scalars['String'];
+  referenciaId: Scalars['String'];
+  tipoProyectoId: Scalars['String'];
+  valor: Scalars['Float'];
+};
+
 export type ApprovalTokenInput = {
   code: Scalars['String'];
   token: Scalars['String'];
@@ -191,6 +200,10 @@ export type CreateGroupInput = {
   notificationConfigId?: InputMaybe<Scalars['ID']>;
 };
 
+export type CreateMarcaInput = {
+  nombre: Scalars['String'];
+};
+
 export type CreateMultikeyRegisterInput = {
   date: Scalars['DateTime'];
   description: Scalars['String'];
@@ -270,9 +283,78 @@ export type CreateProfileInput = {
   region: Scalars['Int'];
 };
 
+export type CreateProyectCommentInput = {
+  /** ID del archivo */
+  fileId?: InputMaybe<Scalars['String']>;
+  /** Saber si viene o no del admin(opcional) */
+  isAdmin?: InputMaybe<Scalars['Boolean']>;
+  /** Descripción de la tarea (opcional) */
+  proyectDescription?: InputMaybe<Scalars['String']>;
+  /** ID de la tarea */
+  proyectId: Scalars['String'];
+};
+
+export type CreateProyectosInput = {
+  /** ID del cliente final */
+  cityId: Scalars['String'];
+  /** ID del cliente final */
+  clientFinalId: Scalars['String'];
+  /** ID del cliente integrador */
+  clientIntegradorId: Scalars['String'];
+  /** Fecha de vencimiento del proyecto */
+  dateExpiration: Scalars['DateTime'];
+  description: Scalars['String'];
+  name: Scalars['String'];
+  status: ProyectosStatusEnum;
+  value: Scalars['Float'];
+  /** ID del trabajador asignado a la tarea */
+  workerId: Scalars['String'];
+};
+
+export type CreateReferenciaInput = {
+  codigo: Scalars['String'];
+  descripcion: Scalars['String'];
+  marcaId: Scalars['String'];
+};
+
 export type CreateRoleInput = {
   description: Scalars['String'];
   name: Scalars['String'];
+};
+
+export type CreateTaskCommentInput = {
+  /** ID del archivo */
+  fileId?: InputMaybe<Scalars['String']>;
+  /** Saber si viene o no del admin(opcional) */
+  isAdmin?: InputMaybe<Scalars['Boolean']>;
+  /** Descripción de la tarea (opcional) */
+  taskDescription?: InputMaybe<Scalars['String']>;
+  /** ID de la tarea */
+  taskId: Scalars['String'];
+  /** Estado de la tarea */
+  taskStatus?: InputMaybe<TaskStatus>;
+};
+
+export type CreateTaskInput = {
+  /** Saber si viene o no del admin(opcional) */
+  isAdmin?: InputMaybe<Scalars['Boolean']>;
+  /** Fecha de vencimiento de la tarea */
+  taskDateExpiration: Scalars['DateTime'];
+  /** Descripción de la tarea (opcional) */
+  taskDescription?: InputMaybe<Scalars['String']>;
+  /** Nombre de la tarea */
+  taskName: Scalars['String'];
+  /** Prioridad de la tarea */
+  taskPriority: TaskPrioridad;
+  /** Estado de la tarea */
+  taskStatus: TaskStatus;
+  /** ID del trabajador asignado a la tarea */
+  workerId: Scalars['String'];
+};
+
+export type CreateTipoProyectoInput = {
+  descripcion?: InputMaybe<Scalars['String']>;
+  nombre: Scalars['String'];
 };
 
 export type CreateUserInput = {
@@ -325,6 +407,13 @@ export type CreateVisitTypeInput = {
   description: Scalars['String'];
   name: Scalars['String'];
   status: VisitTypeStatusEnum;
+};
+
+export type DashboardDataModal = {
+  __typename?: 'DashboardDataModal';
+  idUser: Scalars['String'];
+  label: Scalars['String'];
+  total: Scalars['Float'];
 };
 
 export type DateFilter = {
@@ -442,12 +531,14 @@ export type FacturaPorClienteDto = {
 
 export type FileInfo = {
   __typename?: 'FileInfo';
+  chunkSize?: Maybe<Scalars['Float']>;
   createdAt: Scalars['DateTime'];
   deletedAt?: Maybe<Scalars['DateTime']>;
   fileExtension: Scalars['String'];
   fileMode: FileModes;
-  fileMongoId: Scalars['String'];
+  fileMongoId?: Maybe<Scalars['String']>;
   fileName: Scalars['String'];
+  fileUrl?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   updatedAt: Scalars['DateTime'];
   url: Scalars['String'];
@@ -536,6 +627,64 @@ export type FindFletesWhere = {
   description?: InputMaybe<StringFilter>;
   name?: InputMaybe<StringFilter>;
   status?: InputMaybe<StringFilter>;
+};
+
+export type FindProyectCommentTypeOrderBy = {
+  createdAt?: InputMaybe<OrderTypes>;
+};
+
+export type FindProyectCommentTypeWhere = {
+  _and?: InputMaybe<Array<FindProyectCommentTypeWhere>>;
+  _or?: InputMaybe<Array<FindProyectCommentTypeWhere>>;
+  createdAt?: InputMaybe<DateFilter>;
+  createdByUser?: InputMaybe<StringFilter>;
+  description?: InputMaybe<StringFilter>;
+  proyect?: InputMaybe<StringFilter>;
+};
+
+export type FindProyectoOrderBy = {
+  createdAt?: InputMaybe<OrderTypes>;
+};
+
+export type FindProyectoWhere = {
+  _and?: InputMaybe<Array<FindProyectoWhere>>;
+  _or?: InputMaybe<Array<FindProyectoWhere>>;
+  createdAt?: InputMaybe<DateFilter>;
+  dateExpiration?: InputMaybe<DateFilter>;
+  description?: InputMaybe<StringFilter>;
+  name?: InputMaybe<StringFilter>;
+  status?: InputMaybe<StringFilter>;
+  worker?: InputMaybe<StringFilter>;
+};
+
+export type FindTaskCommentTypeOrderBy = {
+  createdAt?: InputMaybe<OrderTypes>;
+  taskDateExpiration?: InputMaybe<OrderTypes>;
+};
+
+export type FindTaskCommentTypeWhere = {
+  _and?: InputMaybe<Array<FindTaskCommentTypeWhere>>;
+  _or?: InputMaybe<Array<FindTaskCommentTypeWhere>>;
+  createdAt?: InputMaybe<DateFilter>;
+  description?: InputMaybe<StringFilter>;
+  taskDateExpiration?: InputMaybe<DateFilter>;
+  taskStatus?: InputMaybe<StringFilter>;
+  worker?: InputMaybe<StringFilter>;
+};
+
+export type FindTaskTypeOrderBy = {
+  createdAt?: InputMaybe<OrderTypes>;
+  taskDateExpiration?: InputMaybe<OrderTypes>;
+};
+
+export type FindTaskTypeWhere = {
+  _and?: InputMaybe<Array<FindTaskTypeWhere>>;
+  _or?: InputMaybe<Array<FindTaskTypeWhere>>;
+  createdAt?: InputMaybe<DateFilter>;
+  description?: InputMaybe<StringFilter>;
+  taskDateExpiration?: InputMaybe<DateFilter>;
+  taskStatus?: InputMaybe<StringFilter>;
+  worker?: InputMaybe<StringFilter>;
 };
 
 export type FindUsersOrderBy = {
@@ -656,6 +805,10 @@ export enum FunctionalityTag {
   Standard = 'STANDARD'
 }
 
+export type GetSalesInput = {
+  vendedor: Scalars['String'];
+};
+
 export type Group = {
   __typename?: 'Group';
   createdAt: Scalars['DateTime'];
@@ -665,6 +818,17 @@ export type Group = {
   notificationConfig?: Maybe<NotificationConfig>;
   updatedAt: Scalars['DateTime'];
   users?: Maybe<Array<User>>;
+};
+
+export type MarcaProyecto = {
+  __typename?: 'MarcaProyecto';
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  id: Scalars['ID'];
+  isActive: Scalars['Boolean'];
+  nombre: Scalars['String'];
+  referencias: Array<ReferenciaProyecto>;
+  updatedAt: Scalars['DateTime'];
 };
 
 export type MetadataPagination = {
@@ -709,6 +873,7 @@ export type Mutation = {
   createDummy: Dummy;
   createFletes: Fletes;
   createGroup: Group;
+  createMarcaProyecto: MarcaProyecto;
   createMultiKeyRegister: MultikeyRegister;
   createNotification: Notification;
   createNotificationConfig: NotificationConfig;
@@ -717,8 +882,15 @@ export type Mutation = {
   createParameter: Parameter;
   createPositionInput: Position;
   createProfile: Profile;
+  createProyectComment: ProyectComment;
+  createProyecto: Proyectos;
+  createProyectoReferencia: ProyectoReferencia;
+  createReferenciaProyecto: ReferenciaProyecto;
   createRole: Role;
   createRoleFx: Array<RoleFx>;
+  createTask: Task;
+  createTaskComment: TaskComment;
+  createTipoProyecto: TipoProyecto;
   createUser: User;
   createVisit: Visit;
   createVisitComent: VisitComent;
@@ -734,6 +906,7 @@ export type Mutation = {
   removeDummy: Dummy;
   removeFletes: Fletes;
   removeGroup: Group;
+  removeMarcaProyecto: MarcaProyecto;
   removeMultiKeyRegister: MultikeyRegister;
   removeNotification: Notification;
   removeNotificationConfig: NotificationConfig;
@@ -741,9 +914,16 @@ export type Mutation = {
   removeParameter: Parameter;
   removePosition: Position;
   removeProfile: Profile;
+  removeProyectComment: ProyectComment;
+  removeProyecto: Proyectos;
+  removeProyectoReferencia: ProyectoReferencia;
+  removeReferenciaProyecto: ReferenciaProyecto;
   removeRole: Role;
   removeRoleFx: Array<Scalars['String']>;
   removeSubordinate: User;
+  removeTask: Task;
+  removeTaskComment: TaskComment;
+  removeTipoProyecto: TipoProyecto;
   removeUser: User;
   removeUserRole: User;
   removeVisit: Visit;
@@ -765,6 +945,7 @@ export type Mutation = {
   updateDummy: Dummy;
   updateFletes: Fletes;
   updateGroup: Group;
+  updateMarcaProyecto: MarcaProyecto;
   updateMultiKeyRegister: MultikeyRegister;
   updateNotification: Notification;
   updateNotificationConfig: NotificationConfig;
@@ -773,7 +954,14 @@ export type Mutation = {
   updatePassword: User;
   updatePositionInput: Position;
   updateProfile: Profile;
+  updateProyectComment: ProyectComment;
+  updateProyecto: Proyectos;
+  updateProyectoReferencia: ProyectoReferencia;
+  updateReferenciaProyecto: ReferenciaProyecto;
   updateRole: Role;
+  updateTask: Task;
+  updateTaskComment: TaskComment;
+  updateTipoProyecto: TipoProyecto;
   updateUser: User;
   updateUserInformation: User;
   updateUserPassword: User;
@@ -844,6 +1032,11 @@ export type MutationCreateGroupArgs = {
 };
 
 
+export type MutationCreateMarcaProyectoArgs = {
+  createInput: CreateMarcaInput;
+};
+
+
 export type MutationCreateMultiKeyRegisterArgs = {
   createInput: CreateMultikeyRegisterInput;
 };
@@ -884,6 +1077,26 @@ export type MutationCreateProfileArgs = {
 };
 
 
+export type MutationCreateProyectCommentArgs = {
+  createInput: CreateProyectCommentInput;
+};
+
+
+export type MutationCreateProyectoArgs = {
+  createInput: CreateProyectosInput;
+};
+
+
+export type MutationCreateProyectoReferenciaArgs = {
+  createInput: AddReferenciaToProyectoInput;
+};
+
+
+export type MutationCreateReferenciaProyectoArgs = {
+  createInput: CreateReferenciaInput;
+};
+
+
 export type MutationCreateRoleArgs = {
   createInput: CreateRoleInput;
 };
@@ -891,6 +1104,21 @@ export type MutationCreateRoleArgs = {
 
 export type MutationCreateRoleFxArgs = {
   createRoleFxInput: CreateAndRemoveRoleFxInput;
+};
+
+
+export type MutationCreateTaskArgs = {
+  createInput: CreateTaskInput;
+};
+
+
+export type MutationCreateTaskCommentArgs = {
+  createInput: CreateTaskCommentInput;
+};
+
+
+export type MutationCreateTipoProyectoArgs = {
+  createInput: CreateTipoProyectoInput;
 };
 
 
@@ -964,6 +1192,11 @@ export type MutationRemoveGroupArgs = {
 };
 
 
+export type MutationRemoveMarcaProyectoArgs = {
+  id: Scalars['ID'];
+};
+
+
 export type MutationRemoveMultiKeyRegisterArgs = {
   id: MultikeyRegisterIdInput;
 };
@@ -999,6 +1232,26 @@ export type MutationRemoveProfileArgs = {
 };
 
 
+export type MutationRemoveProyectCommentArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationRemoveProyectoArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationRemoveProyectoReferenciaArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationRemoveReferenciaProyectoArgs = {
+  id: Scalars['ID'];
+};
+
+
 export type MutationRemoveRoleArgs = {
   id: Scalars['ID'];
 };
@@ -1012,6 +1265,21 @@ export type MutationRemoveRoleFxArgs = {
 export type MutationRemoveSubordinateArgs = {
   managerId: Scalars['String'];
   subordinateId: Scalars['String'];
+};
+
+
+export type MutationRemoveTaskArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationRemoveTaskCommentArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationRemoveTipoProyectoArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -1115,6 +1383,11 @@ export type MutationUpdateGroupArgs = {
 };
 
 
+export type MutationUpdateMarcaProyectoArgs = {
+  updateInput: UpdateMarcaInput;
+};
+
+
 export type MutationUpdateMultiKeyRegisterArgs = {
   updateInput: UpdateMultikeyRegisterInput;
 };
@@ -1155,8 +1428,43 @@ export type MutationUpdateProfileArgs = {
 };
 
 
+export type MutationUpdateProyectCommentArgs = {
+  updateInput: UpdateProyectCoomentInput;
+};
+
+
+export type MutationUpdateProyectoArgs = {
+  updateInput: UpdatePryectosInput;
+};
+
+
+export type MutationUpdateProyectoReferenciaArgs = {
+  updateInput: UpdateProyectoReferenciaInput;
+};
+
+
+export type MutationUpdateReferenciaProyectoArgs = {
+  updateInput: UpdateReferenciaInput;
+};
+
+
 export type MutationUpdateRoleArgs = {
   updateInput: UpdateRoleInput;
+};
+
+
+export type MutationUpdateTaskArgs = {
+  updateInput: UpdateTaskInput;
+};
+
+
+export type MutationUpdateTaskCommentArgs = {
+  updateInput: UpdateTaskCoomentInput;
+};
+
+
+export type MutationUpdateTipoProyectoArgs = {
+  updateInput: UpdateTipoProyectoInput;
 };
 
 
@@ -1335,6 +1643,53 @@ export type Profile = {
   url: Scalars['String'];
 };
 
+export type ProyectComment = {
+  __typename?: 'ProyectComment';
+  createdAt: Scalars['DateTime'];
+  createdByUser: User;
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  file?: Maybe<FileInfo>;
+  id: Scalars['ID'];
+  proyect: Proyectos;
+  proyectDescription?: Maybe<Scalars['String']>;
+  updatedAt: Scalars['DateTime'];
+};
+
+export type ProyectoReferencia = {
+  __typename?: 'ProyectoReferencia';
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  id: Scalars['ID'];
+  updatedAt: Scalars['DateTime'];
+};
+
+export type Proyectos = {
+  __typename?: 'Proyectos';
+  city?: Maybe<City>;
+  clientFinal: Client;
+  clientIntegrador: Client;
+  createdAt: Scalars['DateTime'];
+  createdByUser: User;
+  dateExpiration: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  status: ProyectosStatusEnum;
+  updatedAt: Scalars['DateTime'];
+  value: Scalars['Float'];
+  worker: User;
+};
+
+export enum ProyectosStatusEnum {
+  Exploracion = 'EXPLORACION',
+  GanadoCerrado = 'GANADO_CERRADO',
+  Negociacion = 'NEGOCIACION',
+  PerdidoCerrado = 'PERDIDO_CERRADO',
+  Presentacion = 'PRESENTACION',
+  Propuesta = 'PROPUESTA'
+}
+
 export type Query = {
   __typename?: 'Query';
   Count: MetadataPagination;
@@ -1344,6 +1699,8 @@ export type Query = {
   NotificationGroup: NotificationGroup;
   NotificationGroups: Array<NotificationGroup>;
   NotificationGroupsCount: MetadataPagination;
+  ProyectoReferencias: Array<ProyectoReferencia>;
+  ProyectoReferenciasCount: MetadataPagination;
   approvalJwt: AuthResponse;
   cities: Array<City>;
   city: City;
@@ -1373,9 +1730,13 @@ export type Query = {
   findOneFacturaClienteByCode: FindOneFacturaClienteByCode;
   findUtilidadReal: UtilidadRealModel;
   functionalities: FunctionalityModel;
+  getDataDashboard: Array<DashboardDataModal>;
   group: Group;
   groups: Array<Group>;
   groupsCount: MetadataPagination;
+  marcaProyecto: MarcaProyecto;
+  marcaProyectos: Array<MarcaProyecto>;
+  marcaProyectosCount: MetadataPagination;
   multiKeyRegister: MultikeyRegister;
   multiKeyRegisters: Array<MultikeyRegister>;
   multiKeyRegistersCount: MetadataPagination;
@@ -1397,6 +1758,16 @@ export type Query = {
   profile: Profile;
   profiles: Array<Profile>;
   profilesCount: MetadataPagination;
+  proyectComment: ProyectComment;
+  proyectComments: Array<ProyectComment>;
+  proyectCommentsCount: MetadataPagination;
+  proyecto: Proyectos;
+  proyectoReferencia: ProyectoReferencia;
+  proyectos: Array<Proyectos>;
+  proyectosCount: MetadataPagination;
+  referenciaProyecto: ReferenciaProyecto;
+  referenciaProyectos: Array<ReferenciaProyecto>;
+  referenciaProyectosCount: MetadataPagination;
   revalidate: AuthResponse;
   role: Role;
   roleFx: RoleFx;
@@ -1405,10 +1776,21 @@ export type Query = {
   rolesFx: Array<RoleFx>;
   rolesFxCount: MetadataPagination;
   sendEmailRecovryPassword: Scalars['String'];
+  task: Task;
+  taskComment: TaskComment;
+  tasks: Array<Task>;
+  tasksComments: Array<TaskComment>;
+  tasksCommentsCount: MetadataPagination;
+  tasksCount: MetadataPagination;
+  tipoProyecto: TipoProyecto;
+  tipoProyectos: Array<TipoProyecto>;
+  tipoProyectosCount: MetadataPagination;
   user: User;
   users: Array<User>;
   usersCount: MetadataPagination;
   validateUserToken: User;
+  ventasPorVendedor: Array<SalesPerWorker>;
+  ventasPorVendedorDepartamento: Array<VentasPorVendedorDepartamento>;
   visit: Visit;
   visitComent: VisitComent;
   visitComents: Array<VisitComent>;
@@ -1458,6 +1840,16 @@ export type QueryNotificationGroupsArgs = {
 
 
 export type QueryNotificationGroupsCountArgs = {
+  pagination?: InputMaybe<Pagination>;
+};
+
+
+export type QueryProyectoReferenciasArgs = {
+  pagination?: InputMaybe<Pagination>;
+};
+
+
+export type QueryProyectoReferenciasCountArgs = {
   pagination?: InputMaybe<Pagination>;
 };
 
@@ -1615,6 +2007,11 @@ export type QueryFindUtilidadRealArgs = {
 };
 
 
+export type QueryGetDataDashboardArgs = {
+  id: Scalars['String'];
+};
+
+
 export type QueryGroupArgs = {
   id: Scalars['ID'];
 };
@@ -1626,6 +2023,21 @@ export type QueryGroupsArgs = {
 
 
 export type QueryGroupsCountArgs = {
+  pagination?: InputMaybe<Pagination>;
+};
+
+
+export type QueryMarcaProyectoArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryMarcaProyectosArgs = {
+  pagination?: InputMaybe<Pagination>;
+};
+
+
+export type QueryMarcaProyectosCountArgs = {
   pagination?: InputMaybe<Pagination>;
 };
 
@@ -1735,6 +2147,64 @@ export type QueryProfilesCountArgs = {
 };
 
 
+export type QueryProyectCommentArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryProyectCommentsArgs = {
+  orderBy?: InputMaybe<Array<FindProyectCommentTypeOrderBy>>;
+  pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindProyectCommentTypeWhere>;
+};
+
+
+export type QueryProyectCommentsCountArgs = {
+  orderBy?: InputMaybe<Array<FindProyectCommentTypeOrderBy>>;
+  pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindProyectCommentTypeWhere>;
+};
+
+
+export type QueryProyectoArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryProyectoReferenciaArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryProyectosArgs = {
+  orderBy?: InputMaybe<Array<FindProyectoOrderBy>>;
+  pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindProyectoWhere>;
+};
+
+
+export type QueryProyectosCountArgs = {
+  orderBy?: InputMaybe<Array<FindProyectoOrderBy>>;
+  pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindProyectoWhere>;
+};
+
+
+export type QueryReferenciaProyectoArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryReferenciaProyectosArgs = {
+  pagination?: InputMaybe<Pagination>;
+};
+
+
+export type QueryReferenciaProyectosCountArgs = {
+  pagination?: InputMaybe<Pagination>;
+};
+
+
 export type QueryRoleArgs = {
   id: Scalars['ID'];
 };
@@ -1770,6 +2240,59 @@ export type QuerySendEmailRecovryPasswordArgs = {
 };
 
 
+export type QueryTaskArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryTaskCommentArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryTasksArgs = {
+  orderBy?: InputMaybe<Array<FindTaskTypeOrderBy>>;
+  pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindTaskTypeWhere>;
+};
+
+
+export type QueryTasksCommentsArgs = {
+  orderBy?: InputMaybe<Array<FindTaskCommentTypeOrderBy>>;
+  pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindTaskCommentTypeWhere>;
+};
+
+
+export type QueryTasksCommentsCountArgs = {
+  orderBy?: InputMaybe<Array<FindTaskCommentTypeOrderBy>>;
+  pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindTaskCommentTypeWhere>;
+};
+
+
+export type QueryTasksCountArgs = {
+  orderBy?: InputMaybe<Array<FindTaskTypeOrderBy>>;
+  pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindTaskTypeWhere>;
+};
+
+
+export type QueryTipoProyectoArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryTipoProyectosArgs = {
+  pagination?: InputMaybe<Pagination>;
+};
+
+
+export type QueryTipoProyectosCountArgs = {
+  pagination?: InputMaybe<Pagination>;
+};
+
+
 export type QueryUserArgs = {
   id: Scalars['ID'];
 };
@@ -1791,6 +2314,16 @@ export type QueryUsersCountArgs = {
 
 export type QueryValidateUserTokenArgs = {
   validateTokenInput: ValidateTokenInput;
+};
+
+
+export type QueryVentasPorVendedorArgs = {
+  input: GetSalesInput;
+};
+
+
+export type QueryVentasPorVendedorDepartamentoArgs = {
+  input: GetSalesInput;
 };
 
 
@@ -1860,6 +2393,18 @@ export type RecoverPasswordInput = {
   email: Scalars['String'];
 };
 
+export type ReferenciaProyecto = {
+  __typename?: 'ReferenciaProyecto';
+  codigo: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  descripcion?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  isActive: Scalars['Boolean'];
+  marca: Array<MarcaProyecto>;
+  updatedAt: Scalars['DateTime'];
+};
+
 export type Role = {
   __typename?: 'Role';
   createdAt: Scalars['DateTime'];
@@ -1888,6 +2433,20 @@ export enum RouterType {
   InternalRouteWithArguments = 'InternalRouteWithArguments',
   InternaltRoute = 'InternaltRoute'
 }
+
+export type SalesPerWorker = {
+  __typename?: 'SalesPerWorker';
+  back: Scalars['Float'];
+  costo: Scalars['Float'];
+  flete: Scalars['Float'];
+  nombre_mes: Scalars['String'];
+  numero_mes: Scalars['Int'];
+  oip: Scalars['Float'];
+  utilidad: Scalars['Float'];
+  utilidad_porcentaje: Scalars['Float'];
+  vendedor: Scalars['String'];
+  venta: Scalars['Float'];
+};
 
 export type SendDoubleVerificationInput = {
   email?: InputMaybe<Scalars['String']>;
@@ -1992,6 +2551,62 @@ export type StringFilter = {
   _startswith?: InputMaybe<Scalars['String']>;
 };
 
+export type Task = {
+  __typename?: 'Task';
+  createdAt: Scalars['DateTime'];
+  createdByUser: User;
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  id: Scalars['ID'];
+  taskComment: Array<TaskComment>;
+  taskDateExpiration: Scalars['String'];
+  taskDescription?: Maybe<Scalars['String']>;
+  taskName: Scalars['String'];
+  taskPriority: TaskPrioridad;
+  taskStatus: TaskStatus;
+  updatedAt: Scalars['DateTime'];
+  worker: User;
+};
+
+export type TaskComment = {
+  __typename?: 'TaskComment';
+  createdAt: Scalars['DateTime'];
+  createdByUser: User;
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  file?: Maybe<FileInfo>;
+  id: Scalars['ID'];
+  task: Task;
+  taskDescription?: Maybe<Scalars['String']>;
+  taskStatus: TaskStatus;
+  updatedAt: Scalars['DateTime'];
+};
+
+export enum TaskPrioridad {
+  Alta = 'ALTA',
+  Baja = 'BAJA',
+  Media = 'MEDIA'
+}
+
+/** Estado de la tarea */
+export enum TaskStatus {
+  Cancelada = 'CANCELADA',
+  Creada = 'CREADA',
+  EnProgreso = 'EN_PROGRESO',
+  Pendiente = 'PENDIENTE',
+  Realizada = 'REALIZADA',
+  Vencida = 'VENCIDA'
+}
+
+export type TipoProyecto = {
+  __typename?: 'TipoProyecto';
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  descripcion?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  isActive: Scalars['Boolean'];
+  nombre: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+};
+
 export enum TypeClientEnum {
   ClienteFinal = 'CLIENTE_FINAL',
   Distribuidor = 'DISTRIBUIDOR',
@@ -2083,6 +2698,12 @@ export type UpdateGroupInput = {
   notificationConfigId?: InputMaybe<Scalars['ID']>;
 };
 
+export type UpdateMarcaInput = {
+  id: Scalars['String'];
+  isActive: Scalars['Boolean'];
+  nombre?: InputMaybe<Scalars['String']>;
+};
+
 export type UpdateMultikeyRegisterInput = {
   date?: InputMaybe<Scalars['DateTime']>;
   description?: InputMaybe<Scalars['String']>;
@@ -2167,6 +2788,55 @@ export type UpdateProfileInput = {
   region?: InputMaybe<Scalars['Int']>;
 };
 
+export type UpdateProyectCoomentInput = {
+  /** ID del archivo */
+  fileId?: InputMaybe<Scalars['String']>;
+  id: Scalars['ID'];
+  /** Saber si viene o no del admin(opcional) */
+  isAdmin?: InputMaybe<Scalars['Boolean']>;
+  /** Descripción de la tarea (opcional) */
+  proyectDescription?: InputMaybe<Scalars['String']>;
+  /** ID de la tarea */
+  proyectId?: InputMaybe<Scalars['String']>;
+};
+
+export type UpdateProyectoReferenciaInput = {
+  id: Scalars['String'];
+  isActive: Scalars['Boolean'];
+  marcaId?: InputMaybe<Scalars['String']>;
+  observacion?: InputMaybe<Scalars['String']>;
+  proyectoId?: InputMaybe<Scalars['String']>;
+  referenciaId?: InputMaybe<Scalars['String']>;
+  tipoProyectoId?: InputMaybe<Scalars['String']>;
+  valor?: InputMaybe<Scalars['Float']>;
+};
+
+export type UpdatePryectosInput = {
+  /** ID del cliente final */
+  cityId?: InputMaybe<Scalars['String']>;
+  /** ID del cliente final */
+  clientFinalId?: InputMaybe<Scalars['String']>;
+  /** ID del cliente integrador */
+  clientIntegradorId?: InputMaybe<Scalars['String']>;
+  /** Fecha de vencimiento del proyecto */
+  dateExpiration?: InputMaybe<Scalars['DateTime']>;
+  description?: InputMaybe<Scalars['String']>;
+  id: Scalars['ID'];
+  name?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<ProyectosStatusEnum>;
+  value?: InputMaybe<Scalars['Float']>;
+  /** ID del trabajador asignado a la tarea */
+  workerId?: InputMaybe<Scalars['String']>;
+};
+
+export type UpdateReferenciaInput = {
+  codigo?: InputMaybe<Scalars['String']>;
+  descripcion?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  isActive: Scalars['Boolean'];
+  marcaId?: InputMaybe<Scalars['String']>;
+};
+
 export type UpdateRoleInput = {
   description?: InputMaybe<Scalars['String']>;
   id: Scalars['ID'];
@@ -2177,6 +2847,45 @@ export type UpdateStatusInput = {
   id: Scalars['String'];
   status: StatusVisitEnum;
   token: Scalars['String'];
+};
+
+export type UpdateTaskCoomentInput = {
+  /** ID del archivo */
+  fileId?: InputMaybe<Scalars['String']>;
+  id: Scalars['ID'];
+  /** Saber si viene o no del admin(opcional) */
+  isAdmin?: InputMaybe<Scalars['Boolean']>;
+  /** Descripción de la tarea (opcional) */
+  taskDescription?: InputMaybe<Scalars['String']>;
+  /** ID de la tarea */
+  taskId?: InputMaybe<Scalars['String']>;
+  /** Estado de la tarea */
+  taskStatus?: InputMaybe<TaskStatus>;
+};
+
+export type UpdateTaskInput = {
+  id: Scalars['ID'];
+  /** Saber si viene o no del admin(opcional) */
+  isAdmin?: InputMaybe<Scalars['Boolean']>;
+  /** Fecha de vencimiento de la tarea */
+  taskDateExpiration?: InputMaybe<Scalars['DateTime']>;
+  /** Descripción de la tarea (opcional) */
+  taskDescription?: InputMaybe<Scalars['String']>;
+  /** Nombre de la tarea */
+  taskName?: InputMaybe<Scalars['String']>;
+  /** Prioridad de la tarea */
+  taskPriority?: InputMaybe<TaskPrioridad>;
+  /** Estado de la tarea */
+  taskStatus?: InputMaybe<TaskStatus>;
+  /** ID del trabajador asignado a la tarea */
+  workerId?: InputMaybe<Scalars['String']>;
+};
+
+export type UpdateTipoProyectoInput = {
+  descripcion?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  isActive: Scalars['Boolean'];
+  nombre?: InputMaybe<Scalars['String']>;
 };
 
 export type UpdateUserInformationInput = {
@@ -2325,6 +3034,19 @@ export enum UserTypes {
 
 export type ValidateTokenInput = {
   token: Scalars['String'];
+};
+
+export type VentasPorVendedorDepartamento = {
+  __typename?: 'VentasPorVendedorDepartamento';
+  back: Scalars['Float'];
+  costo: Scalars['Float'];
+  departamento: Scalars['String'];
+  flete: Scalars['Float'];
+  oip: Scalars['Float'];
+  utilidad: Scalars['Float'];
+  utilidad_porcentaje: Scalars['Float'];
+  vendedor: Scalars['String'];
+  venta: Scalars['Float'];
 };
 
 export enum VerificationTypes {
@@ -2611,7 +3333,7 @@ export type ParametersQueryVariables = Exact<{
 }>;
 
 
-export type ParametersQuery = { __typename?: 'Query', parameters: Array<{ __typename?: 'Parameter', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, codigo: string, descripcion: string, type: TypeParameterEnum, valueInt?: number | null, valueString?: string | null, valueDate?: any | null, valueFile?: { __typename?: 'FileInfo', id: string, url: string, fileMongoId: string, createdAt: any, updatedAt: any, deletedAt?: any | null, fileName: string, fileExtension: string, fileMode: FileModes } | null }>, parametersCount: { __typename?: 'MetadataPagination', totalItems?: number | null, itemsPerPage?: number | null, totalPages?: number | null, currentPage?: number | null } };
+export type ParametersQuery = { __typename?: 'Query', parameters: Array<{ __typename?: 'Parameter', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, codigo: string, descripcion: string, type: TypeParameterEnum, valueInt?: number | null, valueString?: string | null, valueDate?: any | null, valueFile?: { __typename?: 'FileInfo', id: string, url: string, fileMongoId?: string | null, createdAt: any, updatedAt: any, deletedAt?: any | null, fileName: string, fileExtension: string, fileMode: FileModes } | null }>, parametersCount: { __typename?: 'MetadataPagination', totalItems?: number | null, itemsPerPage?: number | null, totalPages?: number | null, currentPage?: number | null } };
 
 export type RemoveParameterMutationVariables = Exact<{
   removeParameterId: Scalars['ID'];
@@ -2632,7 +3354,7 @@ export type CreateParameterMutationVariables = Exact<{
 }>;
 
 
-export type CreateParameterMutation = { __typename?: 'Mutation', createParameter: { __typename?: 'Parameter', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, codigo: string, descripcion: string, type: TypeParameterEnum, valueInt?: number | null, valueString?: string | null, valueDate?: any | null, valueFile?: { __typename?: 'FileInfo', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, fileName: string, fileExtension: string, fileMode: FileModes, fileMongoId: string, url: string } | null } };
+export type CreateParameterMutation = { __typename?: 'Mutation', createParameter: { __typename?: 'Parameter', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, codigo: string, descripcion: string, type: TypeParameterEnum, valueInt?: number | null, valueString?: string | null, valueDate?: any | null, valueFile?: { __typename?: 'FileInfo', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, fileName: string, fileExtension: string, fileMode: FileModes, fileMongoId?: string | null, url: string } | null } };
 
 export type CrearConceptoMutationVariables = Exact<{
   data: CrearConceptoDto;
@@ -2654,6 +3376,90 @@ export type EliminarConceptoMutationVariables = Exact<{
 
 
 export type EliminarConceptoMutation = { __typename?: 'Mutation', eliminarConcepto: string };
+
+export type CreateTipoProyectoMutationVariables = Exact<{
+  createInput: CreateTipoProyectoInput;
+}>;
+
+
+export type CreateTipoProyectoMutation = { __typename?: 'Mutation', createTipoProyecto: { __typename?: 'TipoProyecto', id: string } };
+
+export type UpdateTipoProyectoMutationVariables = Exact<{
+  updateInput: UpdateTipoProyectoInput;
+}>;
+
+
+export type UpdateTipoProyectoMutation = { __typename?: 'Mutation', updateTipoProyecto: { __typename?: 'TipoProyecto', id: string } };
+
+export type TipoProyectosQueryVariables = Exact<{
+  pagination?: InputMaybe<Pagination>;
+}>;
+
+
+export type TipoProyectosQuery = { __typename?: 'Query', tipoProyectos: Array<{ __typename?: 'TipoProyecto', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, nombre: string, descripcion?: string | null, isActive: boolean }>, tipoProyectosCount: { __typename?: 'MetadataPagination', totalItems?: number | null, itemsPerPage?: number | null, totalPages?: number | null, currentPage?: number | null } };
+
+export type MarcaProyectosQueryVariables = Exact<{
+  pagination?: InputMaybe<Pagination>;
+}>;
+
+
+export type MarcaProyectosQuery = { __typename?: 'Query', marcaProyectos: Array<{ __typename?: 'MarcaProyecto', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, nombre: string, isActive: boolean, referencias: Array<{ __typename?: 'ReferenciaProyecto', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, codigo: string, descripcion?: string | null, isActive: boolean }> }>, marcaProyectosCount: { __typename?: 'MetadataPagination', totalItems?: number | null, itemsPerPage?: number | null, totalPages?: number | null, currentPage?: number | null } };
+
+export type CreateMarcaProyectoMutationVariables = Exact<{
+  createInput: CreateMarcaInput;
+}>;
+
+
+export type CreateMarcaProyectoMutation = { __typename?: 'Mutation', createMarcaProyecto: { __typename?: 'MarcaProyecto', id: string } };
+
+export type UpdateMarcaProyectoMutationVariables = Exact<{
+  updateInput: UpdateMarcaInput;
+}>;
+
+
+export type UpdateMarcaProyectoMutation = { __typename?: 'Mutation', updateMarcaProyecto: { __typename?: 'MarcaProyecto', id: string } };
+
+export type ReferenciaProyectosQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ReferenciaProyectosQuery = { __typename?: 'Query', referenciaProyectos: Array<{ __typename?: 'ReferenciaProyecto', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, codigo: string, descripcion?: string | null, isActive: boolean }> };
+
+export type CreateReferenciaProyectoMutationVariables = Exact<{
+  createInput: CreateReferenciaInput;
+}>;
+
+
+export type CreateReferenciaProyectoMutation = { __typename?: 'Mutation', createReferenciaProyecto: { __typename?: 'ReferenciaProyecto', id: string } };
+
+export type UpdateReferenciaProyectoMutationVariables = Exact<{
+  updateInput: UpdateReferenciaInput;
+}>;
+
+
+export type UpdateReferenciaProyectoMutation = { __typename?: 'Mutation', updateReferenciaProyecto: { __typename?: 'ReferenciaProyecto', id: string } };
+
+export type TasksQueryVariables = Exact<{
+  orderBy?: InputMaybe<Array<FindTaskTypeOrderBy> | FindTaskTypeOrderBy>;
+  where?: InputMaybe<FindTaskTypeWhere>;
+  pagination?: InputMaybe<Pagination>;
+}>;
+
+
+export type TasksQuery = { __typename?: 'Query', tasks: Array<{ __typename?: 'Task', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, taskName: string, taskDescription?: string | null, taskDateExpiration: string, taskPriority: TaskPrioridad, taskStatus: TaskStatus, worker: { __typename?: 'User', email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, fullName: string }, createdByUser: { __typename?: 'User', email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, fullName: string } }>, tasksCount: { __typename?: 'MetadataPagination', totalItems?: number | null, itemsPerPage?: number | null, totalPages?: number | null, currentPage?: number | null } };
+
+export type CreateTaskMutationVariables = Exact<{
+  createInput: CreateTaskInput;
+}>;
+
+
+export type CreateTaskMutation = { __typename?: 'Mutation', createTask: { __typename?: 'Task', id: string } };
+
+export type UpdateTaskMutationVariables = Exact<{
+  updateInput: UpdateTaskInput;
+}>;
+
+
+export type UpdateTaskMutation = { __typename?: 'Mutation', updateTask: { __typename?: 'Task', id: string } };
 
 export type UsersQueryVariables = Exact<{
   orderBy?: InputMaybe<Array<FindUsersOrderBy> | FindUsersOrderBy>;
@@ -2767,6 +3573,20 @@ export type CreateVisitComentMutationVariables = Exact<{
 
 
 export type CreateVisitComentMutation = { __typename?: 'Mutation', createVisitComent: { __typename?: 'VisitComent', id: string } };
+
+export type VentasPorVendedorQueryVariables = Exact<{
+  input: GetSalesInput;
+}>;
+
+
+export type VentasPorVendedorQuery = { __typename?: 'Query', ventasPorVendedor: Array<{ __typename?: 'SalesPerWorker', vendedor: string, nombre_mes: string, numero_mes: number, venta: number, costo: number, oip: number, flete: number, back: number, utilidad: number, utilidad_porcentaje: number }> };
+
+export type VentasPorVendedorDepartamentoQueryVariables = Exact<{
+  input: GetSalesInput;
+}>;
+
+
+export type VentasPorVendedorDepartamentoQuery = { __typename?: 'Query', ventasPorVendedorDepartamento: Array<{ __typename?: 'VentasPorVendedorDepartamento', vendedor: string, departamento: string, venta: number, costo: number, oip: number, flete: number, back: number, utilidad: number, utilidad_porcentaje: number }> };
 
 export const UserFragmentFragmentDoc = gql`
     fragment userFragment on User {
@@ -4251,6 +5071,475 @@ export function useEliminarConceptoMutation(baseOptions?: Apollo.MutationHookOpt
 export type EliminarConceptoMutationHookResult = ReturnType<typeof useEliminarConceptoMutation>;
 export type EliminarConceptoMutationResult = Apollo.MutationResult<EliminarConceptoMutation>;
 export type EliminarConceptoMutationOptions = Apollo.BaseMutationOptions<EliminarConceptoMutation, EliminarConceptoMutationVariables>;
+export const CreateTipoProyectoDocument = gql`
+    mutation CreateTipoProyecto($createInput: CreateTipoProyectoInput!) {
+  createTipoProyecto(createInput: $createInput) {
+    id
+  }
+}
+    `;
+export type CreateTipoProyectoMutationFn = Apollo.MutationFunction<CreateTipoProyectoMutation, CreateTipoProyectoMutationVariables>;
+
+/**
+ * __useCreateTipoProyectoMutation__
+ *
+ * To run a mutation, you first call `useCreateTipoProyectoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTipoProyectoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTipoProyectoMutation, { data, loading, error }] = useCreateTipoProyectoMutation({
+ *   variables: {
+ *      createInput: // value for 'createInput'
+ *   },
+ * });
+ */
+export function useCreateTipoProyectoMutation(baseOptions?: Apollo.MutationHookOptions<CreateTipoProyectoMutation, CreateTipoProyectoMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateTipoProyectoMutation, CreateTipoProyectoMutationVariables>(CreateTipoProyectoDocument, options);
+      }
+export type CreateTipoProyectoMutationHookResult = ReturnType<typeof useCreateTipoProyectoMutation>;
+export type CreateTipoProyectoMutationResult = Apollo.MutationResult<CreateTipoProyectoMutation>;
+export type CreateTipoProyectoMutationOptions = Apollo.BaseMutationOptions<CreateTipoProyectoMutation, CreateTipoProyectoMutationVariables>;
+export const UpdateTipoProyectoDocument = gql`
+    mutation UpdateTipoProyecto($updateInput: UpdateTipoProyectoInput!) {
+  updateTipoProyecto(updateInput: $updateInput) {
+    id
+  }
+}
+    `;
+export type UpdateTipoProyectoMutationFn = Apollo.MutationFunction<UpdateTipoProyectoMutation, UpdateTipoProyectoMutationVariables>;
+
+/**
+ * __useUpdateTipoProyectoMutation__
+ *
+ * To run a mutation, you first call `useUpdateTipoProyectoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTipoProyectoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTipoProyectoMutation, { data, loading, error }] = useUpdateTipoProyectoMutation({
+ *   variables: {
+ *      updateInput: // value for 'updateInput'
+ *   },
+ * });
+ */
+export function useUpdateTipoProyectoMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTipoProyectoMutation, UpdateTipoProyectoMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateTipoProyectoMutation, UpdateTipoProyectoMutationVariables>(UpdateTipoProyectoDocument, options);
+      }
+export type UpdateTipoProyectoMutationHookResult = ReturnType<typeof useUpdateTipoProyectoMutation>;
+export type UpdateTipoProyectoMutationResult = Apollo.MutationResult<UpdateTipoProyectoMutation>;
+export type UpdateTipoProyectoMutationOptions = Apollo.BaseMutationOptions<UpdateTipoProyectoMutation, UpdateTipoProyectoMutationVariables>;
+export const TipoProyectosDocument = gql`
+    query TipoProyectos($pagination: Pagination) {
+  tipoProyectos(pagination: $pagination) {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    nombre
+    descripcion
+    isActive
+  }
+  tipoProyectosCount(pagination: $pagination) {
+    totalItems
+    itemsPerPage
+    totalPages
+    currentPage
+  }
+}
+    `;
+
+/**
+ * __useTipoProyectosQuery__
+ *
+ * To run a query within a React component, call `useTipoProyectosQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTipoProyectosQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTipoProyectosQuery({
+ *   variables: {
+ *      pagination: // value for 'pagination'
+ *   },
+ * });
+ */
+export function useTipoProyectosQuery(baseOptions?: Apollo.QueryHookOptions<TipoProyectosQuery, TipoProyectosQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TipoProyectosQuery, TipoProyectosQueryVariables>(TipoProyectosDocument, options);
+      }
+export function useTipoProyectosLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TipoProyectosQuery, TipoProyectosQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TipoProyectosQuery, TipoProyectosQueryVariables>(TipoProyectosDocument, options);
+        }
+export type TipoProyectosQueryHookResult = ReturnType<typeof useTipoProyectosQuery>;
+export type TipoProyectosLazyQueryHookResult = ReturnType<typeof useTipoProyectosLazyQuery>;
+export type TipoProyectosQueryResult = Apollo.QueryResult<TipoProyectosQuery, TipoProyectosQueryVariables>;
+export const MarcaProyectosDocument = gql`
+    query MarcaProyectos($pagination: Pagination) {
+  marcaProyectos(pagination: $pagination) {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    nombre
+    isActive
+    referencias {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      codigo
+      descripcion
+      isActive
+    }
+  }
+  marcaProyectosCount(pagination: $pagination) {
+    totalItems
+    itemsPerPage
+    totalPages
+    currentPage
+  }
+}
+    `;
+
+/**
+ * __useMarcaProyectosQuery__
+ *
+ * To run a query within a React component, call `useMarcaProyectosQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMarcaProyectosQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMarcaProyectosQuery({
+ *   variables: {
+ *      pagination: // value for 'pagination'
+ *   },
+ * });
+ */
+export function useMarcaProyectosQuery(baseOptions?: Apollo.QueryHookOptions<MarcaProyectosQuery, MarcaProyectosQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MarcaProyectosQuery, MarcaProyectosQueryVariables>(MarcaProyectosDocument, options);
+      }
+export function useMarcaProyectosLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MarcaProyectosQuery, MarcaProyectosQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MarcaProyectosQuery, MarcaProyectosQueryVariables>(MarcaProyectosDocument, options);
+        }
+export type MarcaProyectosQueryHookResult = ReturnType<typeof useMarcaProyectosQuery>;
+export type MarcaProyectosLazyQueryHookResult = ReturnType<typeof useMarcaProyectosLazyQuery>;
+export type MarcaProyectosQueryResult = Apollo.QueryResult<MarcaProyectosQuery, MarcaProyectosQueryVariables>;
+export const CreateMarcaProyectoDocument = gql`
+    mutation CreateMarcaProyecto($createInput: CreateMarcaInput!) {
+  createMarcaProyecto(createInput: $createInput) {
+    id
+  }
+}
+    `;
+export type CreateMarcaProyectoMutationFn = Apollo.MutationFunction<CreateMarcaProyectoMutation, CreateMarcaProyectoMutationVariables>;
+
+/**
+ * __useCreateMarcaProyectoMutation__
+ *
+ * To run a mutation, you first call `useCreateMarcaProyectoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateMarcaProyectoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createMarcaProyectoMutation, { data, loading, error }] = useCreateMarcaProyectoMutation({
+ *   variables: {
+ *      createInput: // value for 'createInput'
+ *   },
+ * });
+ */
+export function useCreateMarcaProyectoMutation(baseOptions?: Apollo.MutationHookOptions<CreateMarcaProyectoMutation, CreateMarcaProyectoMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateMarcaProyectoMutation, CreateMarcaProyectoMutationVariables>(CreateMarcaProyectoDocument, options);
+      }
+export type CreateMarcaProyectoMutationHookResult = ReturnType<typeof useCreateMarcaProyectoMutation>;
+export type CreateMarcaProyectoMutationResult = Apollo.MutationResult<CreateMarcaProyectoMutation>;
+export type CreateMarcaProyectoMutationOptions = Apollo.BaseMutationOptions<CreateMarcaProyectoMutation, CreateMarcaProyectoMutationVariables>;
+export const UpdateMarcaProyectoDocument = gql`
+    mutation UpdateMarcaProyecto($updateInput: UpdateMarcaInput!) {
+  updateMarcaProyecto(updateInput: $updateInput) {
+    id
+  }
+}
+    `;
+export type UpdateMarcaProyectoMutationFn = Apollo.MutationFunction<UpdateMarcaProyectoMutation, UpdateMarcaProyectoMutationVariables>;
+
+/**
+ * __useUpdateMarcaProyectoMutation__
+ *
+ * To run a mutation, you first call `useUpdateMarcaProyectoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateMarcaProyectoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateMarcaProyectoMutation, { data, loading, error }] = useUpdateMarcaProyectoMutation({
+ *   variables: {
+ *      updateInput: // value for 'updateInput'
+ *   },
+ * });
+ */
+export function useUpdateMarcaProyectoMutation(baseOptions?: Apollo.MutationHookOptions<UpdateMarcaProyectoMutation, UpdateMarcaProyectoMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateMarcaProyectoMutation, UpdateMarcaProyectoMutationVariables>(UpdateMarcaProyectoDocument, options);
+      }
+export type UpdateMarcaProyectoMutationHookResult = ReturnType<typeof useUpdateMarcaProyectoMutation>;
+export type UpdateMarcaProyectoMutationResult = Apollo.MutationResult<UpdateMarcaProyectoMutation>;
+export type UpdateMarcaProyectoMutationOptions = Apollo.BaseMutationOptions<UpdateMarcaProyectoMutation, UpdateMarcaProyectoMutationVariables>;
+export const ReferenciaProyectosDocument = gql`
+    query ReferenciaProyectos {
+  referenciaProyectos {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    codigo
+    descripcion
+    isActive
+  }
+}
+    `;
+
+/**
+ * __useReferenciaProyectosQuery__
+ *
+ * To run a query within a React component, call `useReferenciaProyectosQuery` and pass it any options that fit your needs.
+ * When your component renders, `useReferenciaProyectosQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useReferenciaProyectosQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useReferenciaProyectosQuery(baseOptions?: Apollo.QueryHookOptions<ReferenciaProyectosQuery, ReferenciaProyectosQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ReferenciaProyectosQuery, ReferenciaProyectosQueryVariables>(ReferenciaProyectosDocument, options);
+      }
+export function useReferenciaProyectosLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ReferenciaProyectosQuery, ReferenciaProyectosQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ReferenciaProyectosQuery, ReferenciaProyectosQueryVariables>(ReferenciaProyectosDocument, options);
+        }
+export type ReferenciaProyectosQueryHookResult = ReturnType<typeof useReferenciaProyectosQuery>;
+export type ReferenciaProyectosLazyQueryHookResult = ReturnType<typeof useReferenciaProyectosLazyQuery>;
+export type ReferenciaProyectosQueryResult = Apollo.QueryResult<ReferenciaProyectosQuery, ReferenciaProyectosQueryVariables>;
+export const CreateReferenciaProyectoDocument = gql`
+    mutation CreateReferenciaProyecto($createInput: CreateReferenciaInput!) {
+  createReferenciaProyecto(createInput: $createInput) {
+    id
+  }
+}
+    `;
+export type CreateReferenciaProyectoMutationFn = Apollo.MutationFunction<CreateReferenciaProyectoMutation, CreateReferenciaProyectoMutationVariables>;
+
+/**
+ * __useCreateReferenciaProyectoMutation__
+ *
+ * To run a mutation, you first call `useCreateReferenciaProyectoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateReferenciaProyectoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createReferenciaProyectoMutation, { data, loading, error }] = useCreateReferenciaProyectoMutation({
+ *   variables: {
+ *      createInput: // value for 'createInput'
+ *   },
+ * });
+ */
+export function useCreateReferenciaProyectoMutation(baseOptions?: Apollo.MutationHookOptions<CreateReferenciaProyectoMutation, CreateReferenciaProyectoMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateReferenciaProyectoMutation, CreateReferenciaProyectoMutationVariables>(CreateReferenciaProyectoDocument, options);
+      }
+export type CreateReferenciaProyectoMutationHookResult = ReturnType<typeof useCreateReferenciaProyectoMutation>;
+export type CreateReferenciaProyectoMutationResult = Apollo.MutationResult<CreateReferenciaProyectoMutation>;
+export type CreateReferenciaProyectoMutationOptions = Apollo.BaseMutationOptions<CreateReferenciaProyectoMutation, CreateReferenciaProyectoMutationVariables>;
+export const UpdateReferenciaProyectoDocument = gql`
+    mutation UpdateReferenciaProyecto($updateInput: UpdateReferenciaInput!) {
+  updateReferenciaProyecto(updateInput: $updateInput) {
+    id
+  }
+}
+    `;
+export type UpdateReferenciaProyectoMutationFn = Apollo.MutationFunction<UpdateReferenciaProyectoMutation, UpdateReferenciaProyectoMutationVariables>;
+
+/**
+ * __useUpdateReferenciaProyectoMutation__
+ *
+ * To run a mutation, you first call `useUpdateReferenciaProyectoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateReferenciaProyectoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateReferenciaProyectoMutation, { data, loading, error }] = useUpdateReferenciaProyectoMutation({
+ *   variables: {
+ *      updateInput: // value for 'updateInput'
+ *   },
+ * });
+ */
+export function useUpdateReferenciaProyectoMutation(baseOptions?: Apollo.MutationHookOptions<UpdateReferenciaProyectoMutation, UpdateReferenciaProyectoMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateReferenciaProyectoMutation, UpdateReferenciaProyectoMutationVariables>(UpdateReferenciaProyectoDocument, options);
+      }
+export type UpdateReferenciaProyectoMutationHookResult = ReturnType<typeof useUpdateReferenciaProyectoMutation>;
+export type UpdateReferenciaProyectoMutationResult = Apollo.MutationResult<UpdateReferenciaProyectoMutation>;
+export type UpdateReferenciaProyectoMutationOptions = Apollo.BaseMutationOptions<UpdateReferenciaProyectoMutation, UpdateReferenciaProyectoMutationVariables>;
+export const TasksDocument = gql`
+    query Tasks($orderBy: [FindTaskTypeOrderBy!], $where: FindTaskTypeWhere, $pagination: Pagination) {
+  tasks(orderBy: $orderBy, where: $where, pagination: $pagination) {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    taskName
+    taskDescription
+    taskDateExpiration
+    taskPriority
+    taskStatus
+    worker {
+      email
+      identificationType
+      identificationNumber
+      fullName
+    }
+    createdByUser {
+      email
+      identificationType
+      identificationNumber
+      fullName
+    }
+  }
+  tasksCount(orderBy: $orderBy, where: $where, pagination: $pagination) {
+    totalItems
+    itemsPerPage
+    totalPages
+    currentPage
+  }
+}
+    `;
+
+/**
+ * __useTasksQuery__
+ *
+ * To run a query within a React component, call `useTasksQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTasksQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTasksQuery({
+ *   variables: {
+ *      orderBy: // value for 'orderBy'
+ *      where: // value for 'where'
+ *      pagination: // value for 'pagination'
+ *   },
+ * });
+ */
+export function useTasksQuery(baseOptions?: Apollo.QueryHookOptions<TasksQuery, TasksQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TasksQuery, TasksQueryVariables>(TasksDocument, options);
+      }
+export function useTasksLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TasksQuery, TasksQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TasksQuery, TasksQueryVariables>(TasksDocument, options);
+        }
+export type TasksQueryHookResult = ReturnType<typeof useTasksQuery>;
+export type TasksLazyQueryHookResult = ReturnType<typeof useTasksLazyQuery>;
+export type TasksQueryResult = Apollo.QueryResult<TasksQuery, TasksQueryVariables>;
+export const CreateTaskDocument = gql`
+    mutation CreateTask($createInput: CreateTaskInput!) {
+  createTask(createInput: $createInput) {
+    id
+  }
+}
+    `;
+export type CreateTaskMutationFn = Apollo.MutationFunction<CreateTaskMutation, CreateTaskMutationVariables>;
+
+/**
+ * __useCreateTaskMutation__
+ *
+ * To run a mutation, you first call `useCreateTaskMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTaskMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTaskMutation, { data, loading, error }] = useCreateTaskMutation({
+ *   variables: {
+ *      createInput: // value for 'createInput'
+ *   },
+ * });
+ */
+export function useCreateTaskMutation(baseOptions?: Apollo.MutationHookOptions<CreateTaskMutation, CreateTaskMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateTaskMutation, CreateTaskMutationVariables>(CreateTaskDocument, options);
+      }
+export type CreateTaskMutationHookResult = ReturnType<typeof useCreateTaskMutation>;
+export type CreateTaskMutationResult = Apollo.MutationResult<CreateTaskMutation>;
+export type CreateTaskMutationOptions = Apollo.BaseMutationOptions<CreateTaskMutation, CreateTaskMutationVariables>;
+export const UpdateTaskDocument = gql`
+    mutation UpdateTask($updateInput: UpdateTaskInput!) {
+  updateTask(updateInput: $updateInput) {
+    id
+  }
+}
+    `;
+export type UpdateTaskMutationFn = Apollo.MutationFunction<UpdateTaskMutation, UpdateTaskMutationVariables>;
+
+/**
+ * __useUpdateTaskMutation__
+ *
+ * To run a mutation, you first call `useUpdateTaskMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTaskMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTaskMutation, { data, loading, error }] = useUpdateTaskMutation({
+ *   variables: {
+ *      updateInput: // value for 'updateInput'
+ *   },
+ * });
+ */
+export function useUpdateTaskMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTaskMutation, UpdateTaskMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateTaskMutation, UpdateTaskMutationVariables>(UpdateTaskDocument, options);
+      }
+export type UpdateTaskMutationHookResult = ReturnType<typeof useUpdateTaskMutation>;
+export type UpdateTaskMutationResult = Apollo.MutationResult<UpdateTaskMutation>;
+export type UpdateTaskMutationOptions = Apollo.BaseMutationOptions<UpdateTaskMutation, UpdateTaskMutationVariables>;
 export const UsersDocument = gql`
     query Users($orderBy: [FindUsersOrderBy!], $where: FindUsersWhere, $pagination: Pagination) {
   users(orderBy: $orderBy, where: $where, pagination: $pagination) {
@@ -5016,3 +6305,90 @@ export function useCreateVisitComentMutation(baseOptions?: Apollo.MutationHookOp
 export type CreateVisitComentMutationHookResult = ReturnType<typeof useCreateVisitComentMutation>;
 export type CreateVisitComentMutationResult = Apollo.MutationResult<CreateVisitComentMutation>;
 export type CreateVisitComentMutationOptions = Apollo.BaseMutationOptions<CreateVisitComentMutation, CreateVisitComentMutationVariables>;
+export const VentasPorVendedorDocument = gql`
+    query VentasPorVendedor($input: GetSalesInput!) {
+  ventasPorVendedor(input: $input) {
+    vendedor
+    nombre_mes
+    numero_mes
+    venta
+    costo
+    oip
+    flete
+    back
+    utilidad
+    utilidad_porcentaje
+  }
+}
+    `;
+
+/**
+ * __useVentasPorVendedorQuery__
+ *
+ * To run a query within a React component, call `useVentasPorVendedorQuery` and pass it any options that fit your needs.
+ * When your component renders, `useVentasPorVendedorQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useVentasPorVendedorQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useVentasPorVendedorQuery(baseOptions: Apollo.QueryHookOptions<VentasPorVendedorQuery, VentasPorVendedorQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<VentasPorVendedorQuery, VentasPorVendedorQueryVariables>(VentasPorVendedorDocument, options);
+      }
+export function useVentasPorVendedorLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<VentasPorVendedorQuery, VentasPorVendedorQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<VentasPorVendedorQuery, VentasPorVendedorQueryVariables>(VentasPorVendedorDocument, options);
+        }
+export type VentasPorVendedorQueryHookResult = ReturnType<typeof useVentasPorVendedorQuery>;
+export type VentasPorVendedorLazyQueryHookResult = ReturnType<typeof useVentasPorVendedorLazyQuery>;
+export type VentasPorVendedorQueryResult = Apollo.QueryResult<VentasPorVendedorQuery, VentasPorVendedorQueryVariables>;
+export const VentasPorVendedorDepartamentoDocument = gql`
+    query VentasPorVendedorDepartamento($input: GetSalesInput!) {
+  ventasPorVendedorDepartamento(input: $input) {
+    vendedor
+    departamento
+    venta
+    costo
+    oip
+    flete
+    back
+    utilidad
+    utilidad_porcentaje
+  }
+}
+    `;
+
+/**
+ * __useVentasPorVendedorDepartamentoQuery__
+ *
+ * To run a query within a React component, call `useVentasPorVendedorDepartamentoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useVentasPorVendedorDepartamentoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useVentasPorVendedorDepartamentoQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useVentasPorVendedorDepartamentoQuery(baseOptions: Apollo.QueryHookOptions<VentasPorVendedorDepartamentoQuery, VentasPorVendedorDepartamentoQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<VentasPorVendedorDepartamentoQuery, VentasPorVendedorDepartamentoQueryVariables>(VentasPorVendedorDepartamentoDocument, options);
+      }
+export function useVentasPorVendedorDepartamentoLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<VentasPorVendedorDepartamentoQuery, VentasPorVendedorDepartamentoQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<VentasPorVendedorDepartamentoQuery, VentasPorVendedorDepartamentoQueryVariables>(VentasPorVendedorDepartamentoDocument, options);
+        }
+export type VentasPorVendedorDepartamentoQueryHookResult = ReturnType<typeof useVentasPorVendedorDepartamentoQuery>;
+export type VentasPorVendedorDepartamentoLazyQueryHookResult = ReturnType<typeof useVentasPorVendedorDepartamentoLazyQuery>;
+export type VentasPorVendedorDepartamentoQueryResult = Apollo.QueryResult<VentasPorVendedorDepartamentoQuery, VentasPorVendedorDepartamentoQueryVariables>;

@@ -1,0 +1,41 @@
+query Tasks($orderBy: [FindTaskTypeOrderBy!], $where: FindTaskTypeWhere, $pagination: Pagination) {
+  tasks(orderBy: $orderBy, where: $where, pagination: $pagination) {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    taskName
+    taskDescription
+    taskDateExpiration
+    taskPriority
+    taskStatus
+    worker {
+      email
+      identificationType
+      identificationNumber
+      fullName
+    }
+    createdByUser {
+      email
+      identificationType
+      identificationNumber
+      fullName
+    }
+  }
+  tasksCount(orderBy: $orderBy, where: $where, pagination: $pagination)  {
+    totalItems
+    itemsPerPage
+    totalPages
+    currentPage
+  }
+}
+mutation CreateTask($createInput: CreateTaskInput!) {
+  createTask(createInput: $createInput) {
+    id
+  }
+}
+mutation UpdateTask($updateInput: UpdateTaskInput!) {
+  updateTask(updateInput: $updateInput) {
+    id
+  }
+}

@@ -21,6 +21,7 @@ import EstadisticasVentas from './statistic/zona-vendedor';
 import TablaIVA from './table/ivaIdeaBimestre';
 import FacturasTable from './table/comisionTotal';
 import Contabilidad from '../excel';
+import TaskTableWorker from './table/taskTable';
 
 const ReportsPage: React.FC = () => {
   const [visitData, setVisitData] = useState([]);
@@ -201,11 +202,12 @@ const ReportsPage: React.FC = () => {
           </div>
         </div>
         <div className="bg-white overflow-hidden shadow rounded-lg">
-        <div className="px-4 py-5 sm:p-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">Visitas sin responder</h2>
-          <GridPendingVisit></GridPendingVisit>
+          <div className="px-4 py-5 sm:p-6">
+            <h2 className="text-lg font-medium text-gray-900 mb-4">Visitas sin responder</h2>
+            <GridPendingVisit></GridPendingVisit>
+          </div>
         </div>
-      </div>
+        <TaskTableWorker />
       </>
     )
   }

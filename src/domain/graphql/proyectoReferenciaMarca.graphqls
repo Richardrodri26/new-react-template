@@ -1,0 +1,83 @@
+mutation CreateTipoProyecto($createInput: CreateTipoProyectoInput!) {
+  createTipoProyecto(createInput: $createInput) {
+    id
+  }
+}
+mutation UpdateTipoProyecto($updateInput: UpdateTipoProyectoInput!) {
+  updateTipoProyecto(updateInput: $updateInput) {
+    id
+  }
+}
+query TipoProyectos($pagination: Pagination) {
+  tipoProyectos(pagination: $pagination) {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    nombre
+    descripcion
+    isActive
+  }
+  tipoProyectosCount(pagination: $pagination) {
+    totalItems
+    itemsPerPage
+    totalPages
+    currentPage
+  }
+}
+query MarcaProyectos($pagination: Pagination) {
+  marcaProyectos(pagination: $pagination) {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    nombre
+    isActive
+    referencias {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      codigo
+      descripcion
+      isActive
+    }
+  }
+  marcaProyectosCount(pagination: $pagination) {
+    totalItems
+    itemsPerPage
+    totalPages
+    currentPage
+  }
+}
+mutation CreateMarcaProyecto($createInput: CreateMarcaInput!) {
+  createMarcaProyecto(createInput: $createInput) {
+    id
+  }
+}
+mutation UpdateMarcaProyecto($updateInput: UpdateMarcaInput!) {
+  updateMarcaProyecto(updateInput: $updateInput) {
+    id
+  }
+}
+query ReferenciaProyectos {
+  referenciaProyectos {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    codigo
+    descripcion
+    isActive
+  }
+}
+mutation CreateReferenciaProyecto($createInput: CreateReferenciaInput!) {
+  createReferenciaProyecto(createInput: $createInput) {
+    id
+  }
+}
+mutation UpdateReferenciaProyecto($updateInput: UpdateReferenciaInput!) {
+  updateReferenciaProyecto(updateInput: $updateInput) {
+    id
+  }
+}

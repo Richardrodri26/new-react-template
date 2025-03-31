@@ -13,9 +13,11 @@ import CalendarPage from "@/pages/calendar";
 import CalendarPage2 from "@/pages/calendar2";
 import ReportInventoryCommscope from "@/pages/inventory/inventory";
 import TablaFacturas from "@/pages/inventory/inventoryPos";
+import { MarcaPoryectoPage } from "@/pages/marcaProyecto";
 import {ConfirmEmailPage} from "@/pages/public/ConfirmEmail";
 import { ForgotPasswordPage } from "@/pages/public/ConfirmEmail/forgot-password";
 import {ResetPasswordPage} from "@/pages/public/ConfirmEmail/resetPassword";
+import { TipoPoryectoPage } from "@/pages/typeProyect";
 import { TypeVistPage } from "@/pages/typeVisit";
 import { createBrowserRouter } from "react-router-dom";
 export const appRouter = createBrowserRouter([
@@ -103,6 +105,14 @@ export const appRouter = createBrowserRouter([
       {
         path: 'reportCommscopePos',
         element: <TablaFacturas/>
+      },
+      {
+        path: 'typeProyect',
+        element: <TipoPoryectoPage />
+      },
+      {
+        path: 'marcaProyect',
+        element: <MarcaPoryectoPage />
       }
     ]
   },

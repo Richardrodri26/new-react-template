@@ -106,7 +106,10 @@ const SettingsNav = () => {
         Parametros generales
       </Link>
       <Link to="/dashboard/parameters-comision" className="font-semibold text-primary">Comisisiones</Link>
-      <Link to="/dashboard/comision-by-user">Comision por usuario</Link>
+      <Link to="/dashboard/comision-by-user" className="font-semibold text-primary">Comision por usuario</Link>
+      <Link to="/dashboard/typeProyect" className="font-semibold text-primary">Tipo de proyecto</Link>
+      <Link to="/dashboard/marcaProyect" className="font-semibold text-primary">Marca de proyecto</Link>
+      
       {/* <Link to="#">Support</Link>
       <Link to="#">Organizations</Link>
       <Link to="#">Advanced</Link> */}

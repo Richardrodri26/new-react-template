@@ -74,6 +74,7 @@
     "react-modal": "^3.16.1",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.23.1",
+    "react-spread-sheet-excel": "^2.1.1",
     "react-tabs": "^6.0.2",
     "react-tooltip": "^5.28.0",
     "sonner": "^1.4.41",

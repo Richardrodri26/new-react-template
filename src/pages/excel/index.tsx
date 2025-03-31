@@ -298,7 +298,7 @@ const TablaConceptos: React.FC = () => {
                   !concepto.editable ? 'bg-gray-100' : ''
                 }`}
               >
-                <td className="py-3 px-4 border-b">
+                <td className="px-2 border-b">
                   <input
                     type="text"
                     value={concepto.nombre}
@@ -353,9 +353,9 @@ const TablaConceptos: React.FC = () => {
                     )}
                   </td>
                 ))}
-                <td className="py-3 px-4 border-b">
+                <td className="px-2 border-b">
                   {concepto.editable && (
-                    <div className="flex flex-col space-y-2">
+                    <div className="flex flex-row space-y-2">
                       <button
                         onClick={() => toggleSumaResta(concepto.id)}
                         className={`px-3 py-1 rounded-lg text-sm font-semibold ${

@@ -8,7 +8,7 @@ import { AsideMenuMobile } from '@/components'
 import { Link, useNavigate } from 'react-router-dom'
 import useGeneral from '@/domain/store/general.store'
 
-export const UsersHeader = () => {
+export const TipoProyectoHeader = () => {
   const navigate = useNavigate();
   const logout = useGeneral(state => state.logout)
 
@@ -16,8 +16,6 @@ export const UsersHeader = () => {
     logout()
     navigate("/")
   }
-
-
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
       <AsideMenuMobile />
@@ -33,7 +31,7 @@ export const UsersHeader = () => {
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link to={"/users"}>Usuarios</Link>
+              <Link to={"/dashboard"}>Visitas</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
 

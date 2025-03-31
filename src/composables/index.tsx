@@ -376,7 +376,7 @@ export const InputDateTimeForm: React.FC<InputDateTimeFormInterface> = ({
           <FormItem className={cn("flex flex-1 flex-col", className)}>
             <FormLabel>{label}</FormLabel>
             <FormControl>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2 my-4 ml-4">
                 <input
                   type="date"
                   value={field.value ? dayjs(field.value).format('YYYY-MM-DD') : ''}
