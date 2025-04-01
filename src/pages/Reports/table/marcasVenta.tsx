@@ -4,7 +4,7 @@ import { Settings } from "lucide-react";
 
 // ✅ Formatear valores en COP
 export const formatCurrency = (value: number) =>
-  value.toLocaleString("es-CO", { style: "currency", currency: "COP" });
+  value?.toLocaleString("es-CO", { style: "currency", currency: "COP" }) || '$0';
 
 // ✅ Traducción de meses
 const mesesInglesAEspanol: Record<string, string> = {

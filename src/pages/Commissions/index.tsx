@@ -127,12 +127,12 @@ const CommissionsTable = ({ workers }: { workers: WorkerData[] }) => {
                                     <td className="border border-gray-300 px-4 py-2">{worker.nombre}</td>
                                     <td className="border border-gray-300 px-4 py-2">{worker.interno ? 'INTERNO' : 'EXTERNO'}</td>
                                     <td className="border border-gray-300 px-4 py-2">
-                                        {worker.totalVendido.toLocaleString('es-CO')}
+                                        {worker.totalVendido?.toLocaleString('es-CO') || 0}
                                     </td>
                                     <td className="border border-gray-300 px-4 py-2">{worker.rentabilidad.toFixed(2)}%</td>
                                     {/* <td className="border border-gray-300 px-4 py-2">{worker.totalVisitas}</td> */}
                                     <td className="border border-gray-300 px-4 py-2">
-                                        {totalPagar.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}
+                                        {totalPagar?.toLocaleString('es-CO', { style: 'currency', currency: 'COP' }) || 0}
                                     </td>
                                 </tr>
                             );
