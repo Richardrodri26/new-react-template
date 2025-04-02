@@ -19,6 +19,8 @@ export function LoagerPage() {
   ]);
   const navigate = useNavigate()
   const { token } = useParams()
+  Cookies.remove(import.meta.env.VITE_APP_KEY_COOKIE_SESSION)
+  Cookies.remove(import.meta.env.VITE_APP_KEY_COOKIE_USER)
   const { loading } = useValidateUserTokenQuery({
     variables: {
       validateTokenInput: {

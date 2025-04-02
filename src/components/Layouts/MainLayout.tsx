@@ -88,7 +88,7 @@ export const AppGuardLayout = () => {
                   {
                     icon: CircleUser,
                     text: "Entrar como trabjador",
-                    onClick: () => window.location.href = `https://intranet.cytech.net.co:3000/${Cookies.get(import.meta.env.VITE_APP_KEY_COOKIE_SESSION) ?? "eyyy.jbvdbdbbjsdbjsjbibvjasbvjsdvjav"}`,
+                    onClick: () => window.location.href = `https://intranet.cytech.net.co:3000/looger/${Cookies.get(import.meta.env.VITE_APP_KEY_COOKIE_SESSION) ?? "eyyy.jbvdbdbbjsdbjsjbibvjasbvjsdvjav"}`,
                   },
                 ]}
               />
