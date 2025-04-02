@@ -33,7 +33,7 @@ export type AddAndRemoveRoleInput = {
 export type AddReferenciaToProyectoInput = {
   marcaId: Scalars['String'];
   observacion?: InputMaybe<Scalars['String']>;
-  proyectoId: Scalars['String'];
+  proyectoId?: InputMaybe<Scalars['String']>;
   referenciaId: Scalars['String'];
   tipoProyectoId: Scalars['String'];
   valor: Scalars['Float'];
@@ -124,6 +124,39 @@ export type ConceptoTable = {
   valores: Scalars['String'];
 };
 
+export type Cotizacion = {
+  __typename?: 'Cotizacion';
+  ciudadCliente: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  descripcion?: Maybe<Scalars['String']>;
+  detalle?: Maybe<Array<DetalleCotizacion>>;
+  emailCliente: Scalars['String'];
+  fecha: Scalars['DateTime'];
+  id: Scalars['ID'];
+  nitCliente: Scalars['String'];
+  nombreCliente: Scalars['String'];
+  nombreVendedor: Scalars['String'];
+  numeroCotizacion: Scalars['String'];
+  proyecto?: Maybe<Proyectos>;
+  status?: Maybe<CotizacionStatusEnum>;
+  updatedAt: Scalars['DateTime'];
+  valor: Scalars['Float'];
+  vendedor: Scalars['String'];
+};
+
+export type CotizacionSeachInput = {
+  ano: Scalars['Float'];
+  mes: Scalars['Float'];
+};
+
+export enum CotizacionStatusEnum {
+  Aceptada = 'ACEPTADA',
+  Ganada = 'GANADA',
+  Perdida = 'PERDIDA',
+  Revisada = 'REVISADA'
+}
+
 export type Country = {
   __typename?: 'Country';
   code: Scalars['Int'];
@@ -169,6 +202,18 @@ export type CreateClientInput = {
   type: TypeClientEnum;
   userId?: InputMaybe<Scalars['String']>;
   vertical?: InputMaybe<Scalars['String']>;
+};
+
+export type CreateCotizacionInput = {
+  ciudadCliente: Scalars['String'];
+  emailCliente: Scalars['String'];
+  fecha: Scalars['DateTime'];
+  nitCliente: Scalars['String'];
+  nombreCliente: Scalars['String'];
+  nombreVendedor: Scalars['String'];
+  numeroCotizacion: Scalars['String'];
+  valor: Scalars['Float'];
+  vendedor: Scalars['String'];
 };
 
 export type CreateDocumentTypeInput = {
@@ -272,6 +317,14 @@ export type CreatePositionInput = {
   name?: InputMaybe<Scalars['String']>;
 };
 
+export type CreatePresupuestoInput = {
+  ano: Scalars['Float'];
+  description?: InputMaybe<Scalars['String']>;
+  mes: Scalars['Float'];
+  valor: Scalars['Float'];
+  workerId: Scalars['String'];
+};
+
 export type CreateProfileInput = {
   city: Scalars['Int'];
   description: Scalars['String'];
@@ -304,6 +357,8 @@ export type CreateProyectosInput = {
   /** Fecha de vencimiento del proyecto */
   dateExpiration: Scalars['DateTime'];
   description: Scalars['String'];
+  /** Datos extras */
+  metaData: Array<AddReferenciaToProyectoInput>;
   name: Scalars['String'];
   status: ProyectosStatusEnum;
   value: Scalars['Float'];
@@ -398,6 +453,7 @@ export type CreateVisitInput = {
   latitude?: InputMaybe<Scalars['String']>;
   location?: InputMaybe<Scalars['String']>;
   longitude?: InputMaybe<Scalars['String']>;
+  proyectoId?: InputMaybe<Scalars['String']>;
   status: StatusVisitEnum;
   typeId: Scalars['String'];
   userId: Scalars['String'];
@@ -437,6 +493,23 @@ export type Department = {
   id: Scalars['ID'];
   name: Scalars['String'];
   updatedAt: Scalars['DateTime'];
+};
+
+export type DetalleCotizacion = {
+  __typename?: 'DetalleCotizacion';
+  cantidad: Scalars['Float'];
+  cotizacion: Cotizacion;
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  descripcion: Scalars['String'];
+  id: Scalars['ID'];
+  referencia: Scalars['String'];
+  total: Scalars['Float'];
+  unidadMedida: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+  uuid: Scalars['Float'];
+  valorCosto: Scalars['Float'];
+  valorVenta: Scalars['Float'];
 };
 
 export type DocumentType = {
@@ -579,6 +652,18 @@ export type FindClientWhere = {
   user?: InputMaybe<StringFilter>;
 };
 
+export type FindCotizacionOrderBy = {
+  fecha?: InputMaybe<OrderTypes>;
+};
+
+export type FindCotizacionWhere = {
+  _and?: InputMaybe<Array<FindCotizacionWhere>>;
+  _or?: InputMaybe<Array<FindCotizacionWhere>>;
+  fecha?: InputMaybe<DateFilter>;
+  proyecto?: InputMaybe<StringFilter>;
+  vendedor?: InputMaybe<StringFilter>;
+};
+
 export type FindDummyFamilyWhere = {
   _and?: InputMaybe<Array<FindDummyFamilyWhere>>;
   _or?: InputMaybe<Array<FindDummyFamilyWhere>>;
@@ -627,6 +712,19 @@ export type FindFletesWhere = {
   description?: InputMaybe<StringFilter>;
   name?: InputMaybe<StringFilter>;
   status?: InputMaybe<StringFilter>;
+};
+
+export type FindPresupuestoOrderBy = {
+  createdAt?: InputMaybe<OrderTypes>;
+};
+
+export type FindPresupuestoWhere = {
+  _and?: InputMaybe<Array<FindPresupuestoWhere>>;
+  _or?: InputMaybe<Array<FindPresupuestoWhere>>;
+  ano?: InputMaybe<NumberFilter>;
+  description?: InputMaybe<StringFilter>;
+  mes?: InputMaybe<NumberFilter>;
+  worker?: InputMaybe<StringFilter>;
 };
 
 export type FindProyectCommentTypeOrderBy = {
@@ -865,8 +963,10 @@ export type Mutation = {
   codeConfirmation: User;
   crearConcepto: ConceptoTable;
   create: RoleFx;
+  createAllPresupuestoToMonth: Scalars['Boolean'];
   createClient: Client;
   createClientContact: ClientContact;
+  createCotizacion: Cotizacion;
   createDefaultRoles: Array<Role>;
   createDocumentType: DocumentType;
   createDummiesX: Array<Dummy>;
@@ -881,6 +981,7 @@ export type Mutation = {
   createPageLinkInput: PageLink;
   createParameter: Parameter;
   createPositionInput: Position;
+  createPresupuesto: Presupuesto;
   createProfile: Profile;
   createProyectComment: ProyectComment;
   createProyecto: Proyectos;
@@ -902,6 +1003,7 @@ export type Mutation = {
   remove: NotificationGroup;
   removeClient: Client;
   removeClientContact: ClientContact;
+  removeCotizacion: Cotizacion;
   removeDocumentType: DocumentType;
   removeDummy: Dummy;
   removeFletes: Fletes;
@@ -913,6 +1015,7 @@ export type Mutation = {
   removePageLink: PageLink;
   removeParameter: Parameter;
   removePosition: Position;
+  removePresupuesto: Presupuesto;
   removeProfile: Profile;
   removeProyectComment: ProyectComment;
   removeProyecto: Proyectos;
@@ -932,6 +1035,7 @@ export type Mutation = {
   replaceAllRolesFx: Array<RoleFx>;
   resetPassword: User;
   resetSuperAdmin: User;
+  saveDetalleCotizacion: Scalars['Boolean'];
   sendCodeDoubleVerification: Scalars['String'];
   signInAdmin: AuthResponse;
   signUpWithDocument: AuthResponse;
@@ -941,6 +1045,8 @@ export type Mutation = {
   updateClient: Client;
   updateClientContact: ClientContact;
   updateConcepto: ConceptoTable;
+  updateCotizacion: Cotizacion;
+  updateDetalleCotizacion: DetalleCotizacion;
   updateDocumentType: DocumentType;
   updateDummy: Dummy;
   updateFletes: Fletes;
@@ -953,6 +1059,7 @@ export type Mutation = {
   updateParameter: Parameter;
   updatePassword: User;
   updatePositionInput: Position;
+  updatePresupuesto: Presupuesto;
   updateProfile: Profile;
   updateProyectComment: ProyectComment;
   updateProyecto: Proyectos;
@@ -1009,6 +1116,11 @@ export type MutationCreateClientArgs = {
 
 export type MutationCreateClientContactArgs = {
   createInput: CreateClientContactInput;
+};
+
+
+export type MutationCreateCotizacionArgs = {
+  createInput: CreateCotizacionInput;
 };
 
 
@@ -1069,6 +1181,11 @@ export type MutationCreateParameterArgs = {
 
 export type MutationCreatePositionInputArgs = {
   createInput: CreatePositionInput;
+};
+
+
+export type MutationCreatePresupuestoArgs = {
+  createInput: CreatePresupuestoInput;
 };
 
 
@@ -1172,6 +1289,11 @@ export type MutationRemoveClientContactArgs = {
 };
 
 
+export type MutationRemoveCotizacionArgs = {
+  id: Scalars['ID'];
+};
+
+
 export type MutationRemoveDocumentTypeArgs = {
   id: Scalars['ID'];
 };
@@ -1223,6 +1345,11 @@ export type MutationRemoveParameterArgs = {
 
 
 export type MutationRemovePositionArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationRemovePresupuestoArgs = {
   id: Scalars['ID'];
 };
 
@@ -1318,6 +1445,11 @@ export type MutationResetPasswordArgs = {
 };
 
 
+export type MutationSaveDetalleCotizacionArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationSendCodeDoubleVerificationArgs = {
   sendDoubleVerificationInput: SendDoubleVerificationInput;
 };
@@ -1360,6 +1492,16 @@ export type MutationUpdateClientContactArgs = {
 
 export type MutationUpdateConceptoArgs = {
   actualizarConceptoDto: ActualizarConceptoDto;
+};
+
+
+export type MutationUpdateCotizacionArgs = {
+  updateInput: UpdateCotizacionInput;
+};
+
+
+export type MutationUpdateDetalleCotizacionArgs = {
+  updateInput: UpdateCotizacionDetalleInput;
 };
 
 
@@ -1420,6 +1562,11 @@ export type MutationUpdatePasswordArgs = {
 
 export type MutationUpdatePositionInputArgs = {
   updateInput: UpdatePositionInput;
+};
+
+
+export type MutationUpdatePresupuestoArgs = {
+  updateInput: UpdatePresupuestoInput;
 };
 
 
@@ -1624,6 +1771,19 @@ export type Position = {
   updatedAt: Scalars['DateTime'];
 };
 
+export type Presupuesto = {
+  __typename?: 'Presupuesto';
+  ano: Scalars['Float'];
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  mes: Scalars['Float'];
+  updatedAt: Scalars['DateTime'];
+  valor: Scalars['Float'];
+  worker: User;
+};
+
 export type Profile = {
   __typename?: 'Profile';
   city: Scalars['Int'];
@@ -1655,12 +1815,26 @@ export type ProyectComment = {
   updatedAt: Scalars['DateTime'];
 };
 
+export type ProyectoEmbudoDto = {
+  __typename?: 'ProyectoEmbudoDto';
+  cantidad: Scalars['Float'];
+  estado: ProyectosStatusEnum;
+  userId: Scalars['ID'];
+  valorTotal: Scalars['Float'];
+};
+
 export type ProyectoReferencia = {
   __typename?: 'ProyectoReferencia';
   createdAt: Scalars['DateTime'];
   deletedAt?: Maybe<Scalars['DateTime']>;
   id: Scalars['ID'];
+  marca: MarcaProyecto;
+  observacion?: Maybe<Scalars['String']>;
+  proyecto?: Maybe<Proyectos>;
+  referencia: ReferenciaProyecto;
+  tipoProyecto: TipoProyecto;
   updatedAt: Scalars['DateTime'];
+  valor: Scalars['Float'];
 };
 
 export type Proyectos = {
@@ -1675,6 +1849,7 @@ export type Proyectos = {
   description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   name: Scalars['String'];
+  referencias?: Maybe<Array<ProyectoReferencia>>;
   status: ProyectosStatusEnum;
   updatedAt: Scalars['DateTime'];
   value: Scalars['Float'];
@@ -1712,6 +1887,9 @@ export type Query = {
   clients: Array<Client>;
   clientsCount: MetadataPagination;
   codeRecoverPassword: Scalars['String'];
+  cotizacion: Cotizacion;
+  cotizaciones: Array<Cotizacion>;
+  cotizacionesCount: MetadataPagination;
   countries: Array<Country>;
   country: Country;
   department: Department;
@@ -1728,6 +1906,8 @@ export type Query = {
   findAllVisitDashboard: VisitDashboardModel;
   findOne: UserKey;
   findOneFacturaClienteByCode: FindOneFacturaClienteByCode;
+  findSeachCotizacion: Scalars['Boolean'];
+  findStatisticStatusProyect: Array<ProyectoEmbudoDto>;
   findUtilidadReal: UtilidadRealModel;
   functionalities: FunctionalityModel;
   getDataDashboard: Array<DashboardDataModal>;
@@ -1755,6 +1935,9 @@ export type Query = {
   position: Position;
   positions: Array<Position>;
   positionsCount: MetadataPagination;
+  presupuesto: Presupuesto;
+  presupuestos: Array<Presupuesto>;
+  presupuestosCount: MetadataPagination;
   profile: Profile;
   profiles: Array<Profile>;
   profilesCount: MetadataPagination;
@@ -1919,6 +2102,25 @@ export type QueryCodeRecoverPasswordArgs = {
 };
 
 
+export type QueryCotizacionArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryCotizacionesArgs = {
+  orderBy?: InputMaybe<Array<FindCotizacionOrderBy>>;
+  pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindCotizacionWhere>;
+};
+
+
+export type QueryCotizacionesCountArgs = {
+  orderBy?: InputMaybe<Array<FindCotizacionOrderBy>>;
+  pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindCotizacionWhere>;
+};
+
+
 export type QueryCountriesArgs = {
   orderBy?: InputMaybe<OrderTypes>;
 };
@@ -1999,6 +2201,16 @@ export type QueryFindOneArgs = {
 
 export type QueryFindOneFacturaClienteByCodeArgs = {
   code: Scalars['String'];
+};
+
+
+export type QueryFindSeachCotizacionArgs = {
+  cotizacionSeachInput: CotizacionSeachInput;
+};
+
+
+export type QueryFindStatisticStatusProyectArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -2129,6 +2341,25 @@ export type QueryPositionsArgs = {
 
 export type QueryPositionsCountArgs = {
   pagination?: InputMaybe<Pagination>;
+};
+
+
+export type QueryPresupuestoArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryPresupuestosArgs = {
+  orderBy?: InputMaybe<Array<FindPresupuestoOrderBy>>;
+  pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindPresupuestoWhere>;
+};
+
+
+export type QueryPresupuestosCountArgs = {
+  orderBy?: InputMaybe<Array<FindPresupuestoOrderBy>>;
+  pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindPresupuestoWhere>;
 };
 
 
@@ -2665,6 +2896,28 @@ export type UpdateClientInput = {
   vertical?: InputMaybe<Scalars['String']>;
 };
 
+export type UpdateCotizacionDetalleInput = {
+  id: Scalars['ID'];
+  valorCosto?: InputMaybe<Scalars['Float']>;
+  valorVenta?: InputMaybe<Scalars['Float']>;
+};
+
+export type UpdateCotizacionInput = {
+  ciudadCliente?: InputMaybe<Scalars['String']>;
+  descripcion?: InputMaybe<Scalars['String']>;
+  emailCliente?: InputMaybe<Scalars['String']>;
+  fecha?: InputMaybe<Scalars['DateTime']>;
+  id: Scalars['ID'];
+  nitCliente?: InputMaybe<Scalars['String']>;
+  nombreCliente?: InputMaybe<Scalars['String']>;
+  nombreVendedor?: InputMaybe<Scalars['String']>;
+  numeroCotizacion?: InputMaybe<Scalars['String']>;
+  proyectoId?: InputMaybe<Scalars['ID']>;
+  status?: InputMaybe<CotizacionStatusEnum>;
+  valor?: InputMaybe<Scalars['Float']>;
+  vendedor?: InputMaybe<Scalars['String']>;
+};
+
 export type UpdateDocumentTypeInput = {
   document?: InputMaybe<Scalars['String']>;
   id: Scalars['ID'];
@@ -2776,6 +3029,15 @@ export type UpdatePositionInput = {
   name?: InputMaybe<Scalars['String']>;
 };
 
+export type UpdatePresupuestoInput = {
+  ano?: InputMaybe<Scalars['Float']>;
+  description?: InputMaybe<Scalars['String']>;
+  id: Scalars['ID'];
+  mes?: InputMaybe<Scalars['Float']>;
+  valor?: InputMaybe<Scalars['Float']>;
+  workerId?: InputMaybe<Scalars['String']>;
+};
+
 export type UpdateProfileInput = {
   city?: InputMaybe<Scalars['Int']>;
   description?: InputMaybe<Scalars['String']>;
@@ -2822,6 +3084,8 @@ export type UpdatePryectosInput = {
   dateExpiration?: InputMaybe<Scalars['DateTime']>;
   description?: InputMaybe<Scalars['String']>;
   id: Scalars['ID'];
+  /** Datos extras */
+  metaData?: InputMaybe<Array<AddReferenciaToProyectoInput>>;
   name?: InputMaybe<Scalars['String']>;
   status?: InputMaybe<ProyectosStatusEnum>;
   value?: InputMaybe<Scalars['Float']>;
@@ -2946,6 +3210,7 @@ export type UpdateVisitInput = {
   latitude?: InputMaybe<Scalars['String']>;
   location?: InputMaybe<Scalars['String']>;
   longitude?: InputMaybe<Scalars['String']>;
+  proyectoId?: InputMaybe<Scalars['String']>;
   status?: InputMaybe<StatusVisitEnum>;
   typeId?: InputMaybe<Scalars['String']>;
   userId?: InputMaybe<Scalars['String']>;
@@ -3066,6 +3331,7 @@ export type Visit = {
   latitude?: Maybe<Scalars['String']>;
   location?: Maybe<Scalars['String']>;
   longitude?: Maybe<Scalars['String']>;
+  proyecto?: Maybe<Proyectos>;
   status: StatusVisitEnum;
   type: VisitType;
   updatedAt: Scalars['DateTime'];
@@ -3376,6 +3642,34 @@ export type EliminarConceptoMutationVariables = Exact<{
 
 
 export type EliminarConceptoMutation = { __typename?: 'Mutation', eliminarConcepto: string };
+
+export type CreatePresupuestoMutationVariables = Exact<{
+  createInput: CreatePresupuestoInput;
+}>;
+
+
+export type CreatePresupuestoMutation = { __typename?: 'Mutation', createPresupuesto: { __typename?: 'Presupuesto', id: string } };
+
+export type RemovePresupuestoMutationVariables = Exact<{
+  removePresupuestoId: Scalars['ID'];
+}>;
+
+
+export type RemovePresupuestoMutation = { __typename?: 'Mutation', removePresupuesto: { __typename?: 'Presupuesto', id: string } };
+
+export type PresupuestosQueryVariables = Exact<{
+  orderBy?: InputMaybe<Array<FindPresupuestoOrderBy> | FindPresupuestoOrderBy>;
+  where?: InputMaybe<FindPresupuestoWhere>;
+  pagination?: InputMaybe<Pagination>;
+}>;
+
+
+export type PresupuestosQuery = { __typename?: 'Query', presupuestos: Array<{ __typename?: 'Presupuesto', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, description?: string | null, valor: number, ano: number, mes: number, worker: { __typename?: 'User', email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, fullName: string } }>, presupuestosCount: { __typename?: 'MetadataPagination', totalItems?: number | null, itemsPerPage?: number | null, totalPages?: number | null, currentPage?: number | null } };
+
+export type CreateAllPresupuestoToMonthMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CreateAllPresupuestoToMonthMutation = { __typename?: 'Mutation', createAllPresupuestoToMonth: boolean };
 
 export type CreateTipoProyectoMutationVariables = Exact<{
   createInput: CreateTipoProyectoInput;
@@ -5071,6 +5365,158 @@ export function useEliminarConceptoMutation(baseOptions?: Apollo.MutationHookOpt
 export type EliminarConceptoMutationHookResult = ReturnType<typeof useEliminarConceptoMutation>;
 export type EliminarConceptoMutationResult = Apollo.MutationResult<EliminarConceptoMutation>;
 export type EliminarConceptoMutationOptions = Apollo.BaseMutationOptions<EliminarConceptoMutation, EliminarConceptoMutationVariables>;
+export const CreatePresupuestoDocument = gql`
+    mutation CreatePresupuesto($createInput: CreatePresupuestoInput!) {
+  createPresupuesto(createInput: $createInput) {
+    id
+  }
+}
+    `;
+export type CreatePresupuestoMutationFn = Apollo.MutationFunction<CreatePresupuestoMutation, CreatePresupuestoMutationVariables>;
+
+/**
+ * __useCreatePresupuestoMutation__
+ *
+ * To run a mutation, you first call `useCreatePresupuestoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePresupuestoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPresupuestoMutation, { data, loading, error }] = useCreatePresupuestoMutation({
+ *   variables: {
+ *      createInput: // value for 'createInput'
+ *   },
+ * });
+ */
+export function useCreatePresupuestoMutation(baseOptions?: Apollo.MutationHookOptions<CreatePresupuestoMutation, CreatePresupuestoMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreatePresupuestoMutation, CreatePresupuestoMutationVariables>(CreatePresupuestoDocument, options);
+      }
+export type CreatePresupuestoMutationHookResult = ReturnType<typeof useCreatePresupuestoMutation>;
+export type CreatePresupuestoMutationResult = Apollo.MutationResult<CreatePresupuestoMutation>;
+export type CreatePresupuestoMutationOptions = Apollo.BaseMutationOptions<CreatePresupuestoMutation, CreatePresupuestoMutationVariables>;
+export const RemovePresupuestoDocument = gql`
+    mutation RemovePresupuesto($removePresupuestoId: ID!) {
+  removePresupuesto(id: $removePresupuestoId) {
+    id
+  }
+}
+    `;
+export type RemovePresupuestoMutationFn = Apollo.MutationFunction<RemovePresupuestoMutation, RemovePresupuestoMutationVariables>;
+
+/**
+ * __useRemovePresupuestoMutation__
+ *
+ * To run a mutation, you first call `useRemovePresupuestoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemovePresupuestoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removePresupuestoMutation, { data, loading, error }] = useRemovePresupuestoMutation({
+ *   variables: {
+ *      removePresupuestoId: // value for 'removePresupuestoId'
+ *   },
+ * });
+ */
+export function useRemovePresupuestoMutation(baseOptions?: Apollo.MutationHookOptions<RemovePresupuestoMutation, RemovePresupuestoMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemovePresupuestoMutation, RemovePresupuestoMutationVariables>(RemovePresupuestoDocument, options);
+      }
+export type RemovePresupuestoMutationHookResult = ReturnType<typeof useRemovePresupuestoMutation>;
+export type RemovePresupuestoMutationResult = Apollo.MutationResult<RemovePresupuestoMutation>;
+export type RemovePresupuestoMutationOptions = Apollo.BaseMutationOptions<RemovePresupuestoMutation, RemovePresupuestoMutationVariables>;
+export const PresupuestosDocument = gql`
+    query Presupuestos($orderBy: [FindPresupuestoOrderBy!], $where: FindPresupuestoWhere, $pagination: Pagination) {
+  presupuestos(orderBy: $orderBy, where: $where, pagination: $pagination) {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    description
+    valor
+    ano
+    mes
+    worker {
+      email
+      identificationType
+      identificationNumber
+      fullName
+    }
+  }
+  presupuestosCount(orderBy: $orderBy, where: $where, pagination: $pagination) {
+    totalItems
+    itemsPerPage
+    totalPages
+    currentPage
+  }
+}
+    `;
+
+/**
+ * __usePresupuestosQuery__
+ *
+ * To run a query within a React component, call `usePresupuestosQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePresupuestosQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePresupuestosQuery({
+ *   variables: {
+ *      orderBy: // value for 'orderBy'
+ *      where: // value for 'where'
+ *      pagination: // value for 'pagination'
+ *   },
+ * });
+ */
+export function usePresupuestosQuery(baseOptions?: Apollo.QueryHookOptions<PresupuestosQuery, PresupuestosQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PresupuestosQuery, PresupuestosQueryVariables>(PresupuestosDocument, options);
+      }
+export function usePresupuestosLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PresupuestosQuery, PresupuestosQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PresupuestosQuery, PresupuestosQueryVariables>(PresupuestosDocument, options);
+        }
+export type PresupuestosQueryHookResult = ReturnType<typeof usePresupuestosQuery>;
+export type PresupuestosLazyQueryHookResult = ReturnType<typeof usePresupuestosLazyQuery>;
+export type PresupuestosQueryResult = Apollo.QueryResult<PresupuestosQuery, PresupuestosQueryVariables>;
+export const CreateAllPresupuestoToMonthDocument = gql`
+    mutation CreateAllPresupuestoToMonth {
+  createAllPresupuestoToMonth
+}
+    `;
+export type CreateAllPresupuestoToMonthMutationFn = Apollo.MutationFunction<CreateAllPresupuestoToMonthMutation, CreateAllPresupuestoToMonthMutationVariables>;
+
+/**
+ * __useCreateAllPresupuestoToMonthMutation__
+ *
+ * To run a mutation, you first call `useCreateAllPresupuestoToMonthMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateAllPresupuestoToMonthMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createAllPresupuestoToMonthMutation, { data, loading, error }] = useCreateAllPresupuestoToMonthMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCreateAllPresupuestoToMonthMutation(baseOptions?: Apollo.MutationHookOptions<CreateAllPresupuestoToMonthMutation, CreateAllPresupuestoToMonthMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateAllPresupuestoToMonthMutation, CreateAllPresupuestoToMonthMutationVariables>(CreateAllPresupuestoToMonthDocument, options);
+      }
+export type CreateAllPresupuestoToMonthMutationHookResult = ReturnType<typeof useCreateAllPresupuestoToMonthMutation>;
+export type CreateAllPresupuestoToMonthMutationResult = Apollo.MutationResult<CreateAllPresupuestoToMonthMutation>;
+export type CreateAllPresupuestoToMonthMutationOptions = Apollo.BaseMutationOptions<CreateAllPresupuestoToMonthMutation, CreateAllPresupuestoToMonthMutationVariables>;
 export const CreateTipoProyectoDocument = gql`
     mutation CreateTipoProyecto($createInput: CreateTipoProyectoInput!) {
   createTipoProyecto(createInput: $createInput) {

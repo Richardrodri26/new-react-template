@@ -1,9 +1,11 @@
-import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
-import { Package2, Home, ShoppingCart, Package, Users2, LineChart, Settings, Goal, PanelLeft, Calendar, PersonStanding, MapPinIcon, Bolt, Users, HandCoinsIcon, Map, Car, Archive } from "lucide-react"
+import { useState, useEffect } from "react";
+import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { Package2, Home, ShoppingCart, Package, Users2, LineChart, Settings, Goal, PanelLeft, Calendar, PersonStanding, MapPinIcon, Bolt, Users, HandCoinsIcon, Map, Car, Archive, Pin, PinOff } from "lucide-react";
 import { Fragment } from "react/jsx-runtime";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { cn } from "@/lib/utils";
 
 interface IAsideMenuItem {
   title: string;
@@ -79,137 +81,121 @@ const asideMenuItems: IAsideMenuItem[] = [
   }
 ]
 
+
 export const AsideMenu = () => {
-  const navigate = useNavigate()
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isPinned, setIsPinned] = useState(() => {
+    // Recuperar preferencia de localStorage si existe
+    return localStorage.getItem('menuPinned') === 'true';
+  });
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Efecto para manejar el pinned state
+  useEffect(() => {
+    localStorage.setItem('menuPinned', String(isPinned));
+    if (isPinned) {
+      setIsExpanded(true);
+    }
+  }, [isPinned]);
+
+  // Manejar el hover
+  const handleMouseEnter = () => {
+    if (!isPinned) {
+      setIsExpanded(true);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (!isPinned) {
+      setIsExpanded(false);
+    }
+  };
+
   return (
-    <aside className="min-w-14 flex-row border-r bg-background sm:flex">
-      <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
-        <Link
-          to="/dashboard/visit"
-          className="group flex px-2.5 h-9 min-w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:min-w-8 md:text-base"
-        >
-          <Home className="h-4 w-4 transition-all group-hover:scale-110" />
-          {/* <p>SELLER</p> */}
-          {/* <span className="sr-only">Seller</span> */}
-        </Link>
-        {
-          asideMenuItems.map((item) => (
-            <Fragment key={item.url}>
-              <TooltipProvider>
+    <aside 
+      className={cn(
+        "fixed left-0 top-0 z-40 h-screen border-r bg-background transition-all duration-300 ease-in-out",
+        isExpanded ? "w-64" : "w-20"
+      )}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <div className="flex h-full flex-col">
+        {/* Menú principal */}
+        <nav className="flex-1 overflow-y-auto px-3 py-4">
+          <ul className="space-y-1">
+            {asideMenuItems.map((item) => (
+              <li key={item.url}>
+                <Link
+                  to={item.url}
+                  className={cn(
+                    "group flex items-center rounded-lg p-3 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground",
+                    location.pathname === item.url && "bg-accent text-accent-foreground",
+                    isExpanded ? "justify-start gap-3" : "justify-center"
+                  )}
+                >
+                  <div className="flex-shrink-0">
+                    {item.icon}
+                  </div>
+                  {isExpanded && (
+                    <span className="whitespace-nowrap transition-opacity duration-200">
+                      {item.title}
+                    </span>
+                  )}
+                  {!isExpanded && (
+                    <TooltipProvider delayDuration={0}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="sr-only">{item.title}</span>
+                        </TooltipTrigger>
+                        <TooltipContent side="right">
+                          {item.title}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        {/* Menú inferior (configuración) */}
+        {/* <nav className="px-3 pb-4">
+          <Link
+            to="/dashboard/parameters"
+            className={cn(
+              "group flex items-center rounded-lg p-3 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground",
+              location.pathname === "/dashboard/parameters" && "bg-accent text-accent-foreground",
+              isExpanded ? "justify-start gap-3" : "justify-center"
+            )}
+          >
+            <Settings className="h-5 w-5" />
+            {isExpanded && (
+              <span className="whitespace-nowrap">Configuración</span>
+            )}
+            {!isExpanded && (
+              <TooltipProvider delayDuration={0}>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Link
-                      to={item.url}
-                      className="flex h-9 min-w-9 w-full items-center justify-start gap-5 rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:min-w-8"
-                    >
-                      {/* <Home className="h-5 w-5" /> */}
-                      {item.icon}
-                      {/* {item.title} */}
-                      {/* <span className="sr-only">{item.title}</span> */}
-                    </Link>
+                    <span className="sr-only">Configuración</span>
                   </TooltipTrigger>
-                  <TooltipContent side="right">{item.title}</TooltipContent>
+                  <TooltipContent side="right">
+                    Configuración
+                  </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
-            </Fragment>
-          ))
-        }
-        {/* <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <a
-                  href="#"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                >
-                  <Home className="h-5 w-5" />
-                  <span className="sr-only">Dashboard</span>
-                </a>
-              </TooltipTrigger>
-              <TooltipContent side="right">Dashboard</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <a
-                  href="#"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                >
-                  <ShoppingCart className="h-5 w-5" />
-                  <span className="sr-only">Orders</span>
-                </a>
-              </TooltipTrigger>
-              <TooltipContent side="right">Orders</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <a
-                  href="#"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                >
-                  <Package className="h-5 w-5" />
-                  <span className="sr-only">Products</span>
-                </a>
-              </TooltipTrigger>
-              <TooltipContent side="right">Products</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <a
-                  href="#"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                >
-                  <Users2 className="h-5 w-5" />
-                  <span className="sr-only">Customers</span>
-                </a>
-              </TooltipTrigger>
-              <TooltipContent side="right">Customers</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <a
-                  href="#"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                >
-                  <LineChart className="h-5 w-5" />
-                  <span className="sr-only">Analytics</span>
-                </a>
-              </TooltipTrigger>
-              <TooltipContent side="right">Analytics</TooltipContent>
-            </Tooltip>
-          </TooltipProvider> */}
-      </nav>
-      <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <a
-                href="/dashboard/parameters"
-                className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-              >
-                <Settings className="h-5 w-5" />
-                <span className="sr-only">Parametros</span>
-              </a>
-            </TooltipTrigger>
-            <TooltipContent side="right" >Parametros</TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      </nav>
+            )}
+          </Link>
+        </nav> */}
+      </div>
     </aside>
-  )
-}
-
+  );
+};
 
 export const AsideMenuMobile = () => {
+  const location = useLocation();
 
   return (
     <Sheet>
@@ -219,68 +205,41 @@ export const AsideMenuMobile = () => {
           <span className="sr-only">Toggle Menu</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="sm:max-w-xs">
-        <nav className="grid gap-6 text-lg font-medium">
-          {/* <a
-              href="#"
-              className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
+      <SheetContent side="left" className="w-64">
+        <div className="flex h-full flex-col">
+          <nav className="flex-1 overflow-y-auto px-3 py-4">
+            <ul className="space-y-1">
+              {asideMenuItems.map((item) => (
+                <li key={item.url}>
+                  <Link
+                    to={item.url}
+                    className={cn(
+                      "flex items-center gap-3 rounded-lg p-3 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground",
+                      location.pathname === item.url && "bg-accent text-accent-foreground"
+                    )}
+                  >
+                    {item.icon}
+                    <span>{item.title}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+{/* 
+          <nav className="px-3 pb-4">
+            <Link
+              to="/dashboard/parameters"
+              className={cn(
+                "flex items-center gap-3 rounded-lg p-3 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground",
+                location.pathname === "/dashboard/parameters" && "bg-accent text-accent-foreground"
+              )}
             >
-              <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
-              <span className="sr-only">Acme Inc</span>
-            </a>
-            <a
-              href="#"
-              className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-            >
-              <Home className="h-5 w-5" />
-              Dashboard
-            </a>
-            <a
-              href="#"
-              className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-            >
-              <ShoppingCart className="h-5 w-5" />
-              Orders
-            </a>
-            <a
-              href="#"
-              className="flex items-center gap-4 px-2.5 text-foreground"
-            >
-              <Package className="h-5 w-5" />
-              Products
-            </a>
-            <a
-              href="#"
-              className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-            >
-              <Users2 className="h-5 w-5" />
-              Customers
-            </a>
-            <a
-              href="#"
-              className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-            >
-              <LineChart className="h-5 w-5" />
-              Settings
-            </a> */}
-
-          {
-            asideMenuItems.map((item) => (
-              <Fragment key={item.url}>
-                <Link
-                  to={item.url}
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                >
-                  {/* <Home className="h-5 w-5" /> */}
-                  {item.icon}
-                  <span className="sr-only">{item.title}</span>
-                </Link>
-              </Fragment>
-            ))
-          }
-
-        </nav>
+              <Settings className="h-5 w-5" />
+              <span>Configuración</span>
+            </Link>
+          </nav> */}
+        </div>
       </SheetContent>
     </Sheet>
-  )
-}
+  );
+};

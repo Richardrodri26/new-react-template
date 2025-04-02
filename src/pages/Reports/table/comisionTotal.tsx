@@ -133,9 +133,9 @@ const FacturasTable: React.FC = memo(() => {
                       <div className="w-full h-4 bg-gray-200 rounded-md">
                         <div
                           className={`h-full ${calculatePercentageColor(
-                            (externo?.totalVentasGrupo / convertirANumero(presupuesto?.PRESUPUESTO)) * 100 || 0
+                            (externo?.totalVentasGrupo / (presupuesto?.PRESUPUESTO)) * 100 || 0
                           )} rounded-md`}
-                          style={{ width: `${((externo?.totalVentasGrupo / convertirANumero(presupuesto?.PRESUPUESTO)) * 100 || 0) > 100 ? 100 :((externo?.totalVentasGrupo / convertirANumero(presupuesto?.PRESUPUESTO)) * 100 || 0) }%` }}
+                          style={{ width: `${((externo?.totalVentasGrupo / (presupuesto?.PRESUPUESTO)) * 100 || 0) > 100 ? 100 :((externo?.totalVentasGrupo / (presupuesto?.PRESUPUESTO)) * 100 || 0) }%` }}
                         ></div>
                       </div>
                     </td>
@@ -153,9 +153,9 @@ const FacturasTable: React.FC = memo(() => {
                       <div className="w-full h-4 bg-gray-200 rounded-md">
                         <div
                           className={`h-full ${calculatePercentageColor(
-                            (totalizado?.totalVendido / convertirANumero(presupuesto?.PRESUPUESTO)) * 100 || 0
+                            (totalizado?.totalVendido / (presupuesto?.PRESUPUESTO)) * 100 || 0
                           )} rounded-md`}
-                          style={{ width: `${((totalizado?.totalVendido / convertirANumero(presupuesto?.PRESUPUESTO)) * 100 || 0) > 100 ? 100 : ((totalizado?.totalVendido / convertirANumero(presupuesto?.PRESUPUESTO)) * 100 || 0)  }%` }}
+                          style={{ width: `${((totalizado?.totalVendido / (presupuesto?.PRESUPUESTO)) * 100 || 0) > 100 ? 100 : ((totalizado?.totalVendido / (presupuesto?.PRESUPUESTO)) * 100 || 0)  }%` }}
                         ></div>
                       </div>
                     </td>

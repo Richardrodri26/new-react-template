@@ -1,0 +1,40 @@
+mutation CreatePresupuesto($createInput: CreatePresupuestoInput!) {
+  createPresupuesto(createInput: $createInput) {
+    id
+  }
+}
+
+mutation RemovePresupuesto($removePresupuestoId: ID!) {
+  removePresupuesto(id: $removePresupuestoId) {
+    id
+  }
+}
+
+query Presupuestos($orderBy: [FindPresupuestoOrderBy!], $where: FindPresupuestoWhere, $pagination: Pagination) {
+  presupuestos(orderBy: $orderBy, where: $where, pagination: $pagination) {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    description
+    valor
+    ano
+    mes
+    worker {
+      email
+      identificationType
+      identificationNumber
+      fullName
+    }
+  }
+  presupuestosCount(orderBy: $orderBy, where: $where, pagination: $pagination) {
+    totalItems
+    itemsPerPage
+    totalPages
+    currentPage
+  }
+}
+
+mutation CreateAllPresupuestoToMonth {
+  createAllPresupuestoToMonth
+}

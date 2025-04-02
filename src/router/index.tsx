@@ -8,12 +8,14 @@ import MapaApp from "@/pages/Mapa";
 import { CommissionsConfigPage } from "@/pages/Parameters/comision";
 import ReportsPage from "@/pages/Reports";
 import { VisitDetailPage } from "@/pages/Visits/Detalle";
+import { LoagerPage } from "@/pages/auth/looager";
 import { HomeBlog } from "@/pages/blog";
 import CalendarPage from "@/pages/calendar";
 import CalendarPage2 from "@/pages/calendar2";
 import ReportInventoryCommscope from "@/pages/inventory/inventory";
 import TablaFacturas from "@/pages/inventory/inventoryPos";
 import { MarcaPoryectoPage } from "@/pages/marcaProyecto";
+import { PresupuestoPage } from "@/pages/presupuesto";
 import {ConfirmEmailPage} from "@/pages/public/ConfirmEmail";
 import { ForgotPasswordPage } from "@/pages/public/ConfirmEmail/forgot-password";
 import {ResetPasswordPage} from "@/pages/public/ConfirmEmail/resetPassword";
@@ -25,6 +27,10 @@ export const appRouter = createBrowserRouter([
     path: "/",
     element: <LoginPage />,
 
+  },
+  {
+    path: "/looger/:token",
+    element: <LoagerPage />,
   },
   {
     path: "/dashboard",
@@ -113,6 +119,10 @@ export const appRouter = createBrowserRouter([
       {
         path: 'marcaProyect',
         element: <MarcaPoryectoPage />
+      },
+      {
+        path: 'presupuesto',
+        element: <PresupuestoPage />
       }
     ]
   },
