@@ -1,4 +1,3 @@
-document.title = "FLETES"
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { toast } from "sonner";

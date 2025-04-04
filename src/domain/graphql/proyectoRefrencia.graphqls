@@ -1,0 +1,10 @@
+mutation RemoveProyectoReferencia($removeProyectoReferenciaId: ID!) {
+  removeProyectoReferencia(id: $removeProyectoReferenciaId) {
+    id   
+  }
+}
+mutation CreateProyectoReferencia($createInput: AddReferenciaToProyectoInput!) {
+  createProyectoReferencia(createInput: $createInput) {
+    id
+  }
+}

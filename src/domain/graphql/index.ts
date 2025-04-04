@@ -3533,6 +3533,50 @@ export type CreateClientContactMutationVariables = Exact<{
 
 export type CreateClientContactMutation = { __typename?: 'Mutation', createClientContact: { __typename?: 'ClientContact', id: string, name: string } };
 
+export type CotizacionesQueryVariables = Exact<{
+  orderBy?: InputMaybe<Array<FindCotizacionOrderBy> | FindCotizacionOrderBy>;
+  where?: InputMaybe<FindCotizacionWhere>;
+  pagination?: InputMaybe<Pagination>;
+}>;
+
+
+export type CotizacionesQuery = { __typename?: 'Query', cotizaciones: Array<{ __typename?: 'Cotizacion', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, numeroCotizacion: string, fecha: any, nombreCliente: string, nombreVendedor: string, vendedor: string, ciudadCliente: string, emailCliente: string, nitCliente: string, valor: number }>, cotizacionesCount: { __typename?: 'MetadataPagination', totalItems?: number | null, itemsPerPage?: number | null, totalPages?: number | null, currentPage?: number | null } };
+
+export type FindSeachCotizacionQueryVariables = Exact<{
+  cotizacionSeachInput: CotizacionSeachInput;
+}>;
+
+
+export type FindSeachCotizacionQuery = { __typename?: 'Query', findSeachCotizacion: boolean };
+
+export type CotizacionQueryVariables = Exact<{
+  cotizacionId: Scalars['ID'];
+}>;
+
+
+export type CotizacionQuery = { __typename?: 'Query', cotizacion: { __typename?: 'Cotizacion', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, numeroCotizacion: string, fecha: any, nombreCliente: string, nombreVendedor: string, vendedor: string, ciudadCliente: string, emailCliente: string, nitCliente: string, valor: number, descripcion?: string | null, status?: CotizacionStatusEnum | null, proyecto?: { __typename?: 'Proyectos', name: string, status: ProyectosStatusEnum, description?: string | null, value: number, id: string } | null, detalle?: Array<{ __typename?: 'DetalleCotizacion', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, referencia: string, descripcion: string, unidadMedida: string, cantidad: number, valorCosto: number, valorVenta: number, total: number, uuid: number }> | null } };
+
+export type SaveDetalleCotizacionMutationVariables = Exact<{
+  saveDetalleCotizacionId: Scalars['String'];
+}>;
+
+
+export type SaveDetalleCotizacionMutation = { __typename?: 'Mutation', saveDetalleCotizacion: boolean };
+
+export type UpdateCotizacionMutationVariables = Exact<{
+  updateInput: UpdateCotizacionInput;
+}>;
+
+
+export type UpdateCotizacionMutation = { __typename?: 'Mutation', updateCotizacion: { __typename?: 'Cotizacion', id: string } };
+
+export type UpdateDetalleCotizacionMutationVariables = Exact<{
+  updateInput: UpdateCotizacionDetalleInput;
+}>;
+
+
+export type UpdateDetalleCotizacionMutation = { __typename?: 'Mutation', updateDetalleCotizacion: { __typename?: 'DetalleCotizacion', id: string } };
+
 export type FindAllFacturaClienteQueryVariables = Exact<{
   input: FacturaPorClienteDto;
 }>;
@@ -3671,6 +3715,65 @@ export type CreateAllPresupuestoToMonthMutationVariables = Exact<{ [key: string]
 
 export type CreateAllPresupuestoToMonthMutation = { __typename?: 'Mutation', createAllPresupuestoToMonth: boolean };
 
+export type CreateProyectoMutationVariables = Exact<{
+  createInput: CreateProyectosInput;
+}>;
+
+
+export type CreateProyectoMutation = { __typename?: 'Mutation', createProyecto: { __typename?: 'Proyectos', id: string } };
+
+export type ProyectosQueryVariables = Exact<{
+  pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindProyectoWhere>;
+  orderBy?: InputMaybe<Array<FindProyectoOrderBy> | FindProyectoOrderBy>;
+}>;
+
+
+export type ProyectosQuery = { __typename?: 'Query', proyectos: Array<{ __typename?: 'Proyectos', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, value: number, status: ProyectosStatusEnum, dateExpiration: any, description?: string | null, clientIntegrador: { __typename?: 'Client', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, numberDocument: string, email: string, telefono?: string | null, address?: string | null, descripcion?: string | null, type?: TypeClientEnum | null, vertical?: string | null, celular: string, department?: { __typename?: 'Department', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, country?: { __typename?: 'Country', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, user?: { __typename?: 'User', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name?: string | null, middleName?: string | null, lastName?: string | null, secondSurname?: string | null, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, dateIssue?: any | null, legalRepresentativeIdentificationType?: UserDocumentTypes | null, legalRepresentativeIdentificationNumber?: string | null, phoneCountryCode?: string | null, phoneNumber?: string | null, address?: string | null, hasRural?: boolean | null, confirmationCode?: string | null, position?: string | null, valueTransport?: number | null, typeWoker?: TypeWorker | null, status: UserStatusTypes, phoneVerification: boolean, emailVerification: boolean, type: UserTypes, fullName: string } | null }, clientFinal: { __typename?: 'Client', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, numberDocument: string, email: string, telefono?: string | null, address?: string | null, descripcion?: string | null, type?: TypeClientEnum | null, vertical?: string | null, celular: string }, worker: { __typename?: 'User', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name?: string | null, middleName?: string | null, lastName?: string | null, secondSurname?: string | null, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, dateIssue?: any | null, legalRepresentativeIdentificationType?: UserDocumentTypes | null, legalRepresentativeIdentificationNumber?: string | null, phoneCountryCode?: string | null, phoneNumber?: string | null, address?: string | null, hasRural?: boolean | null, confirmationCode?: string | null, position?: string | null, valueTransport?: number | null, typeWoker?: TypeWorker | null, status: UserStatusTypes, phoneVerification: boolean, emailVerification: boolean, type: UserTypes, fullName: string, manager?: { __typename?: 'User', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name?: string | null, middleName?: string | null, lastName?: string | null, secondSurname?: string | null, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, dateIssue?: any | null, legalRepresentativeIdentificationType?: UserDocumentTypes | null, legalRepresentativeIdentificationNumber?: string | null, phoneCountryCode?: string | null, phoneNumber?: string | null, address?: string | null, hasRural?: boolean | null, confirmationCode?: string | null, position?: string | null, valueTransport?: number | null, typeWoker?: TypeWorker | null, status: UserStatusTypes, phoneVerification: boolean, emailVerification: boolean, type: UserTypes, fullName: string } | null, subordinates?: Array<{ __typename?: 'User', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name?: string | null, middleName?: string | null, lastName?: string | null, secondSurname?: string | null, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, dateIssue?: any | null, legalRepresentativeIdentificationType?: UserDocumentTypes | null, legalRepresentativeIdentificationNumber?: string | null, phoneCountryCode?: string | null, phoneNumber?: string | null, address?: string | null, hasRural?: boolean | null, confirmationCode?: string | null, position?: string | null, valueTransport?: number | null, typeWoker?: TypeWorker | null, status: UserStatusTypes, phoneVerification: boolean, emailVerification: boolean, type: UserTypes, fullName: string }> | null, userRoles: Array<{ __typename?: 'Role', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, description: string, defaultForType?: UserTypes | null, users?: Array<{ __typename?: 'User', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name?: string | null, middleName?: string | null, lastName?: string | null, secondSurname?: string | null, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, dateIssue?: any | null, legalRepresentativeIdentificationType?: UserDocumentTypes | null, legalRepresentativeIdentificationNumber?: string | null, phoneCountryCode?: string | null, phoneNumber?: string | null, address?: string | null, hasRural?: boolean | null, confirmationCode?: string | null, position?: string | null, valueTransport?: number | null, typeWoker?: TypeWorker | null, status: UserStatusTypes, phoneVerification: boolean, emailVerification: boolean, type: UserTypes, fullName: string }> | null, roleFx: Array<{ __typename?: 'RoleFx', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, permission: string }> }>, userRolesFx: Array<{ __typename?: 'RoleFx', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, permission: string, role?: { __typename?: 'Role', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, description: string, defaultForType?: UserTypes | null } | null }> }, createdByUser: { __typename?: 'User', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name?: string | null, middleName?: string | null, lastName?: string | null, secondSurname?: string | null, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, dateIssue?: any | null, legalRepresentativeIdentificationType?: UserDocumentTypes | null, legalRepresentativeIdentificationNumber?: string | null, phoneCountryCode?: string | null, phoneNumber?: string | null, address?: string | null, hasRural?: boolean | null, confirmationCode?: string | null, position?: string | null, valueTransport?: number | null, typeWoker?: TypeWorker | null, status: UserStatusTypes, phoneVerification: boolean, emailVerification: boolean, type: UserTypes, fullName: string }, city?: { __typename?: 'City', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null }>, proyectosCount: { __typename?: 'MetadataPagination', totalItems?: number | null, itemsPerPage?: number | null, totalPages?: number | null, currentPage?: number | null } };
+
+export type UpdateProyectoMutationVariables = Exact<{
+  updateInput: UpdatePryectosInput;
+}>;
+
+
+export type UpdateProyectoMutation = { __typename?: 'Mutation', updateProyecto: { __typename?: 'Proyectos', id: string } };
+
+export type ProyectoQueryVariables = Exact<{
+  proyectoId: Scalars['ID'];
+}>;
+
+
+export type ProyectoQuery = { __typename?: 'Query', proyecto: { __typename?: 'Proyectos', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, value: number, status: ProyectosStatusEnum, dateExpiration: any, description?: string | null, clientIntegrador: { __typename?: 'Client', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, numberDocument: string, email: string, telefono?: string | null, address?: string | null, descripcion?: string | null, type?: TypeClientEnum | null, vertical?: string | null, celular: string, department?: { __typename?: 'Department', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, country?: { __typename?: 'Country', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, user?: { __typename?: 'User', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name?: string | null, middleName?: string | null, lastName?: string | null, secondSurname?: string | null, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, dateIssue?: any | null, legalRepresentativeIdentificationType?: UserDocumentTypes | null, legalRepresentativeIdentificationNumber?: string | null, phoneCountryCode?: string | null, phoneNumber?: string | null, address?: string | null, hasRural?: boolean | null, confirmationCode?: string | null, position?: string | null, valueTransport?: number | null, typeWoker?: TypeWorker | null, status: UserStatusTypes, phoneVerification: boolean, emailVerification: boolean, type: UserTypes, fullName: string } | null }, clientFinal: { __typename?: 'Client', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, numberDocument: string, email: string, telefono?: string | null, address?: string | null, descripcion?: string | null, type?: TypeClientEnum | null, vertical?: string | null, celular: string }, worker: { __typename?: 'User', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name?: string | null, middleName?: string | null, lastName?: string | null, secondSurname?: string | null, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, dateIssue?: any | null, legalRepresentativeIdentificationType?: UserDocumentTypes | null, legalRepresentativeIdentificationNumber?: string | null, phoneCountryCode?: string | null, phoneNumber?: string | null, address?: string | null, hasRural?: boolean | null, confirmationCode?: string | null, position?: string | null, valueTransport?: number | null, typeWoker?: TypeWorker | null, status: UserStatusTypes, phoneVerification: boolean, emailVerification: boolean, type: UserTypes, fullName: string, manager?: { __typename?: 'User', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name?: string | null, middleName?: string | null, lastName?: string | null, secondSurname?: string | null, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, dateIssue?: any | null, legalRepresentativeIdentificationType?: UserDocumentTypes | null, legalRepresentativeIdentificationNumber?: string | null, phoneCountryCode?: string | null, phoneNumber?: string | null, address?: string | null, hasRural?: boolean | null, confirmationCode?: string | null, position?: string | null, valueTransport?: number | null, typeWoker?: TypeWorker | null, status: UserStatusTypes, phoneVerification: boolean, emailVerification: boolean, type: UserTypes, fullName: string } | null, subordinates?: Array<{ __typename?: 'User', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name?: string | null, middleName?: string | null, lastName?: string | null, secondSurname?: string | null, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, dateIssue?: any | null, legalRepresentativeIdentificationType?: UserDocumentTypes | null, legalRepresentativeIdentificationNumber?: string | null, phoneCountryCode?: string | null, phoneNumber?: string | null, address?: string | null, hasRural?: boolean | null, confirmationCode?: string | null, position?: string | null, valueTransport?: number | null, typeWoker?: TypeWorker | null, status: UserStatusTypes, phoneVerification: boolean, emailVerification: boolean, type: UserTypes, fullName: string }> | null, userRoles: Array<{ __typename?: 'Role', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, description: string, defaultForType?: UserTypes | null, users?: Array<{ __typename?: 'User', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name?: string | null, middleName?: string | null, lastName?: string | null, secondSurname?: string | null, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, dateIssue?: any | null, legalRepresentativeIdentificationType?: UserDocumentTypes | null, legalRepresentativeIdentificationNumber?: string | null, phoneCountryCode?: string | null, phoneNumber?: string | null, address?: string | null, hasRural?: boolean | null, confirmationCode?: string | null, position?: string | null, valueTransport?: number | null, typeWoker?: TypeWorker | null, status: UserStatusTypes, phoneVerification: boolean, emailVerification: boolean, type: UserTypes, fullName: string }> | null, roleFx: Array<{ __typename?: 'RoleFx', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, permission: string }> }>, userRolesFx: Array<{ __typename?: 'RoleFx', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, permission: string, role?: { __typename?: 'Role', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, description: string, defaultForType?: UserTypes | null } | null }> }, createdByUser: { __typename?: 'User', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name?: string | null, middleName?: string | null, lastName?: string | null, secondSurname?: string | null, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, dateIssue?: any | null, legalRepresentativeIdentificationType?: UserDocumentTypes | null, legalRepresentativeIdentificationNumber?: string | null, phoneCountryCode?: string | null, phoneNumber?: string | null, address?: string | null, hasRural?: boolean | null, confirmationCode?: string | null, position?: string | null, valueTransport?: number | null, typeWoker?: TypeWorker | null, status: UserStatusTypes, phoneVerification: boolean, emailVerification: boolean, type: UserTypes, fullName: string }, city?: { __typename?: 'City', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, code: number, name: string } | null, referencias?: Array<{ __typename?: 'ProyectoReferencia', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, observacion?: string | null, valor: number, tipoProyecto: { __typename?: 'TipoProyecto', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, nombre: string, descripcion?: string | null, isActive: boolean }, marca: { __typename?: 'MarcaProyecto', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, nombre: string, isActive: boolean }, referencia: { __typename?: 'ReferenciaProyecto', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, codigo: string, descripcion?: string | null, isActive: boolean } }> | null } };
+
+export type CreateProyectCommentMutationVariables = Exact<{
+  createInput: CreateProyectCommentInput;
+}>;
+
+
+export type CreateProyectCommentMutation = { __typename?: 'Mutation', createProyectComment: { __typename?: 'ProyectComment', id: string } };
+
+export type UpdateProyectCommentMutationVariables = Exact<{
+  updateInput: UpdateProyectCoomentInput;
+}>;
+
+
+export type UpdateProyectCommentMutation = { __typename?: 'Mutation', updateProyectComment: { __typename?: 'ProyectComment', id: string } };
+
+export type ProyectCommentsQueryVariables = Exact<{
+  where?: InputMaybe<FindProyectCommentTypeWhere>;
+  orderBy?: InputMaybe<Array<FindProyectCommentTypeOrderBy> | FindProyectCommentTypeOrderBy>;
+}>;
+
+
+export type ProyectCommentsQuery = { __typename?: 'Query', proyectComments: Array<{ __typename?: 'ProyectComment', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, proyectDescription?: string | null, createdByUser: { __typename?: 'User', identificationNumber?: string | null, identificationType?: UserDocumentTypes | null, email: string, fullName: string }, file?: { __typename?: 'FileInfo', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, fileName: string, fileExtension: string, fileMode: FileModes, fileMongoId?: string | null, fileUrl?: string | null, url: string, chunkSize?: number | null } | null }> };
+
+export type FindStatisticStatusProyectQueryVariables = Exact<{
+  findStatisticStatusProyectId: Scalars['ID'];
+}>;
+
+
+export type FindStatisticStatusProyectQuery = { __typename?: 'Query', findStatisticStatusProyect: Array<{ __typename?: 'ProyectoEmbudoDto', valorTotal: number, cantidad: number, estado: ProyectosStatusEnum, userId: string }> };
+
 export type CreateTipoProyectoMutationVariables = Exact<{
   createInput: CreateTipoProyectoInput;
 }>;
@@ -3731,6 +3834,20 @@ export type UpdateReferenciaProyectoMutationVariables = Exact<{
 
 
 export type UpdateReferenciaProyectoMutation = { __typename?: 'Mutation', updateReferenciaProyecto: { __typename?: 'ReferenciaProyecto', id: string } };
+
+export type RemoveProyectoReferenciaMutationVariables = Exact<{
+  removeProyectoReferenciaId: Scalars['ID'];
+}>;
+
+
+export type RemoveProyectoReferenciaMutation = { __typename?: 'Mutation', removeProyectoReferencia: { __typename?: 'ProyectoReferencia', id: string } };
+
+export type CreateProyectoReferenciaMutationVariables = Exact<{
+  createInput: AddReferenciaToProyectoInput;
+}>;
+
+
+export type CreateProyectoReferenciaMutation = { __typename?: 'Mutation', createProyectoReferencia: { __typename?: 'ProyectoReferencia', id: string } };
 
 export type TasksQueryVariables = Exact<{
   orderBy?: InputMaybe<Array<FindTaskTypeOrderBy> | FindTaskTypeOrderBy>;
@@ -4695,6 +4812,261 @@ export function useCreateClientContactMutation(baseOptions?: Apollo.MutationHook
 export type CreateClientContactMutationHookResult = ReturnType<typeof useCreateClientContactMutation>;
 export type CreateClientContactMutationResult = Apollo.MutationResult<CreateClientContactMutation>;
 export type CreateClientContactMutationOptions = Apollo.BaseMutationOptions<CreateClientContactMutation, CreateClientContactMutationVariables>;
+export const CotizacionesDocument = gql`
+    query Cotizaciones($orderBy: [FindCotizacionOrderBy!], $where: FindCotizacionWhere, $pagination: Pagination) {
+  cotizaciones(orderBy: $orderBy, where: $where, pagination: $pagination) {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    numeroCotizacion
+    fecha
+    nombreCliente
+    nombreVendedor
+    vendedor
+    ciudadCliente
+    emailCliente
+    nitCliente
+    valor
+  }
+  cotizacionesCount(orderBy: $orderBy, where: $where, pagination: $pagination) {
+    totalItems
+    itemsPerPage
+    totalPages
+    currentPage
+  }
+}
+    `;
+
+/**
+ * __useCotizacionesQuery__
+ *
+ * To run a query within a React component, call `useCotizacionesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCotizacionesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCotizacionesQuery({
+ *   variables: {
+ *      orderBy: // value for 'orderBy'
+ *      where: // value for 'where'
+ *      pagination: // value for 'pagination'
+ *   },
+ * });
+ */
+export function useCotizacionesQuery(baseOptions?: Apollo.QueryHookOptions<CotizacionesQuery, CotizacionesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CotizacionesQuery, CotizacionesQueryVariables>(CotizacionesDocument, options);
+      }
+export function useCotizacionesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CotizacionesQuery, CotizacionesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CotizacionesQuery, CotizacionesQueryVariables>(CotizacionesDocument, options);
+        }
+export type CotizacionesQueryHookResult = ReturnType<typeof useCotizacionesQuery>;
+export type CotizacionesLazyQueryHookResult = ReturnType<typeof useCotizacionesLazyQuery>;
+export type CotizacionesQueryResult = Apollo.QueryResult<CotizacionesQuery, CotizacionesQueryVariables>;
+export const FindSeachCotizacionDocument = gql`
+    query findSeachCotizacion($cotizacionSeachInput: CotizacionSeachInput!) {
+  findSeachCotizacion(cotizacionSeachInput: $cotizacionSeachInput)
+}
+    `;
+
+/**
+ * __useFindSeachCotizacionQuery__
+ *
+ * To run a query within a React component, call `useFindSeachCotizacionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindSeachCotizacionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindSeachCotizacionQuery({
+ *   variables: {
+ *      cotizacionSeachInput: // value for 'cotizacionSeachInput'
+ *   },
+ * });
+ */
+export function useFindSeachCotizacionQuery(baseOptions: Apollo.QueryHookOptions<FindSeachCotizacionQuery, FindSeachCotizacionQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindSeachCotizacionQuery, FindSeachCotizacionQueryVariables>(FindSeachCotizacionDocument, options);
+      }
+export function useFindSeachCotizacionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindSeachCotizacionQuery, FindSeachCotizacionQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindSeachCotizacionQuery, FindSeachCotizacionQueryVariables>(FindSeachCotizacionDocument, options);
+        }
+export type FindSeachCotizacionQueryHookResult = ReturnType<typeof useFindSeachCotizacionQuery>;
+export type FindSeachCotizacionLazyQueryHookResult = ReturnType<typeof useFindSeachCotizacionLazyQuery>;
+export type FindSeachCotizacionQueryResult = Apollo.QueryResult<FindSeachCotizacionQuery, FindSeachCotizacionQueryVariables>;
+export const CotizacionDocument = gql`
+    query Cotizacion($cotizacionId: ID!) {
+  cotizacion(id: $cotizacionId) {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    numeroCotizacion
+    fecha
+    nombreCliente
+    nombreVendedor
+    vendedor
+    ciudadCliente
+    emailCliente
+    nitCliente
+    valor
+    descripcion
+    status
+    proyecto {
+      name
+      status
+      description
+      value
+      id
+    }
+    detalle {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      referencia
+      descripcion
+      unidadMedida
+      cantidad
+      valorCosto
+      valorVenta
+      total
+      uuid
+    }
+  }
+}
+    `;
+
+/**
+ * __useCotizacionQuery__
+ *
+ * To run a query within a React component, call `useCotizacionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCotizacionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCotizacionQuery({
+ *   variables: {
+ *      cotizacionId: // value for 'cotizacionId'
+ *   },
+ * });
+ */
+export function useCotizacionQuery(baseOptions: Apollo.QueryHookOptions<CotizacionQuery, CotizacionQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CotizacionQuery, CotizacionQueryVariables>(CotizacionDocument, options);
+      }
+export function useCotizacionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CotizacionQuery, CotizacionQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CotizacionQuery, CotizacionQueryVariables>(CotizacionDocument, options);
+        }
+export type CotizacionQueryHookResult = ReturnType<typeof useCotizacionQuery>;
+export type CotizacionLazyQueryHookResult = ReturnType<typeof useCotizacionLazyQuery>;
+export type CotizacionQueryResult = Apollo.QueryResult<CotizacionQuery, CotizacionQueryVariables>;
+export const SaveDetalleCotizacionDocument = gql`
+    mutation SaveDetalleCotizacion($saveDetalleCotizacionId: String!) {
+  saveDetalleCotizacion(id: $saveDetalleCotizacionId)
+}
+    `;
+export type SaveDetalleCotizacionMutationFn = Apollo.MutationFunction<SaveDetalleCotizacionMutation, SaveDetalleCotizacionMutationVariables>;
+
+/**
+ * __useSaveDetalleCotizacionMutation__
+ *
+ * To run a mutation, you first call `useSaveDetalleCotizacionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSaveDetalleCotizacionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [saveDetalleCotizacionMutation, { data, loading, error }] = useSaveDetalleCotizacionMutation({
+ *   variables: {
+ *      saveDetalleCotizacionId: // value for 'saveDetalleCotizacionId'
+ *   },
+ * });
+ */
+export function useSaveDetalleCotizacionMutation(baseOptions?: Apollo.MutationHookOptions<SaveDetalleCotizacionMutation, SaveDetalleCotizacionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SaveDetalleCotizacionMutation, SaveDetalleCotizacionMutationVariables>(SaveDetalleCotizacionDocument, options);
+      }
+export type SaveDetalleCotizacionMutationHookResult = ReturnType<typeof useSaveDetalleCotizacionMutation>;
+export type SaveDetalleCotizacionMutationResult = Apollo.MutationResult<SaveDetalleCotizacionMutation>;
+export type SaveDetalleCotizacionMutationOptions = Apollo.BaseMutationOptions<SaveDetalleCotizacionMutation, SaveDetalleCotizacionMutationVariables>;
+export const UpdateCotizacionDocument = gql`
+    mutation UpdateCotizacion($updateInput: UpdateCotizacionInput!) {
+  updateCotizacion(updateInput: $updateInput) {
+    id
+  }
+}
+    `;
+export type UpdateCotizacionMutationFn = Apollo.MutationFunction<UpdateCotizacionMutation, UpdateCotizacionMutationVariables>;
+
+/**
+ * __useUpdateCotizacionMutation__
+ *
+ * To run a mutation, you first call `useUpdateCotizacionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCotizacionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCotizacionMutation, { data, loading, error }] = useUpdateCotizacionMutation({
+ *   variables: {
+ *      updateInput: // value for 'updateInput'
+ *   },
+ * });
+ */
+export function useUpdateCotizacionMutation(baseOptions?: Apollo.MutationHookOptions<UpdateCotizacionMutation, UpdateCotizacionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateCotizacionMutation, UpdateCotizacionMutationVariables>(UpdateCotizacionDocument, options);
+      }
+export type UpdateCotizacionMutationHookResult = ReturnType<typeof useUpdateCotizacionMutation>;
+export type UpdateCotizacionMutationResult = Apollo.MutationResult<UpdateCotizacionMutation>;
+export type UpdateCotizacionMutationOptions = Apollo.BaseMutationOptions<UpdateCotizacionMutation, UpdateCotizacionMutationVariables>;
+export const UpdateDetalleCotizacionDocument = gql`
+    mutation UpdateDetalleCotizacion($updateInput: UpdateCotizacionDetalleInput!) {
+  updateDetalleCotizacion(updateInput: $updateInput) {
+    id
+  }
+}
+    `;
+export type UpdateDetalleCotizacionMutationFn = Apollo.MutationFunction<UpdateDetalleCotizacionMutation, UpdateDetalleCotizacionMutationVariables>;
+
+/**
+ * __useUpdateDetalleCotizacionMutation__
+ *
+ * To run a mutation, you first call `useUpdateDetalleCotizacionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateDetalleCotizacionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateDetalleCotizacionMutation, { data, loading, error }] = useUpdateDetalleCotizacionMutation({
+ *   variables: {
+ *      updateInput: // value for 'updateInput'
+ *   },
+ * });
+ */
+export function useUpdateDetalleCotizacionMutation(baseOptions?: Apollo.MutationHookOptions<UpdateDetalleCotizacionMutation, UpdateDetalleCotizacionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateDetalleCotizacionMutation, UpdateDetalleCotizacionMutationVariables>(UpdateDetalleCotizacionDocument, options);
+      }
+export type UpdateDetalleCotizacionMutationHookResult = ReturnType<typeof useUpdateDetalleCotizacionMutation>;
+export type UpdateDetalleCotizacionMutationResult = Apollo.MutationResult<UpdateDetalleCotizacionMutation>;
+export type UpdateDetalleCotizacionMutationOptions = Apollo.BaseMutationOptions<UpdateDetalleCotizacionMutation, UpdateDetalleCotizacionMutationVariables>;
 export const FindAllFacturaClienteDocument = gql`
     query FindAllFacturaCliente($input: FacturaPorClienteDto!) {
   findAllFacturaCliente(input: $input) {
@@ -5517,6 +5889,883 @@ export function useCreateAllPresupuestoToMonthMutation(baseOptions?: Apollo.Muta
 export type CreateAllPresupuestoToMonthMutationHookResult = ReturnType<typeof useCreateAllPresupuestoToMonthMutation>;
 export type CreateAllPresupuestoToMonthMutationResult = Apollo.MutationResult<CreateAllPresupuestoToMonthMutation>;
 export type CreateAllPresupuestoToMonthMutationOptions = Apollo.BaseMutationOptions<CreateAllPresupuestoToMonthMutation, CreateAllPresupuestoToMonthMutationVariables>;
+export const CreateProyectoDocument = gql`
+    mutation CreateProyecto($createInput: CreateProyectosInput!) {
+  createProyecto(createInput: $createInput) {
+    id
+  }
+}
+    `;
+export type CreateProyectoMutationFn = Apollo.MutationFunction<CreateProyectoMutation, CreateProyectoMutationVariables>;
+
+/**
+ * __useCreateProyectoMutation__
+ *
+ * To run a mutation, you first call `useCreateProyectoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateProyectoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createProyectoMutation, { data, loading, error }] = useCreateProyectoMutation({
+ *   variables: {
+ *      createInput: // value for 'createInput'
+ *   },
+ * });
+ */
+export function useCreateProyectoMutation(baseOptions?: Apollo.MutationHookOptions<CreateProyectoMutation, CreateProyectoMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateProyectoMutation, CreateProyectoMutationVariables>(CreateProyectoDocument, options);
+      }
+export type CreateProyectoMutationHookResult = ReturnType<typeof useCreateProyectoMutation>;
+export type CreateProyectoMutationResult = Apollo.MutationResult<CreateProyectoMutation>;
+export type CreateProyectoMutationOptions = Apollo.BaseMutationOptions<CreateProyectoMutation, CreateProyectoMutationVariables>;
+export const ProyectosDocument = gql`
+    query Proyectos($pagination: Pagination, $where: FindProyectoWhere, $orderBy: [FindProyectoOrderBy!]) {
+  proyectos(pagination: $pagination, where: $where, orderBy: $orderBy) {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    name
+    value
+    status
+    dateExpiration
+    description
+    clientIntegrador {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      name
+      numberDocument
+      email
+      telefono
+      address
+      descripcion
+      type
+      vertical
+      celular
+      department {
+        id
+        createdAt
+        updatedAt
+        deletedAt
+        code
+        name
+      }
+      country {
+        id
+        createdAt
+        updatedAt
+        deletedAt
+        code
+        name
+      }
+      user {
+        id
+        createdAt
+        updatedAt
+        deletedAt
+        name
+        middleName
+        lastName
+        secondSurname
+        email
+        identificationType
+        identificationNumber
+        dateIssue
+        legalRepresentativeIdentificationType
+        legalRepresentativeIdentificationNumber
+        phoneCountryCode
+        phoneNumber
+        address
+        hasRural
+        confirmationCode
+        position
+        valueTransport
+        typeWoker
+        status
+        phoneVerification
+        emailVerification
+        type
+        fullName
+      }
+    }
+    clientFinal {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      name
+      numberDocument
+      email
+      telefono
+      address
+      descripcion
+      type
+      vertical
+      celular
+    }
+    worker {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      name
+      middleName
+      lastName
+      secondSurname
+      email
+      identificationType
+      identificationNumber
+      dateIssue
+      legalRepresentativeIdentificationType
+      legalRepresentativeIdentificationNumber
+      phoneCountryCode
+      phoneNumber
+      address
+      hasRural
+      confirmationCode
+      position
+      valueTransport
+      typeWoker
+      status
+      phoneVerification
+      emailVerification
+      type
+      manager {
+        id
+        createdAt
+        updatedAt
+        deletedAt
+        name
+        middleName
+        lastName
+        secondSurname
+        email
+        identificationType
+        identificationNumber
+        dateIssue
+        legalRepresentativeIdentificationType
+        legalRepresentativeIdentificationNumber
+        phoneCountryCode
+        phoneNumber
+        address
+        hasRural
+        confirmationCode
+        position
+        valueTransport
+        typeWoker
+        status
+        phoneVerification
+        emailVerification
+        type
+        fullName
+      }
+      subordinates {
+        id
+        createdAt
+        updatedAt
+        deletedAt
+        name
+        middleName
+        lastName
+        secondSurname
+        email
+        identificationType
+        identificationNumber
+        dateIssue
+        legalRepresentativeIdentificationType
+        legalRepresentativeIdentificationNumber
+        phoneCountryCode
+        phoneNumber
+        address
+        hasRural
+        confirmationCode
+        position
+        valueTransport
+        typeWoker
+        status
+        phoneVerification
+        emailVerification
+        type
+        fullName
+      }
+      userRoles {
+        id
+        createdAt
+        updatedAt
+        deletedAt
+        name
+        description
+        defaultForType
+        users {
+          id
+          createdAt
+          updatedAt
+          deletedAt
+          name
+          middleName
+          lastName
+          secondSurname
+          email
+          identificationType
+          identificationNumber
+          dateIssue
+          legalRepresentativeIdentificationType
+          legalRepresentativeIdentificationNumber
+          phoneCountryCode
+          phoneNumber
+          address
+          hasRural
+          confirmationCode
+          position
+          valueTransport
+          typeWoker
+          status
+          phoneVerification
+          emailVerification
+          type
+          fullName
+        }
+        roleFx {
+          id
+          createdAt
+          updatedAt
+          deletedAt
+          permission
+        }
+      }
+      userRolesFx {
+        id
+        createdAt
+        updatedAt
+        deletedAt
+        permission
+        role {
+          id
+          createdAt
+          updatedAt
+          deletedAt
+          name
+          description
+          defaultForType
+        }
+      }
+      fullName
+    }
+    createdByUser {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      name
+      middleName
+      lastName
+      secondSurname
+      email
+      identificationType
+      identificationNumber
+      dateIssue
+      legalRepresentativeIdentificationType
+      legalRepresentativeIdentificationNumber
+      phoneCountryCode
+      phoneNumber
+      address
+      hasRural
+      confirmationCode
+      position
+      valueTransport
+      typeWoker
+      status
+      phoneVerification
+      emailVerification
+      type
+      fullName
+    }
+    city {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      code
+      name
+    }
+  }
+  proyectosCount(pagination: $pagination, where: $where, orderBy: $orderBy) {
+    totalItems
+    itemsPerPage
+    totalPages
+    currentPage
+  }
+}
+    `;
+
+/**
+ * __useProyectosQuery__
+ *
+ * To run a query within a React component, call `useProyectosQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProyectosQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProyectosQuery({
+ *   variables: {
+ *      pagination: // value for 'pagination'
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useProyectosQuery(baseOptions?: Apollo.QueryHookOptions<ProyectosQuery, ProyectosQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ProyectosQuery, ProyectosQueryVariables>(ProyectosDocument, options);
+      }
+export function useProyectosLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProyectosQuery, ProyectosQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ProyectosQuery, ProyectosQueryVariables>(ProyectosDocument, options);
+        }
+export type ProyectosQueryHookResult = ReturnType<typeof useProyectosQuery>;
+export type ProyectosLazyQueryHookResult = ReturnType<typeof useProyectosLazyQuery>;
+export type ProyectosQueryResult = Apollo.QueryResult<ProyectosQuery, ProyectosQueryVariables>;
+export const UpdateProyectoDocument = gql`
+    mutation UpdateProyecto($updateInput: UpdatePryectosInput!) {
+  updateProyecto(updateInput: $updateInput) {
+    id
+  }
+}
+    `;
+export type UpdateProyectoMutationFn = Apollo.MutationFunction<UpdateProyectoMutation, UpdateProyectoMutationVariables>;
+
+/**
+ * __useUpdateProyectoMutation__
+ *
+ * To run a mutation, you first call `useUpdateProyectoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateProyectoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateProyectoMutation, { data, loading, error }] = useUpdateProyectoMutation({
+ *   variables: {
+ *      updateInput: // value for 'updateInput'
+ *   },
+ * });
+ */
+export function useUpdateProyectoMutation(baseOptions?: Apollo.MutationHookOptions<UpdateProyectoMutation, UpdateProyectoMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateProyectoMutation, UpdateProyectoMutationVariables>(UpdateProyectoDocument, options);
+      }
+export type UpdateProyectoMutationHookResult = ReturnType<typeof useUpdateProyectoMutation>;
+export type UpdateProyectoMutationResult = Apollo.MutationResult<UpdateProyectoMutation>;
+export type UpdateProyectoMutationOptions = Apollo.BaseMutationOptions<UpdateProyectoMutation, UpdateProyectoMutationVariables>;
+export const ProyectoDocument = gql`
+    query Proyecto($proyectoId: ID!) {
+  proyecto(id: $proyectoId) {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    name
+    value
+    status
+    dateExpiration
+    description
+    clientIntegrador {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      name
+      numberDocument
+      email
+      telefono
+      address
+      descripcion
+      type
+      vertical
+      celular
+      department {
+        id
+        createdAt
+        updatedAt
+        deletedAt
+        code
+        name
+      }
+      country {
+        id
+        createdAt
+        updatedAt
+        deletedAt
+        code
+        name
+      }
+      user {
+        id
+        createdAt
+        updatedAt
+        deletedAt
+        name
+        middleName
+        lastName
+        secondSurname
+        email
+        identificationType
+        identificationNumber
+        dateIssue
+        legalRepresentativeIdentificationType
+        legalRepresentativeIdentificationNumber
+        phoneCountryCode
+        phoneNumber
+        address
+        hasRural
+        confirmationCode
+        position
+        valueTransport
+        typeWoker
+        status
+        phoneVerification
+        emailVerification
+        type
+        fullName
+      }
+    }
+    clientFinal {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      name
+      numberDocument
+      email
+      telefono
+      address
+      descripcion
+      type
+      vertical
+      celular
+    }
+    worker {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      name
+      middleName
+      lastName
+      secondSurname
+      email
+      identificationType
+      identificationNumber
+      dateIssue
+      legalRepresentativeIdentificationType
+      legalRepresentativeIdentificationNumber
+      phoneCountryCode
+      phoneNumber
+      address
+      hasRural
+      confirmationCode
+      position
+      valueTransport
+      typeWoker
+      status
+      phoneVerification
+      emailVerification
+      type
+      manager {
+        id
+        createdAt
+        updatedAt
+        deletedAt
+        name
+        middleName
+        lastName
+        secondSurname
+        email
+        identificationType
+        identificationNumber
+        dateIssue
+        legalRepresentativeIdentificationType
+        legalRepresentativeIdentificationNumber
+        phoneCountryCode
+        phoneNumber
+        address
+        hasRural
+        confirmationCode
+        position
+        valueTransport
+        typeWoker
+        status
+        phoneVerification
+        emailVerification
+        type
+        fullName
+      }
+      subordinates {
+        id
+        createdAt
+        updatedAt
+        deletedAt
+        name
+        middleName
+        lastName
+        secondSurname
+        email
+        identificationType
+        identificationNumber
+        dateIssue
+        legalRepresentativeIdentificationType
+        legalRepresentativeIdentificationNumber
+        phoneCountryCode
+        phoneNumber
+        address
+        hasRural
+        confirmationCode
+        position
+        valueTransport
+        typeWoker
+        status
+        phoneVerification
+        emailVerification
+        type
+        fullName
+      }
+      userRoles {
+        id
+        createdAt
+        updatedAt
+        deletedAt
+        name
+        description
+        defaultForType
+        users {
+          id
+          createdAt
+          updatedAt
+          deletedAt
+          name
+          middleName
+          lastName
+          secondSurname
+          email
+          identificationType
+          identificationNumber
+          dateIssue
+          legalRepresentativeIdentificationType
+          legalRepresentativeIdentificationNumber
+          phoneCountryCode
+          phoneNumber
+          address
+          hasRural
+          confirmationCode
+          position
+          valueTransport
+          typeWoker
+          status
+          phoneVerification
+          emailVerification
+          type
+          fullName
+        }
+        roleFx {
+          id
+          createdAt
+          updatedAt
+          deletedAt
+          permission
+        }
+      }
+      userRolesFx {
+        id
+        createdAt
+        updatedAt
+        deletedAt
+        permission
+        role {
+          id
+          createdAt
+          updatedAt
+          deletedAt
+          name
+          description
+          defaultForType
+        }
+      }
+      fullName
+    }
+    createdByUser {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      name
+      middleName
+      lastName
+      secondSurname
+      email
+      identificationType
+      identificationNumber
+      dateIssue
+      legalRepresentativeIdentificationType
+      legalRepresentativeIdentificationNumber
+      phoneCountryCode
+      phoneNumber
+      address
+      hasRural
+      confirmationCode
+      position
+      valueTransport
+      typeWoker
+      status
+      phoneVerification
+      emailVerification
+      type
+      fullName
+    }
+    city {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      code
+      name
+    }
+    referencias {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      observacion
+      valor
+      tipoProyecto {
+        id
+        createdAt
+        updatedAt
+        deletedAt
+        nombre
+        descripcion
+        isActive
+      }
+      marca {
+        id
+        createdAt
+        updatedAt
+        deletedAt
+        nombre
+        isActive
+      }
+      referencia {
+        id
+        createdAt
+        updatedAt
+        deletedAt
+        codigo
+        descripcion
+        isActive
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useProyectoQuery__
+ *
+ * To run a query within a React component, call `useProyectoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProyectoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProyectoQuery({
+ *   variables: {
+ *      proyectoId: // value for 'proyectoId'
+ *   },
+ * });
+ */
+export function useProyectoQuery(baseOptions: Apollo.QueryHookOptions<ProyectoQuery, ProyectoQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ProyectoQuery, ProyectoQueryVariables>(ProyectoDocument, options);
+      }
+export function useProyectoLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProyectoQuery, ProyectoQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ProyectoQuery, ProyectoQueryVariables>(ProyectoDocument, options);
+        }
+export type ProyectoQueryHookResult = ReturnType<typeof useProyectoQuery>;
+export type ProyectoLazyQueryHookResult = ReturnType<typeof useProyectoLazyQuery>;
+export type ProyectoQueryResult = Apollo.QueryResult<ProyectoQuery, ProyectoQueryVariables>;
+export const CreateProyectCommentDocument = gql`
+    mutation CreateProyectComment($createInput: CreateProyectCommentInput!) {
+  createProyectComment(createInput: $createInput) {
+    id
+  }
+}
+    `;
+export type CreateProyectCommentMutationFn = Apollo.MutationFunction<CreateProyectCommentMutation, CreateProyectCommentMutationVariables>;
+
+/**
+ * __useCreateProyectCommentMutation__
+ *
+ * To run a mutation, you first call `useCreateProyectCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateProyectCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createProyectCommentMutation, { data, loading, error }] = useCreateProyectCommentMutation({
+ *   variables: {
+ *      createInput: // value for 'createInput'
+ *   },
+ * });
+ */
+export function useCreateProyectCommentMutation(baseOptions?: Apollo.MutationHookOptions<CreateProyectCommentMutation, CreateProyectCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateProyectCommentMutation, CreateProyectCommentMutationVariables>(CreateProyectCommentDocument, options);
+      }
+export type CreateProyectCommentMutationHookResult = ReturnType<typeof useCreateProyectCommentMutation>;
+export type CreateProyectCommentMutationResult = Apollo.MutationResult<CreateProyectCommentMutation>;
+export type CreateProyectCommentMutationOptions = Apollo.BaseMutationOptions<CreateProyectCommentMutation, CreateProyectCommentMutationVariables>;
+export const UpdateProyectCommentDocument = gql`
+    mutation UpdateProyectComment($updateInput: UpdateProyectCoomentInput!) {
+  updateProyectComment(updateInput: $updateInput) {
+    id
+  }
+}
+    `;
+export type UpdateProyectCommentMutationFn = Apollo.MutationFunction<UpdateProyectCommentMutation, UpdateProyectCommentMutationVariables>;
+
+/**
+ * __useUpdateProyectCommentMutation__
+ *
+ * To run a mutation, you first call `useUpdateProyectCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateProyectCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateProyectCommentMutation, { data, loading, error }] = useUpdateProyectCommentMutation({
+ *   variables: {
+ *      updateInput: // value for 'updateInput'
+ *   },
+ * });
+ */
+export function useUpdateProyectCommentMutation(baseOptions?: Apollo.MutationHookOptions<UpdateProyectCommentMutation, UpdateProyectCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateProyectCommentMutation, UpdateProyectCommentMutationVariables>(UpdateProyectCommentDocument, options);
+      }
+export type UpdateProyectCommentMutationHookResult = ReturnType<typeof useUpdateProyectCommentMutation>;
+export type UpdateProyectCommentMutationResult = Apollo.MutationResult<UpdateProyectCommentMutation>;
+export type UpdateProyectCommentMutationOptions = Apollo.BaseMutationOptions<UpdateProyectCommentMutation, UpdateProyectCommentMutationVariables>;
+export const ProyectCommentsDocument = gql`
+    query ProyectComments($where: FindProyectCommentTypeWhere, $orderBy: [FindProyectCommentTypeOrderBy!]) {
+  proyectComments(where: $where, orderBy: $orderBy) {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    proyectDescription
+    createdByUser {
+      identificationNumber
+      identificationType
+      email
+      fullName
+    }
+    file {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      fileName
+      fileExtension
+      fileMode
+      fileMongoId
+      fileUrl
+      url
+      chunkSize
+    }
+  }
+}
+    `;
+
+/**
+ * __useProyectCommentsQuery__
+ *
+ * To run a query within a React component, call `useProyectCommentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProyectCommentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProyectCommentsQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useProyectCommentsQuery(baseOptions?: Apollo.QueryHookOptions<ProyectCommentsQuery, ProyectCommentsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ProyectCommentsQuery, ProyectCommentsQueryVariables>(ProyectCommentsDocument, options);
+      }
+export function useProyectCommentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProyectCommentsQuery, ProyectCommentsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ProyectCommentsQuery, ProyectCommentsQueryVariables>(ProyectCommentsDocument, options);
+        }
+export type ProyectCommentsQueryHookResult = ReturnType<typeof useProyectCommentsQuery>;
+export type ProyectCommentsLazyQueryHookResult = ReturnType<typeof useProyectCommentsLazyQuery>;
+export type ProyectCommentsQueryResult = Apollo.QueryResult<ProyectCommentsQuery, ProyectCommentsQueryVariables>;
+export const FindStatisticStatusProyectDocument = gql`
+    query FindStatisticStatusProyect($findStatisticStatusProyectId: ID!) {
+  findStatisticStatusProyect(id: $findStatisticStatusProyectId) {
+    valorTotal
+    cantidad
+    estado
+    userId
+  }
+}
+    `;
+
+/**
+ * __useFindStatisticStatusProyectQuery__
+ *
+ * To run a query within a React component, call `useFindStatisticStatusProyectQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindStatisticStatusProyectQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindStatisticStatusProyectQuery({
+ *   variables: {
+ *      findStatisticStatusProyectId: // value for 'findStatisticStatusProyectId'
+ *   },
+ * });
+ */
+export function useFindStatisticStatusProyectQuery(baseOptions: Apollo.QueryHookOptions<FindStatisticStatusProyectQuery, FindStatisticStatusProyectQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindStatisticStatusProyectQuery, FindStatisticStatusProyectQueryVariables>(FindStatisticStatusProyectDocument, options);
+      }
+export function useFindStatisticStatusProyectLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindStatisticStatusProyectQuery, FindStatisticStatusProyectQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindStatisticStatusProyectQuery, FindStatisticStatusProyectQueryVariables>(FindStatisticStatusProyectDocument, options);
+        }
+export type FindStatisticStatusProyectQueryHookResult = ReturnType<typeof useFindStatisticStatusProyectQuery>;
+export type FindStatisticStatusProyectLazyQueryHookResult = ReturnType<typeof useFindStatisticStatusProyectLazyQuery>;
+export type FindStatisticStatusProyectQueryResult = Apollo.QueryResult<FindStatisticStatusProyectQuery, FindStatisticStatusProyectQueryVariables>;
 export const CreateTipoProyectoDocument = gql`
     mutation CreateTipoProyecto($createInput: CreateTipoProyectoInput!) {
   createTipoProyecto(createInput: $createInput) {
@@ -5857,6 +7106,72 @@ export function useUpdateReferenciaProyectoMutation(baseOptions?: Apollo.Mutatio
 export type UpdateReferenciaProyectoMutationHookResult = ReturnType<typeof useUpdateReferenciaProyectoMutation>;
 export type UpdateReferenciaProyectoMutationResult = Apollo.MutationResult<UpdateReferenciaProyectoMutation>;
 export type UpdateReferenciaProyectoMutationOptions = Apollo.BaseMutationOptions<UpdateReferenciaProyectoMutation, UpdateReferenciaProyectoMutationVariables>;
+export const RemoveProyectoReferenciaDocument = gql`
+    mutation RemoveProyectoReferencia($removeProyectoReferenciaId: ID!) {
+  removeProyectoReferencia(id: $removeProyectoReferenciaId) {
+    id
+  }
+}
+    `;
+export type RemoveProyectoReferenciaMutationFn = Apollo.MutationFunction<RemoveProyectoReferenciaMutation, RemoveProyectoReferenciaMutationVariables>;
+
+/**
+ * __useRemoveProyectoReferenciaMutation__
+ *
+ * To run a mutation, you first call `useRemoveProyectoReferenciaMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveProyectoReferenciaMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeProyectoReferenciaMutation, { data, loading, error }] = useRemoveProyectoReferenciaMutation({
+ *   variables: {
+ *      removeProyectoReferenciaId: // value for 'removeProyectoReferenciaId'
+ *   },
+ * });
+ */
+export function useRemoveProyectoReferenciaMutation(baseOptions?: Apollo.MutationHookOptions<RemoveProyectoReferenciaMutation, RemoveProyectoReferenciaMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemoveProyectoReferenciaMutation, RemoveProyectoReferenciaMutationVariables>(RemoveProyectoReferenciaDocument, options);
+      }
+export type RemoveProyectoReferenciaMutationHookResult = ReturnType<typeof useRemoveProyectoReferenciaMutation>;
+export type RemoveProyectoReferenciaMutationResult = Apollo.MutationResult<RemoveProyectoReferenciaMutation>;
+export type RemoveProyectoReferenciaMutationOptions = Apollo.BaseMutationOptions<RemoveProyectoReferenciaMutation, RemoveProyectoReferenciaMutationVariables>;
+export const CreateProyectoReferenciaDocument = gql`
+    mutation CreateProyectoReferencia($createInput: AddReferenciaToProyectoInput!) {
+  createProyectoReferencia(createInput: $createInput) {
+    id
+  }
+}
+    `;
+export type CreateProyectoReferenciaMutationFn = Apollo.MutationFunction<CreateProyectoReferenciaMutation, CreateProyectoReferenciaMutationVariables>;
+
+/**
+ * __useCreateProyectoReferenciaMutation__
+ *
+ * To run a mutation, you first call `useCreateProyectoReferenciaMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateProyectoReferenciaMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createProyectoReferenciaMutation, { data, loading, error }] = useCreateProyectoReferenciaMutation({
+ *   variables: {
+ *      createInput: // value for 'createInput'
+ *   },
+ * });
+ */
+export function useCreateProyectoReferenciaMutation(baseOptions?: Apollo.MutationHookOptions<CreateProyectoReferenciaMutation, CreateProyectoReferenciaMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateProyectoReferenciaMutation, CreateProyectoReferenciaMutationVariables>(CreateProyectoReferenciaDocument, options);
+      }
+export type CreateProyectoReferenciaMutationHookResult = ReturnType<typeof useCreateProyectoReferenciaMutation>;
+export type CreateProyectoReferenciaMutationResult = Apollo.MutationResult<CreateProyectoReferenciaMutation>;
+export type CreateProyectoReferenciaMutationOptions = Apollo.BaseMutationOptions<CreateProyectoReferenciaMutation, CreateProyectoReferenciaMutationVariables>;
 export const TasksDocument = gql`
     query Tasks($orderBy: [FindTaskTypeOrderBy!], $where: FindTaskTypeWhere, $pagination: Pagination) {
   tasks(orderBy: $orderBy, where: $where, pagination: $pagination) {

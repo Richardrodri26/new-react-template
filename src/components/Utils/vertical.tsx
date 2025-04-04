@@ -13,5 +13,6 @@ export const TIPOS_VERTICALES:  { key: string; value: string | number }[] =  [
     { key: 'PETROLEOS', value: 'PETROLEOS' },
     { key: 'ZONAS FRANCAS', value: 'ZONAS FRANCAS' },
     { key: 'DATACENTERS', value: 'DATACENTERS' },
-    { key: 'CALLCENTERS', value: 'CALLCENTERS' }
+    { key: 'CALLCENTERS', value: 'CALLCENTERS' },
+    { key: 'INSTITUCIONAL', value: 'INSTITUCIONAL' },
 ];
