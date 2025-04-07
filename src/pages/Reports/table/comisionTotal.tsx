@@ -129,7 +129,7 @@ const FacturasTable: React.FC = memo(() => {
                   <tr className="text-left">
                     <td className="px-6 py-4 whitespace-nowrap">{user ? user?.name + ' ' + user?.lastName : "Usuario desconocido"}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(totalizado.totalVendido)}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(0)}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(externo.totalVentasGrupo)}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(presupuesto?.PRESUPUESTO || 0)}</td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="w-full h-4 bg-gray-200 rounded-md">
