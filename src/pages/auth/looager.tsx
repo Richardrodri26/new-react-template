@@ -19,8 +19,8 @@ export function LoagerPage() {
   ]);
   const navigate = useNavigate()
   const { token } = useParams()
-  Cookies.remove(import.meta.env.VITE_APP_KEY_COOKIE_SESSION)
-  Cookies.remove(import.meta.env.VITE_APP_KEY_COOKIE_USER)
+  // Cookies.remove(import.meta.env.VITE_APP_KEY_COOKIE_SESSION)
+  // Cookies.remove(import.meta.env.VITE_APP_KEY_COOKIE_USER)
   const { loading } = useValidateUserTokenQuery({
     variables: {
       validateTokenInput: {
@@ -29,6 +29,8 @@ export function LoagerPage() {
     },
     onCompleted: (data) => {
       setLoginUser(data.validateUserToken as User);
+      Cookies.set(import.meta.env.VITE_APP_KEY_COOKIE_SESSION, token || '')
+      Cookies.set(import.meta.env.VITE_APP_KEY_COOKIE_USER, JSON.stringify(data.validateUserToken))
       navigate("/dashboard/reports")
     },
     onError: (error) => {
