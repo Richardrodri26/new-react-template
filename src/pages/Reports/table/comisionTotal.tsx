@@ -102,7 +102,8 @@ const FacturasTable: React.FC = memo(() => {
           <thead className="bg-gray-50">
             <tr>
               <th className="x-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuario</th>
-              <th className="x-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Venta</th>
+              <th className="x-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Venta individual</th>
+              <th className="x-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Venta grupal</th>
               <th className="x-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Presupuesto</th>
               <th className="x-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Presupuesto en %</th>
               <th className="x-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Utilidad Real</th>
@@ -127,7 +128,8 @@ const FacturasTable: React.FC = memo(() => {
                 {externo ? (
                   <tr className="text-left">
                     <td className="px-6 py-4 whitespace-nowrap">{user ? user?.name + ' ' + user?.lastName : "Usuario desconocido"}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(externo.totalVentasGrupo)}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(totalizado.totalVendido)}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(0)}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(presupuesto?.PRESUPUESTO || 0)}</td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="w-full h-4 bg-gray-200 rounded-md">
@@ -147,6 +149,7 @@ const FacturasTable: React.FC = memo(() => {
                 ) : (
                   <tr className="text-left">
                     <td className="px-6 py-4 whitespace-nowrap">{user ? user?.name + ' ' + user?.lastName : "Usuario desconocido"}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(totalizado.totalVendido)}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(totalizado.totalVendido)}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(presupuesto?.PRESUPUESTO || 0)}</td>
                     <td className="px-6 py-4 whitespace-nowrap">
