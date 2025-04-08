@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
-import { ProyectosStatusEnum, useCitiesQuery, useClientsQuery, useCreateProyectoMutation, useCreateProyectoReferenciaMutation, useMarcaProyectosQuery, useProyectoQuery, useRemoveProyectoReferenciaMutation, useTipoProyectosQuery, useUpdateProyectoMutation } from "../../domain/graphql";
+import { ProyectosStatusEnum, useCitiesQuery, useClientsQuery, useCreateProyectoMutation, useCreateProyectoReferenciaMutation, useMarcaProyectosQuery, useProyectoQuery, useRemoveProyectoReferenciaMutation, useTipoProyectosQuery, useUpdateProyectoMutation, useUsersQuery } from "../../domain/graphql";
 import { z } from "zod";
 import { toast } from "sonner";
 import { ToastyErrorGraph } from "../../lib/utils";
@@ -13,6 +13,7 @@ import SearchableSelect, { Option } from "@/components/ui/selectSeach";
 import { formatCurrency } from "../Reports/table/marcasVenta";
 import Select from "antd/es/select";
 import { fireAlert } from "@/domain/store/general.store";
+import { Button } from "@/components/ui/button";
 
 interface ProjectItem {
   id: string;
@@ -40,6 +41,7 @@ export default function ViewProyecto({ id }: {id: string}) {
   const [description, setDescription] = useState('');
   const [observacion, setObservacion] = useState("");
   const [clientIntegrador, setClientIntegrador] = useState('');
+  const [userProyect, setUserProyect] = useState<string>();
   const [clientFinal, setClientFinal] = useState('');
   const [cityId, setCityId] = useState('');
   const [status, setStatus] = useState<ProyectosStatusEnum>();
@@ -88,6 +90,14 @@ export default function ViewProyecto({ id }: {id: string}) {
       }
     }
   })
+  const {data: dataUser, loading: loadingUser} = useUsersQuery({
+    variables: {
+      pagination: {
+        skip: 0,
+        take: 99999999
+      }
+    }
+  })
   // Inicializar estados cuando los datos llegan
   useEffect(() => {
     if (dataProyect?.proyecto) {
@@ -98,6 +108,7 @@ export default function ViewProyecto({ id }: {id: string}) {
       setCityId(dataProyect.proyecto.city?.id || '');
       setStatus(dataProyect.proyecto.status);
       setValue(dataProyect.proyecto.value);
+      setUserProyect(dataProyect?.proyecto?.worker?.id)
       setDueDate(dayjs(dataProyect.proyecto.dateExpiration).format("YYYY-MM-DD hh:mm:ss"));
     }
   }, [dataProyect]);
@@ -131,6 +142,12 @@ export default function ViewProyecto({ id }: {id: string}) {
     return {
       value: client.id,
       label: client.name
+    }
+  }) || []
+  const userOption: Option[] = dataUser?.users.map((user) => {
+    return {
+      value: user.id,
+      label: user.fullName
     }
   }) || []
   const cityOptions: Option[] = dataCity?.cities.map((city) => {
@@ -190,7 +207,8 @@ export default function ViewProyecto({ id }: {id: string}) {
               description: description,
               clientFinalId: clientFinal,
               clientIntegradorId: clientIntegrador,
-              value: value
+              value: value,
+              workerId: userProyect
             }
           }
           })
@@ -290,6 +308,25 @@ export default function ViewProyecto({ id }: {id: string}) {
           <div>
             <div className="mt-8">
               {/* Campo: Título de la tarea */}
+              <div className="mt-6">
+                <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                  Trabajador
+                </label>
+                <div className="relative">
+                {
+                  userProyect
+                  && 
+                  (
+                    <SearchableSelect 
+                    placeholder="Selecione un trabajador"
+                    options={userOption}
+                    onChange={(e) => setUserProyect(e)}
+                    defaultValue={userProyect}
+                  />
+                  )
+                }
+                </div>
+              </div>
               <div className="mt-6">
                 <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                   Nombre del proyecto
@@ -550,13 +587,12 @@ export default function ViewProyecto({ id }: {id: string}) {
             </Table>
             {/* Botones del modal */}
             <div className="flex items-center gap-3 mt-6 modal-footer sm:justify-end">
-              <button
+              <Button
                 onClick={onCreateSubmit}
                 type="button"
-                className="btn btn-success btn-update-event flex w-full justify-center rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600 sm:w-auto"
               >
                 {"Actualizar Proyecto"}
-              </button>
+              </Button>
             </div>
           </div>
         </div>
