@@ -5,7 +5,7 @@ import { useShallowGeneralStore } from "@/domain/store/general.store";
 import { User, useValidateUserTokenQuery } from "@/domain/graphql";
 import Cookies from 'js-cookie'
 import { FloatingButton } from "../Utils/FloatingButton";
-import { CircleUser, MessageCircle, Phone, Plus, Settings } from "lucide-react";
+import { ArrowUpFromLine, CircleUser, MessageCircle, Phone, PhoneIcon, Plus, Settings } from "lucide-react";
 
 
 
@@ -93,6 +93,22 @@ export const AppGuardLayout = () => {
                       '_blank' // Esto hace que se abra en una nueva pestaña/ventana
                     )
                   },
+                  {
+                    icon: ArrowUpFromLine,
+                    text: "Entrar al archer",
+                    onClick: () => window.open(
+                      `https://intranet.cytech.net.co:8080`,
+                      '_blank' // Esto hace que se abra en una nueva pestaña/ventana
+                    )
+                  },
+                  {
+                    icon: PhoneIcon,
+                    text: "Entrar al Whastapp Web",
+                    onClick: () => window.open(
+                      `https://web.whatsapp.com/`,
+                      '_blank' // Esto hace que se abra en una nueva pestaña/ventana
+                    )
+                  }
                 ]}
               />
             </div>
