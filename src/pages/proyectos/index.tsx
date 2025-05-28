@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
-import { ListFilter, PlusCircle, File } from 'lucide-react'
+import { ListFilter, PlusCircle, File, Sheet } from 'lucide-react'
 import { PaginationTable } from '@/components/TableElements'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card'
 import { DataTableVisits } from '../Visits/Grids'
@@ -12,6 +12,8 @@ import { useShallowGeneralStore } from '@/domain/store/general.store'
 import { TypeVistHeader } from './Elements'
 import { TypeVisitColumns } from './Columns'
 import { TypeVistModals } from './Modals'
+import { axiosRest } from '@/domain/api.config'
+import { toast } from 'sonner'
 
 export const ProyectoPage = () => {
   return (
@@ -45,6 +47,33 @@ const TypeVisitGrid = () => {
     setModalStatus({ id: "createTypeVisit" })
 
   }
+  const onDowlonadExcel = async () => {
+    const toastId = toast.loading('Descargando Excel...');
+    try {
+      const response = await axiosRest.get(`/proyectos/exportar-excel`, {
+        responseType: 'blob', // 👈 importante para archivos
+      });
+
+      // Crear enlace para descarga
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'proyectos.xlsx'); // 👈 nombre del archivo
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      toast.success('Excel descargado con éxito.');
+    } catch (error) {
+      console.error('Error descargando Excel:', error);
+      //@ts-ignore
+      const errorAny = (error as any)
+      toast.error('Uuupss hubo un error: ' + errorAny.message);
+    } finally {
+      toast.dismiss(toastId);
+    }
+  };
+
 
   const clients = (data?.proyectos || [])
 
@@ -63,6 +92,12 @@ const TypeVisitGrid = () => {
                 <PlusCircle className="h-3.5 w-3.5" />
                 <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
                   Crear proyecto
+                </span>
+              </Button>
+              <Button onClick={onDowlonadExcel} size="sm" className="h-8 gap-1">
+                <Sheet className="h-3.5 w-3.5" />
+                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                  Descargar Excel
                 </span>
               </Button>
             </div>
