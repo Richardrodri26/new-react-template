@@ -7,6 +7,7 @@ import { ComisionByUserPage } from "@/pages/Fletes/comisionByUser";
 import MapaApp from "@/pages/Mapa";
 import { CommissionsConfigPage } from "@/pages/Parameters/comision";
 import ReportsPage from "@/pages/Reports";
+import { StockPage } from "@/pages/Stock";
 import { VisitDetailPage } from "@/pages/Visits/Detalle";
 import { LoagerPage } from "@/pages/auth/looager";
 import { HomeBlog } from "@/pages/blog";
@@ -102,6 +103,10 @@ export const appRouter = createBrowserRouter([
       {
         path: "fletes", // Ruta para el detalle de la visita con su ID
         element: <FletesPage/>,
+      },
+      {
+        path: 'stock',
+        element:<StockPage />
       },
       {
         path: 'mapaApp',

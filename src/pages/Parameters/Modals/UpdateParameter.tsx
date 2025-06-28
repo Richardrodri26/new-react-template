@@ -58,7 +58,7 @@ export const UpdateParameter = () => {
     type: parameterData?.type,
     valueInt: "" +parameterData?.valueInt,
     valueString: parameterData?.valueString || "",
-    valueDate: parameterData?.valueDate || new Date()
+    valueDate: new Date(parameterData?.valueDate) || new Date()
   }
   const [type, setType] = useState<TypeParameterEnum | ''>(defaultData.type as TypeParameterEnum); // Estado para almacenar el tipo seleccionado
 

@@ -36,7 +36,8 @@ export const InputForm = ({
   placeholder,
   description,
   className,
-  type = "text"
+  type = "text", 
+  disabled = false,
 }: InputFormInterface) => {
   const { control } = useFormContext();
 
@@ -48,7 +49,7 @@ export const InputForm = ({
         <FormItem className={cn("w-full flex-1", className)}>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Input placeholder={placeholder} {...field} type={type} />
+            <Input placeholder={placeholder} {...field} type={type} disabled={disabled}/>
           </FormControl>
           <FormDescription>{description}</FormDescription>
           <FormMessage />

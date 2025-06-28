@@ -1,0 +1,50 @@
+query Stocks {
+  stocks {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    referencia
+    nombreReferencia
+    clase
+    nombreClase
+    cantidadActual
+    stcMin
+    isDeleted
+    stcMax
+    fichaTecnica {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      fileName
+      fileExtension
+      fileMode
+      fileMongoId
+      chunkSize
+      fileUrl
+      url
+    }
+  }
+}
+mutation CreateStock($createInput: CreateStockInput!) {
+  createStock(createInput: $createInput) {
+    id
+  }
+}
+mutation UpdateStock($updateInput: UpdateStockInput!) {
+  updateStock(updateInput: $updateInput) {
+    id
+  }
+}
+mutation UpdateToStock {
+  updateToStock {
+    success
+    message
+  }
+}
+mutation RemoveStock($removeStockId: ID!) {
+  removeStock(id: $removeStockId) {
+    id
+  }
+}

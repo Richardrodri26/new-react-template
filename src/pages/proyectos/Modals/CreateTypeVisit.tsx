@@ -68,23 +68,10 @@ export const CreateTypeVisit = () => {
 
 
   }
-
-  // const defaultValues = {
-  //   address: "",
-  //   email: "",
-  //   identificationNumber: "",
-  //   identificationType: "",
-  //   lastName: "",
-  //   name: "",
-  //   password: "",
-  //   phoneNumber: "",
-  //   type: "",
-  // }
-
   return (
     <>
       <DialogHeader >
-        Crear tipo de visita
+        Crear Proyecto
       </DialogHeader>
 
       <BasicFormProviderZod submit={onSubmit} schema={createTypeVistSchema}>

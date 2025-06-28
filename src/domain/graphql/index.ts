@@ -50,6 +50,30 @@ export type AuthResponse = {
   user: User;
 };
 
+export type CellClass = {
+  __typename?: 'CellClass';
+  cell: WsCell;
+  class: Class;
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  id: Scalars['ID'];
+  notes?: Maybe<Scalars['String']>;
+  updatedAt: Scalars['DateTime'];
+};
+
+/** Estados posibles de un celular */
+export enum CellStatusEmun {
+  Activo = 'ACTIVO',
+  Inactivo = 'INACTIVO',
+  Suspendido = 'SUSPENDIDO'
+}
+
+/** Estados tipos de celular */
+export enum CellTpeStatusEmun {
+  Cliente = 'CLIENTE',
+  Proveedor = 'PROVEEDOR'
+}
+
 export type City = {
   __typename?: 'City';
   code: Scalars['Int'];
@@ -60,6 +84,25 @@ export type City = {
   name: Scalars['String'];
   updatedAt: Scalars['DateTime'];
 };
+
+export type Class = {
+  __typename?: 'Class';
+  cellClasses?: Maybe<Array<CellClass>>;
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  description: Scalars['String'];
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  status: ClassStatus;
+  subclasses?: Maybe<Array<SubClass>>;
+  updatedAt: Scalars['DateTime'];
+};
+
+export enum ClassStatus {
+  Active = 'ACTIVE',
+  Archived = 'ARCHIVED',
+  Inactive = 'INACTIVE'
+}
 
 export type Client = {
   __typename?: 'Client';
@@ -133,16 +176,29 @@ export type Cotizacion = {
   detalle?: Maybe<Array<DetalleCotizacion>>;
   emailCliente: Scalars['String'];
   fecha: Scalars['DateTime'];
+  fechaRecordatorio?: Maybe<Scalars['DateTime']>;
+  fechaVersion?: Maybe<Scalars['DateTime']>;
+  fechaVersionString?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   nitCliente: Scalars['String'];
   nombreCliente: Scalars['String'];
   nombreVendedor: Scalars['String'];
   numeroCotizacion: Scalars['String'];
+  plazo?: Maybe<Scalars['Float']>;
   proyecto?: Maybe<Proyectos>;
+  recordatorioEnviado: Scalars['Boolean'];
   status?: Maybe<CotizacionStatusEnum>;
   updatedAt: Scalars['DateTime'];
   valor: Scalars['Float'];
   vendedor: Scalars['String'];
+  whatsappEnviado: Scalars['Boolean'];
+};
+
+export type CotizacionResendByNumber = {
+  apellido?: InputMaybe<Scalars['String']>;
+  cell: Scalars['String'];
+  nombre?: InputMaybe<Scalars['String']>;
+  numeroCotizacion: Scalars['String'];
 };
 
 export type CotizacionSeachInput = {
@@ -152,6 +208,7 @@ export type CotizacionSeachInput = {
 
 export enum CotizacionStatusEnum {
   Aceptada = 'ACEPTADA',
+  Enviada = 'ENVIADA',
   Ganada = 'GANADA',
   Perdida = 'PERDIDA',
   Revisada = 'REVISADA'
@@ -177,6 +234,33 @@ export type CrearConceptoDto = {
 export type CreateAndRemoveRoleFxInput = {
   permissions: Array<Scalars['String']>;
   role: Scalars['ID'];
+};
+
+export type CreateCellInput = {
+  apellido?: InputMaybe<Scalars['String']>;
+  asesorId?: InputMaybe<Scalars['String']>;
+  asistenteId?: InputMaybe<Scalars['String']>;
+  celular: Scalars['String'];
+  ciudad?: InputMaybe<Scalars['String']>;
+  classIds?: InputMaybe<Array<Scalars['ID']>>;
+  direccion?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']>;
+  emailsDto?: InputMaybe<Array<Scalars['String']>>;
+  empresa?: InputMaybe<Scalars['String']>;
+  groupIds?: InputMaybe<Array<Scalars['ID']>>;
+  nit?: InputMaybe<Scalars['String']>;
+  nombre?: InputMaybe<Scalars['String']>;
+  region: Scalars['String'];
+  status?: CellStatusEmun;
+  tipoCliente?: InputMaybe<TypeClientEnum>;
+  type?: InputMaybe<CellTpeStatusEmun>;
+  verify?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type CreateClassInput = {
+  description?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  status?: InputMaybe<ClassStatus>;
 };
 
 export type CreateClientContactInput = {
@@ -228,6 +312,18 @@ export type CreateDummyInput = {
   thirdField: Scalars['Float'];
 };
 
+export type CreateEmailInput = {
+  address: Scalars['String'];
+  cellId: Scalars['ID'];
+};
+
+export type CreateFichaTecnicaInput = {
+  description?: InputMaybe<Scalars['String']>;
+  fileId: Scalars['ID'];
+  referencia: Scalars['String'];
+  status: FichaTecnicaEnum;
+};
+
 export type CreateFletesInput = {
   backComision: Scalars['Float'];
   carrier: Scalars['String'];
@@ -241,8 +337,10 @@ export type CreateFletesInput = {
 };
 
 export type CreateGroupInput = {
-  name: Scalars['String'];
-  notificationConfigId?: InputMaybe<Scalars['ID']>;
+  cellIds?: InputMaybe<Array<Scalars['ID']>>;
+  descripcion?: InputMaybe<Scalars['String']>;
+  nombre: Scalars['String'];
+  workerId?: InputMaybe<Scalars['String']>;
 };
 
 export type CreateMarcaInput = {
@@ -377,6 +475,31 @@ export type CreateRoleInput = {
   name: Scalars['String'];
 };
 
+export type CreateSesionInput = {
+  description?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  status?: InputMaybe<SesionEmun>;
+  userId?: InputMaybe<Scalars['String']>;
+};
+
+export type CreateStockInput = {
+  cantidadActual?: InputMaybe<Scalars['Float']>;
+  clase?: InputMaybe<Scalars['String']>;
+  isDeleted?: InputMaybe<Scalars['Boolean']>;
+  nombreClase?: InputMaybe<Scalars['String']>;
+  nombreReferencia?: InputMaybe<Scalars['String']>;
+  referencia?: InputMaybe<Scalars['String']>;
+  stcMax?: InputMaybe<Scalars['Float']>;
+  stcMin?: InputMaybe<Scalars['Float']>;
+};
+
+export type CreateSubClassInput = {
+  classId: Scalars['String'];
+  description?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  status?: InputMaybe<SubClassStatus>;
+};
+
 export type CreateTaskCommentInput = {
   /** ID del archivo */
   fileId?: InputMaybe<Scalars['String']>;
@@ -391,8 +514,12 @@ export type CreateTaskCommentInput = {
 };
 
 export type CreateTaskInput = {
+  /** ID del proyecto asignado a la tarea (optional) */
+  cotizacionId?: InputMaybe<Scalars['String']>;
   /** Saber si viene o no del admin(opcional) */
   isAdmin?: InputMaybe<Scalars['Boolean']>;
+  /** ID del proyecto asignado a la tarea (optional) */
+  proyectoId?: InputMaybe<Scalars['String']>;
   /** Fecha de vencimiento de la tarea */
   taskDateExpiration: Scalars['DateTime'];
   /** Descripción de la tarea (opcional) */
@@ -465,6 +592,19 @@ export type CreateVisitTypeInput = {
   status: VisitTypeStatusEnum;
 };
 
+export type CreateWsBatchDto = {
+  celularesIds: Array<Scalars['String']>;
+  createdByUserAtId?: InputMaybe<Scalars['String']>;
+  descripcion?: InputMaybe<Scalars['String']>;
+  fileHtmlId?: InputMaybe<Scalars['String']>;
+  fileId?: InputMaybe<Scalars['String']>;
+  groupId?: InputMaybe<Scalars['String']>;
+  message: Scalars['String'];
+  nombre: Scalars['String'];
+  type?: InputMaybe<TypeBundleEnum>;
+  variables?: InputMaybe<Array<KeyValuePairInput>>;
+};
+
 export type DashboardDataModal = {
   __typename?: 'DashboardDataModal';
   idUser: Scalars['String'];
@@ -504,6 +644,7 @@ export type DetalleCotizacion = {
   descripcion: Scalars['String'];
   id: Scalars['ID'];
   referencia: Scalars['String'];
+  tiempo_entrega?: Maybe<Scalars['String']>;
   total: Scalars['Float'];
   unidadMedida: Scalars['String'];
   updatedAt: Scalars['DateTime'];
@@ -602,6 +743,23 @@ export type FacturaPorClienteDto = {
   tem_vended?: InputMaybe<Scalars['String']>;
 };
 
+export type FichaTecnica = {
+  __typename?: 'FichaTecnica';
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  description?: Maybe<Scalars['String']>;
+  file?: Maybe<FileInfo>;
+  id: Scalars['ID'];
+  referencia: Scalars['String'];
+  status: FichaTecnicaEnum;
+  updatedAt: Scalars['DateTime'];
+};
+
+export enum FichaTecnicaEnum {
+  Active = 'ACTIVE',
+  Inactive = 'INACTIVE'
+}
+
 export type FileInfo = {
   __typename?: 'FileInfo';
   chunkSize?: Maybe<Scalars['Float']>;
@@ -622,6 +780,38 @@ export enum FileModes {
   Mongo = 'mongo',
   Url = 'url'
 }
+
+export type FindCellOrderBy = {
+  createdAt?: InputMaybe<OrderTypes>;
+  nombre?: InputMaybe<OrderTypes>;
+};
+
+export type FindCellWhere = {
+  _and?: InputMaybe<Array<FindCellWhere>>;
+  _or?: InputMaybe<Array<FindCellWhere>>;
+  celular?: InputMaybe<StringFilter>;
+  city?: InputMaybe<StringFilter>;
+  direccion?: InputMaybe<StringFilter>;
+  email?: InputMaybe<StringFilter>;
+  empresa?: InputMaybe<StringFilter>;
+  nit?: InputMaybe<StringFilter>;
+  nombre?: InputMaybe<StringFilter>;
+  region?: InputMaybe<StringFilter>;
+  type?: InputMaybe<StringFilter>;
+  verify?: InputMaybe<StringFilter>;
+};
+
+export type FindClassOrderBy = {
+  createdAt?: InputMaybe<OrderTypes>;
+};
+
+export type FindClassWhere = {
+  _and?: InputMaybe<Array<FindClassWhere>>;
+  _or?: InputMaybe<Array<FindClassWhere>>;
+  description?: InputMaybe<StringFilter>;
+  name?: InputMaybe<StringFilter>;
+  status?: InputMaybe<StringFilter>;
+};
 
 export type FindClientContactOrderBy = {
   createdAt?: InputMaybe<OrderTypes>;
@@ -660,6 +850,9 @@ export type FindCotizacionWhere = {
   _and?: InputMaybe<Array<FindCotizacionWhere>>;
   _or?: InputMaybe<Array<FindCotizacionWhere>>;
   fecha?: InputMaybe<DateFilter>;
+  nitCliente?: InputMaybe<StringFilter>;
+  nombreCliente?: InputMaybe<StringFilter>;
+  numeroCotizacion?: InputMaybe<StringFilter>;
   proyecto?: InputMaybe<StringFilter>;
   vendedor?: InputMaybe<StringFilter>;
 };
@@ -702,6 +895,19 @@ export type FindDummyWhere = {
   type?: InputMaybe<FindDummyTypeWhere>;
 };
 
+export type FindFichaTecnicaOrderBy = {
+  createdAt?: InputMaybe<OrderTypes>;
+};
+
+export type FindFichaTecnicaWhere = {
+  _and?: InputMaybe<Array<FindFichaTecnicaWhere>>;
+  _or?: InputMaybe<Array<FindFichaTecnicaWhere>>;
+  description?: InputMaybe<StringFilter>;
+  file?: InputMaybe<StringFilter>;
+  referencia?: InputMaybe<StringFilter>;
+  status?: InputMaybe<StringFilter>;
+};
+
 export type FindFletesOrderBy = {
   createdAt?: InputMaybe<OrderTypes>;
 };
@@ -712,6 +918,18 @@ export type FindFletesWhere = {
   description?: InputMaybe<StringFilter>;
   name?: InputMaybe<StringFilter>;
   status?: InputMaybe<StringFilter>;
+};
+
+export type FindGroupOrderBy = {
+  createdAt?: InputMaybe<OrderTypes>;
+};
+
+export type FindGroupWhere = {
+  _and?: InputMaybe<Array<FindGroupWhere>>;
+  _or?: InputMaybe<Array<FindGroupWhere>>;
+  descripcion?: InputMaybe<StringFilter>;
+  nombre?: InputMaybe<StringFilter>;
+  worker?: InputMaybe<StringFilter>;
 };
 
 export type FindPresupuestoOrderBy = {
@@ -747,12 +965,48 @@ export type FindProyectoOrderBy = {
 export type FindProyectoWhere = {
   _and?: InputMaybe<Array<FindProyectoWhere>>;
   _or?: InputMaybe<Array<FindProyectoWhere>>;
+  clientFinal?: InputMaybe<StringFilter>;
+  clientIntegrador?: InputMaybe<StringFilter>;
   createdAt?: InputMaybe<DateFilter>;
   dateExpiration?: InputMaybe<DateFilter>;
   description?: InputMaybe<StringFilter>;
   name?: InputMaybe<StringFilter>;
   status?: InputMaybe<StringFilter>;
   worker?: InputMaybe<StringFilter>;
+};
+
+export type FindSesionOrderBy = {
+  createdAt?: InputMaybe<OrderTypes>;
+};
+
+export type FindSesionWhere = {
+  _and?: InputMaybe<Array<FindSesionWhere>>;
+  _or?: InputMaybe<Array<FindSesionWhere>>;
+  description?: InputMaybe<StringFilter>;
+  name?: InputMaybe<StringFilter>;
+  status?: InputMaybe<StringFilter>;
+};
+
+export type FindStockTypeOrderBy = {
+  createdAt?: InputMaybe<OrderTypes>;
+};
+
+export type FindStockTypeWhere = {
+  _and?: InputMaybe<Array<FindStockTypeWhere>>;
+  _or?: InputMaybe<Array<FindStockTypeWhere>>;
+  createdAt?: InputMaybe<DateFilter>;
+};
+
+export type FindSubClassOrderBy = {
+  createdAt?: InputMaybe<OrderTypes>;
+};
+
+export type FindSubClassWhere = {
+  _and?: InputMaybe<Array<FindSubClassWhere>>;
+  _or?: InputMaybe<Array<FindSubClassWhere>>;
+  description?: InputMaybe<StringFilter>;
+  name?: InputMaybe<StringFilter>;
+  status?: InputMaybe<StringFilter>;
 };
 
 export type FindTaskCommentTypeOrderBy = {
@@ -778,8 +1032,10 @@ export type FindTaskTypeOrderBy = {
 export type FindTaskTypeWhere = {
   _and?: InputMaybe<Array<FindTaskTypeWhere>>;
   _or?: InputMaybe<Array<FindTaskTypeWhere>>;
+  cotizacion?: InputMaybe<StringFilter>;
   createdAt?: InputMaybe<DateFilter>;
   description?: InputMaybe<StringFilter>;
+  proyecto?: InputMaybe<StringFilter>;
   taskDateExpiration?: InputMaybe<DateFilter>;
   taskStatus?: InputMaybe<StringFilter>;
   worker?: InputMaybe<StringFilter>;
@@ -839,6 +1095,20 @@ export type FindVisitWhere = {
   dateVisit?: InputMaybe<DateFilter>;
   status?: InputMaybe<StringFilter>;
   user?: InputMaybe<StringFilter>;
+};
+
+export type FindWsBatchOrderBy = {
+  createdAt?: InputMaybe<OrderTypes>;
+};
+
+export type FindWsBatchWhere = {
+  _and?: InputMaybe<Array<FindWsBatchWhere>>;
+  _or?: InputMaybe<Array<FindWsBatchWhere>>;
+  createdByUserAt?: InputMaybe<StringFilter>;
+  descripcion?: InputMaybe<StringFilter>;
+  estado?: InputMaybe<StringFilter>;
+  message?: InputMaybe<StringFilter>;
+  nombre?: InputMaybe<StringFilter>;
 };
 
 export type Fletes = {
@@ -918,6 +1188,17 @@ export type Group = {
   users?: Maybe<Array<User>>;
 };
 
+export type KeyValuePair = {
+  __typename?: 'KeyValuePair';
+  key: Scalars['String'];
+  value: Scalars['String'];
+};
+
+export type KeyValuePairInput = {
+  key: Scalars['String'];
+  value: Scalars['String'];
+};
+
 export type MarcaProyecto = {
   __typename?: 'MarcaProyecto';
   createdAt: Scalars['DateTime'];
@@ -958,12 +1239,17 @@ export type MultikeyRegisterIdInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   acceptOrDeclineVisit: Scalars['String'];
+  addCellToGroup: WsGroupCell;
   addUserRole: User;
   assignSubordinate: User;
+  bundleMailSend: SendLoteResult;
   codeConfirmation: User;
   crearConcepto: ConceptoTable;
   create: RoleFx;
   createAllPresupuestoToMonth: Scalars['Boolean'];
+  createBundle: WsBatch;
+  createCell: WsCell;
+  createClass: Class;
   createClient: Client;
   createClientContact: ClientContact;
   createCotizacion: Cotizacion;
@@ -971,8 +1257,9 @@ export type Mutation = {
   createDocumentType: DocumentType;
   createDummiesX: Array<Dummy>;
   createDummy: Dummy;
+  createFichaTecnica: FichaTecnica;
   createFletes: Fletes;
-  createGroup: Group;
+  createGroup: WsGroup;
   createMarcaProyecto: MarcaProyecto;
   createMultiKeyRegister: MultikeyRegister;
   createNotification: Notification;
@@ -989,6 +1276,9 @@ export type Mutation = {
   createReferenciaProyecto: ReferenciaProyecto;
   createRole: Role;
   createRoleFx: Array<RoleFx>;
+  createSesion: WsSesion;
+  createStock: Stock;
+  createSubClass: SubClass;
   createTask: Task;
   createTaskComment: TaskComment;
   createTipoProyecto: TipoProyecto;
@@ -996,18 +1286,25 @@ export type Mutation = {
   createVisit: Visit;
   createVisitComent: VisitComent;
   createVisitType: VisitType;
+  createWsEmail: WsEmail;
   eliminarConcepto: Scalars['String'];
   enableAndDisableDoubleVerification: Scalars['String'];
   i18nTest: Scalars['String'];
+  importGroupWithExcell: Scalars['String'];
   recoverPassword: Scalars['String'];
   remove: NotificationGroup;
+  removeBundle: WsBatch;
+  removeCell: WsCell;
+  removeClass: Class;
   removeClient: Client;
   removeClientContact: ClientContact;
   removeCotizacion: Cotizacion;
   removeDocumentType: DocumentType;
   removeDummy: Dummy;
+  removeFichaTecnica: FichaTecnica;
   removeFletes: Fletes;
-  removeGroup: Group;
+  removeGroup: WsGroup;
+  removeGroupWithCells: WsGroupCell;
   removeMarcaProyecto: MarcaProyecto;
   removeMultiKeyRegister: MultikeyRegister;
   removeNotification: Notification;
@@ -1023,6 +1320,9 @@ export type Mutation = {
   removeReferenciaProyecto: ReferenciaProyecto;
   removeRole: Role;
   removeRoleFx: Array<Scalars['String']>;
+  removeSesion: WsSesion;
+  removeStock: Stock;
+  removeSubClass: SubClass;
   removeSubordinate: User;
   removeTask: Task;
   removeTaskComment: TaskComment;
@@ -1032,16 +1332,24 @@ export type Mutation = {
   removeVisit: Visit;
   removeVisitComent: VisitComent;
   removeVisitType: VisitType;
+  removeWsEmail: WsEmail;
   replaceAllRolesFx: Array<RoleFx>;
+  resendCotizacionByNumber: Scalars['Boolean'];
   resetPassword: User;
   resetSuperAdmin: User;
   saveDetalleCotizacion: Scalars['Boolean'];
   sendCodeDoubleVerification: Scalars['String'];
+  sendLoteMessages: SendLoteResult;
+  sendLoteMessagesById: SendLoteResult;
+  sendLoteMessagesByOption: SendLoteResult;
   signInAdmin: AuthResponse;
   signUpWithDocument: AuthResponse;
   signUpWithEmail: AuthResponse;
   signin: AuthResponse;
   update: NotificationGroup;
+  updateBundle: WsBatch;
+  updateCell: WsCell;
+  updateClass: Class;
   updateClient: Client;
   updateClientContact: ClientContact;
   updateConcepto: ConceptoTable;
@@ -1049,8 +1357,9 @@ export type Mutation = {
   updateDetalleCotizacion: DetalleCotizacion;
   updateDocumentType: DocumentType;
   updateDummy: Dummy;
+  updateFichaTecnica: FichaTecnica;
   updateFletes: Fletes;
-  updateGroup: Group;
+  updateGroup: WsGroup;
   updateMarcaProyecto: MarcaProyecto;
   updateMultiKeyRegister: MultikeyRegister;
   updateNotification: Notification;
@@ -1066,20 +1375,31 @@ export type Mutation = {
   updateProyectoReferencia: ProyectoReferencia;
   updateReferenciaProyecto: ReferenciaProyecto;
   updateRole: Role;
+  updateSesion: WsSesion;
+  updateStock: Stock;
+  updateSubClass: SubClass;
   updateTask: Task;
   updateTaskComment: TaskComment;
   updateTipoProyecto: TipoProyecto;
+  updateToStock: ResponseDto;
   updateUser: User;
   updateUserInformation: User;
   updateUserPassword: User;
   updateVisit: Visit;
   updateVisitComent: VisitComent;
   updateVisitType: VisitType;
+  updateWsEmail: WsEmail;
 };
 
 
 export type MutationAcceptOrDeclineVisitArgs = {
   UpdateStatusInput: UpdateStatusInput;
+};
+
+
+export type MutationAddCellToGroupArgs = {
+  cellId: Scalars['String'];
+  groupId: Scalars['String'];
 };
 
 
@@ -1091,6 +1411,11 @@ export type MutationAddUserRoleArgs = {
 export type MutationAssignSubordinateArgs = {
   managerId: Scalars['String'];
   subordinateId: Scalars['String'];
+};
+
+
+export type MutationBundleMailSendArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -1106,6 +1431,21 @@ export type MutationCrearConceptoArgs = {
 
 export type MutationCreateArgs = {
   createInput: CreateAndRemoveRoleFxInput;
+};
+
+
+export type MutationCreateBundleArgs = {
+  createInput: CreateWsBatchDto;
+};
+
+
+export type MutationCreateCellArgs = {
+  createInput: CreateCellInput;
+};
+
+
+export type MutationCreateClassArgs = {
+  createInput: CreateClassInput;
 };
 
 
@@ -1131,6 +1471,11 @@ export type MutationCreateDocumentTypeArgs = {
 
 export type MutationCreateDummyArgs = {
   createInput: CreateDummyInput;
+};
+
+
+export type MutationCreateFichaTecnicaArgs = {
+  createInput: CreateFichaTecnicaInput;
 };
 
 
@@ -1224,6 +1569,21 @@ export type MutationCreateRoleFxArgs = {
 };
 
 
+export type MutationCreateSesionArgs = {
+  createInput: CreateSesionInput;
+};
+
+
+export type MutationCreateStockArgs = {
+  createInput: CreateStockInput;
+};
+
+
+export type MutationCreateSubClassArgs = {
+  createInput: CreateSubClassInput;
+};
+
+
 export type MutationCreateTaskArgs = {
   createInput: CreateTaskInput;
 };
@@ -1259,6 +1619,11 @@ export type MutationCreateVisitTypeArgs = {
 };
 
 
+export type MutationCreateWsEmailArgs = {
+  createInput: CreateEmailInput;
+};
+
+
 export type MutationEliminarConceptoArgs = {
   eliminarConceptoDto: Scalars['String'];
 };
@@ -1269,12 +1634,32 @@ export type MutationEnableAndDisableDoubleVerificationArgs = {
 };
 
 
+export type MutationImportGroupWithExcellArgs = {
+  fileId: Scalars['String'];
+};
+
+
 export type MutationRecoverPasswordArgs = {
   recoverPasswordInput: RecoverPasswordInput;
 };
 
 
 export type MutationRemoveArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationRemoveBundleArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationRemoveCellArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationRemoveClassArgs = {
   id: Scalars['ID'];
 };
 
@@ -1304,6 +1689,11 @@ export type MutationRemoveDummyArgs = {
 };
 
 
+export type MutationRemoveFichaTecnicaArgs = {
+  id: Scalars['ID'];
+};
+
+
 export type MutationRemoveFletesArgs = {
   id: Scalars['ID'];
 };
@@ -1311,6 +1701,12 @@ export type MutationRemoveFletesArgs = {
 
 export type MutationRemoveGroupArgs = {
   id: Scalars['ID'];
+};
+
+
+export type MutationRemoveGroupWithCellsArgs = {
+  cellId: Scalars['String'];
+  groupId: Scalars['String'];
 };
 
 
@@ -1389,6 +1785,21 @@ export type MutationRemoveRoleFxArgs = {
 };
 
 
+export type MutationRemoveSesionArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationRemoveStockArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationRemoveSubClassArgs = {
+  id: Scalars['ID'];
+};
+
+
 export type MutationRemoveSubordinateArgs = {
   managerId: Scalars['String'];
   subordinateId: Scalars['String'];
@@ -1435,8 +1846,18 @@ export type MutationRemoveVisitTypeArgs = {
 };
 
 
+export type MutationRemoveWsEmailArgs = {
+  id: Scalars['ID'];
+};
+
+
 export type MutationReplaceAllRolesFxArgs = {
   replaceAllRoleFxInput: CreateAndRemoveRoleFxInput;
+};
+
+
+export type MutationResendCotizacionByNumberArgs = {
+  input: CotizacionResendByNumber;
 };
 
 
@@ -1452,6 +1873,23 @@ export type MutationSaveDetalleCotizacionArgs = {
 
 export type MutationSendCodeDoubleVerificationArgs = {
   sendDoubleVerificationInput: SendDoubleVerificationInput;
+};
+
+
+export type MutationSendLoteMessagesArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationSendLoteMessagesByIdArgs = {
+  bundleId: Scalars['String'];
+  cellId: Scalars['String'];
+};
+
+
+export type MutationSendLoteMessagesByOptionArgs = {
+  id: Scalars['String'];
+  option: ResendOption;
 };
 
 
@@ -1477,6 +1915,21 @@ export type MutationSigninArgs = {
 
 export type MutationUpdateArgs = {
   updateInput: UpdateNotificationGroupInput;
+};
+
+
+export type MutationUpdateBundleArgs = {
+  updateInput: UpdateBundleInput;
+};
+
+
+export type MutationUpdateCellArgs = {
+  updateInput: UpdateCellInput;
+};
+
+
+export type MutationUpdateClassArgs = {
+  updateInput: UpdateClassInput;
 };
 
 
@@ -1512,6 +1965,11 @@ export type MutationUpdateDocumentTypeArgs = {
 
 export type MutationUpdateDummyArgs = {
   updateInput: UpdateDummyInput;
+};
+
+
+export type MutationUpdateFichaTecnicaArgs = {
+  updateInput: UpdateFichaTecnicaInput;
 };
 
 
@@ -1600,6 +2058,21 @@ export type MutationUpdateRoleArgs = {
 };
 
 
+export type MutationUpdateSesionArgs = {
+  updateInput: UpdateSessionInput;
+};
+
+
+export type MutationUpdateStockArgs = {
+  updateInput: UpdateStockInput;
+};
+
+
+export type MutationUpdateSubClassArgs = {
+  updateInput: UpdateSubClassInput;
+};
+
+
 export type MutationUpdateTaskArgs = {
   updateInput: UpdateTaskInput;
 };
@@ -1642,6 +2115,11 @@ export type MutationUpdateVisitComentArgs = {
 
 export type MutationUpdateVisitTypeArgs = {
   updateInput: UpdateVisitTypeInput;
+};
+
+
+export type MutationUpdateWsEmailArgs = {
+  updateInput: UpdateEmailInput;
 };
 
 export type Notification = {
@@ -1784,6 +2262,27 @@ export type Presupuesto = {
   worker: User;
 };
 
+export type PresupuestoVsVenta = {
+  __typename?: 'PresupuestoVsVenta';
+  comparacionCumplimientoAcumulado: Scalars['String'];
+  comparacionCumplimientoHoy: Scalars['String'];
+  comparacionVentaAcumulada: Scalars['String'];
+  comparacionVentaHoy: Scalars['String'];
+  cumplimientoAcumuladoActual: Scalars['Float'];
+  cumplimientoAcumuladoHastaHoy: Scalars['Float'];
+  cumplimientoHoyActual: Scalars['Float'];
+  diaActual: Scalars['Int'];
+  presupuestoActual: Scalars['Float'];
+  presupuestoAnterior: Scalars['Float'];
+  userId: Scalars['String'];
+  ventaAcumuladaActual: Scalars['Float'];
+  ventaAcumuladaAnterior: Scalars['Float'];
+  ventaAcumuladaHastaHoy: Scalars['Float'];
+  ventaAcumuladaHastaMismoDiaAnterior: Scalars['Float'];
+  ventaHoyActual: Scalars['Float'];
+  ventaMismoDiaAnterior: Scalars['Float'];
+};
+
 export type Profile = {
   __typename?: 'Profile';
   city: Scalars['Int'];
@@ -1857,6 +2356,7 @@ export type Proyectos = {
 };
 
 export enum ProyectosStatusEnum {
+  Cancelado = 'CANCELADO',
   Exploracion = 'EXPLORACION',
   GanadoCerrado = 'GANADO_CERRADO',
   Negociacion = 'NEGOCIACION',
@@ -1867,6 +2367,12 @@ export enum ProyectosStatusEnum {
 
 export type Query = {
   __typename?: 'Query';
+  Cell: WsCell;
+  Cells: Array<WsCell>;
+  CellsCount: MetadataPagination;
+  Class: Class;
+  Classes: Array<Class>;
+  ClassesCount: MetadataPagination;
   Count: MetadataPagination;
   Fletes: Fletes;
   Fletess: Array<Fletes>;
@@ -1876,7 +2382,17 @@ export type Query = {
   NotificationGroupsCount: MetadataPagination;
   ProyectoReferencias: Array<ProyectoReferencia>;
   ProyectoReferenciasCount: MetadataPagination;
+  SubClass: SubClass;
+  SubClasses: Array<SubClass>;
+  SubClassesCount: MetadataPagination;
+  WsEmail: WsEmail;
+  WsEmails: Array<WsEmail>;
+  WsEmailsCount: MetadataPagination;
   approvalJwt: AuthResponse;
+  bundle: WsBatch;
+  bundles: Array<WsBatch>;
+  bundlesCount: MetadataPagination;
+  cellsByClass: Array<CellClass>;
   cities: Array<City>;
   city: City;
   client: Client;
@@ -1900,10 +2416,14 @@ export type Query = {
   dummies: Array<Dummy>;
   dummiesCount: MetadataPagination;
   dummy: Dummy;
+  fichaTecnica: FichaTecnica;
+  fichaTecnicas: Array<FichaTecnica>;
+  fichaTecnicasCount: MetadataPagination;
   file: FileInfo;
   findAll: Array<UserKey>;
   findAllFacturaCliente: Array<FletesWithDocument>;
   findAllVisitDashboard: VisitDashboardModel;
+  findBundleInStop?: Maybe<WsBatch>;
   findOne: UserKey;
   findOneFacturaClienteByCode: FindOneFacturaClienteByCode;
   findSeachCotizacion: Scalars['Boolean'];
@@ -1911,8 +2431,9 @@ export type Query = {
   findUtilidadReal: UtilidadRealModel;
   functionalities: FunctionalityModel;
   getDataDashboard: Array<DashboardDataModal>;
-  group: Group;
-  groups: Array<Group>;
+  getVentasTop20Clientes: Array<VentasTrabajadorCliente>;
+  group: WsGroup;
+  groups: Array<WsGroup>;
   groupsCount: MetadataPagination;
   marcaProyecto: MarcaProyecto;
   marcaProyectos: Array<MarcaProyecto>;
@@ -1936,6 +2457,7 @@ export type Query = {
   positions: Array<Position>;
   positionsCount: MetadataPagination;
   presupuesto: Presupuesto;
+  presupuestoVentaPorUsuario?: Maybe<PresupuestoVsVenta>;
   presupuestos: Array<Presupuesto>;
   presupuestosCount: MetadataPagination;
   profile: Profile;
@@ -1959,6 +2481,12 @@ export type Query = {
   rolesFx: Array<RoleFx>;
   rolesFxCount: MetadataPagination;
   sendEmailRecovryPassword: Scalars['String'];
+  sesion: WsSesion;
+  sesiones: Array<WsSesion>;
+  sesionesCount: MetadataPagination;
+  stock: Stock;
+  stocks: Array<Stock>;
+  stocksCount: MetadataPagination;
   task: Task;
   taskComment: TaskComment;
   tasks: Array<Task>;
@@ -1968,6 +2496,7 @@ export type Query = {
   tipoProyecto: TipoProyecto;
   tipoProyectos: Array<TipoProyecto>;
   tipoProyectosCount: MetadataPagination;
+  todosPresupuestosVentas: Array<PresupuestoVsVenta>;
   user: User;
   users: Array<User>;
   usersCount: MetadataPagination;
@@ -1983,6 +2512,44 @@ export type Query = {
   visitTypesCount: MetadataPagination;
   visits: Array<Visit>;
   visitsCount: MetadataPagination;
+};
+
+
+export type QueryCellArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryCellsArgs = {
+  orderBy?: InputMaybe<Array<FindCellOrderBy>>;
+  pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindCellWhere>;
+};
+
+
+export type QueryCellsCountArgs = {
+  orderBy?: InputMaybe<Array<FindCellOrderBy>>;
+  pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindCellWhere>;
+};
+
+
+export type QueryClassArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryClassesArgs = {
+  orderBy?: InputMaybe<Array<FindClassOrderBy>>;
+  pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindClassWhere>;
+};
+
+
+export type QueryClassesCountArgs = {
+  orderBy?: InputMaybe<Array<FindClassOrderBy>>;
+  pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindClassWhere>;
 };
 
 
@@ -2037,8 +2604,67 @@ export type QueryProyectoReferenciasCountArgs = {
 };
 
 
+export type QuerySubClassArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QuerySubClassesArgs = {
+  orderBy?: InputMaybe<Array<FindSubClassOrderBy>>;
+  pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindSubClassWhere>;
+};
+
+
+export type QuerySubClassesCountArgs = {
+  orderBy?: InputMaybe<Array<FindSubClassOrderBy>>;
+  pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindSubClassWhere>;
+};
+
+
+export type QueryWsEmailArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryWsEmailsArgs = {
+  pagination?: InputMaybe<Pagination>;
+};
+
+
+export type QueryWsEmailsCountArgs = {
+  pagination?: InputMaybe<Pagination>;
+};
+
+
 export type QueryApprovalJwtArgs = {
   approvalTokenInput: ApprovalTokenInput;
+};
+
+
+export type QueryBundleArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryBundlesArgs = {
+  orderBy?: InputMaybe<Array<FindWsBatchOrderBy>>;
+  pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindWsBatchWhere>;
+};
+
+
+export type QueryBundlesCountArgs = {
+  orderBy?: InputMaybe<Array<FindWsBatchOrderBy>>;
+  pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindWsBatchWhere>;
+};
+
+
+export type QueryCellsByClassArgs = {
+  classId: Scalars['String'];
+  subClassId?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -2177,6 +2803,25 @@ export type QueryDummyArgs = {
 };
 
 
+export type QueryFichaTecnicaArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryFichaTecnicasArgs = {
+  orderBy?: InputMaybe<Array<FindFichaTecnicaOrderBy>>;
+  pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindFichaTecnicaWhere>;
+};
+
+
+export type QueryFichaTecnicasCountArgs = {
+  orderBy?: InputMaybe<Array<FindFichaTecnicaOrderBy>>;
+  pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindFichaTecnicaWhere>;
+};
+
+
 export type QueryFileArgs = {
   id: Scalars['ID'];
 };
@@ -2224,18 +2869,27 @@ export type QueryGetDataDashboardArgs = {
 };
 
 
+export type QueryGetVentasTop20ClientesArgs = {
+  vendedor: Scalars['String'];
+};
+
+
 export type QueryGroupArgs = {
   id: Scalars['ID'];
 };
 
 
 export type QueryGroupsArgs = {
+  orderBy?: InputMaybe<Array<FindGroupOrderBy>>;
   pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindGroupWhere>;
 };
 
 
 export type QueryGroupsCountArgs = {
+  orderBy?: InputMaybe<Array<FindGroupOrderBy>>;
   pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindGroupWhere>;
 };
 
 
@@ -2346,6 +3000,11 @@ export type QueryPositionsCountArgs = {
 
 export type QueryPresupuestoArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryPresupuestoVentaPorUsuarioArgs = {
+  userId: Scalars['String'];
 };
 
 
@@ -2468,6 +3127,44 @@ export type QueryRolesFxCountArgs = {
 
 export type QuerySendEmailRecovryPasswordArgs = {
   email: Scalars['String'];
+};
+
+
+export type QuerySesionArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QuerySesionesArgs = {
+  orderBy?: InputMaybe<Array<FindSesionOrderBy>>;
+  pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindSesionWhere>;
+};
+
+
+export type QuerySesionesCountArgs = {
+  orderBy?: InputMaybe<Array<FindSesionOrderBy>>;
+  pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindSesionWhere>;
+};
+
+
+export type QueryStockArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryStocksArgs = {
+  orderBy?: InputMaybe<Array<FindStockTypeOrderBy>>;
+  pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindStockTypeWhere>;
+};
+
+
+export type QueryStocksCountArgs = {
+  orderBy?: InputMaybe<Array<FindStockTypeOrderBy>>;
+  pagination?: InputMaybe<Pagination>;
+  where?: InputMaybe<FindStockTypeWhere>;
 };
 
 
@@ -2636,6 +3333,22 @@ export type ReferenciaProyecto = {
   updatedAt: Scalars['DateTime'];
 };
 
+export enum ResendOption {
+  Fallidos = 'FALLIDOS',
+  FallidosPendientes = 'FALLIDOS_PENDIENTES',
+  Pendientes = 'PENDIENTES',
+  Todos = 'TODOS'
+}
+
+/** Respuesta global estándar */
+export type ResponseDto = {
+  __typename?: 'ResponseDto';
+  /** Mensaje informativo de la operación */
+  message: Scalars['String'];
+  /** Indica si la operación fue exitosa */
+  success: Scalars['Boolean'];
+};
+
 export type Role = {
   __typename?: 'Role';
   createdAt: Scalars['DateTime'];
@@ -2684,6 +3397,19 @@ export type SendDoubleVerificationInput = {
   phoneNumber?: InputMaybe<Scalars['String']>;
   token: Scalars['String'];
 };
+
+export type SendLoteResult = {
+  __typename?: 'SendLoteResult';
+  error?: Maybe<Scalars['String']>;
+  message: Scalars['String'];
+  success: Scalars['Boolean'];
+};
+
+export enum SesionEmun {
+  Fallida = 'FALLIDA',
+  Lista = 'LISTA',
+  Pendiente = 'PENDIENTE'
+}
 
 export type SigninAdminInput = {
   email?: InputMaybe<Scalars['String']>;
@@ -2768,11 +3494,30 @@ export enum StatusVisitEnum {
   Reprogrammed = 'reprogrammed'
 }
 
+export type Stock = {
+  __typename?: 'Stock';
+  cantidadActual: Scalars['Float'];
+  clase: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  fichaTecnica?: Maybe<FileInfo>;
+  id: Scalars['ID'];
+  isDeleted?: Maybe<Scalars['Boolean']>;
+  nombreClase: Scalars['String'];
+  nombreReferencia: Scalars['String'];
+  referencia: Scalars['String'];
+  stcMax: Scalars['Float'];
+  stcMin: Scalars['Float'];
+  updatedAt: Scalars['DateTime'];
+};
+
 export type StringFilter = {
   _contains?: InputMaybe<Scalars['String']>;
   _endswith?: InputMaybe<Scalars['String']>;
   _eq?: InputMaybe<Scalars['String']>;
   _in?: InputMaybe<Array<Scalars['String']>>;
+  _isNotNull?: InputMaybe<Scalars['Boolean']>;
+  _isNull?: InputMaybe<Scalars['Boolean']>;
   _like?: InputMaybe<Scalars['String']>;
   _neq?: InputMaybe<Scalars['String']>;
   _notcontains?: InputMaybe<Scalars['String']>;
@@ -2782,12 +3527,32 @@ export type StringFilter = {
   _startswith?: InputMaybe<Scalars['String']>;
 };
 
+export type SubClass = {
+  __typename?: 'SubClass';
+  class?: Maybe<Class>;
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  description: Scalars['String'];
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  status: SubClassStatus;
+  updatedAt: Scalars['DateTime'];
+};
+
+export enum SubClassStatus {
+  Active = 'ACTIVE',
+  Archived = 'ARCHIVED',
+  Inactive = 'INACTIVE'
+}
+
 export type Task = {
   __typename?: 'Task';
+  cotizacion?: Maybe<Cotizacion>;
   createdAt: Scalars['DateTime'];
   createdByUser: User;
   deletedAt?: Maybe<Scalars['DateTime']>;
   id: Scalars['ID'];
+  proyecto?: Maybe<Proyectos>;
   taskComment: Array<TaskComment>;
   taskDateExpiration: Scalars['String'];
   taskDescription?: Maybe<Scalars['String']>;
@@ -2838,6 +3603,11 @@ export type TipoProyecto = {
   updatedAt: Scalars['DateTime'];
 };
 
+export enum TypeBundleEnum {
+  Emails = 'EMAILS',
+  Whastapp = 'WHASTAPP'
+}
+
 export enum TypeClientEnum {
   ClienteFinal = 'CLIENTE_FINAL',
   Distribuidor = 'DISTRIBUIDOR',
@@ -2868,6 +3638,50 @@ export enum TypeWorker {
   Externo = 'externo',
   Interno = 'interno'
 }
+
+export type UpdateBundleInput = {
+  celularesIds?: InputMaybe<Array<Scalars['String']>>;
+  createdByUserAtId?: InputMaybe<Scalars['String']>;
+  deleteFile?: InputMaybe<Scalars['Boolean']>;
+  descripcion?: InputMaybe<Scalars['String']>;
+  fileHtmlId?: InputMaybe<Scalars['String']>;
+  fileId?: InputMaybe<Scalars['String']>;
+  groupId?: InputMaybe<Scalars['String']>;
+  id: Scalars['ID'];
+  message?: InputMaybe<Scalars['String']>;
+  nombre?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<TypeBundleEnum>;
+  variables?: InputMaybe<Array<KeyValuePairInput>>;
+};
+
+export type UpdateCellInput = {
+  apellido?: InputMaybe<Scalars['String']>;
+  asesorId?: InputMaybe<Scalars['String']>;
+  asistenteId?: InputMaybe<Scalars['String']>;
+  celular?: InputMaybe<Scalars['String']>;
+  ciudad?: InputMaybe<Scalars['String']>;
+  classIds?: InputMaybe<Array<Scalars['ID']>>;
+  direccion?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']>;
+  emailsDto?: InputMaybe<Array<Scalars['String']>>;
+  empresa?: InputMaybe<Scalars['String']>;
+  groupIds?: InputMaybe<Array<Scalars['ID']>>;
+  id: Scalars['ID'];
+  nit?: InputMaybe<Scalars['String']>;
+  nombre?: InputMaybe<Scalars['String']>;
+  region?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<CellStatusEmun>;
+  tipoCliente?: InputMaybe<TypeClientEnum>;
+  type?: InputMaybe<CellTpeStatusEmun>;
+  verify?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type UpdateClassInput = {
+  description?: InputMaybe<Scalars['String']>;
+  id: Scalars['ID'];
+  name?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<ClassStatus>;
+};
 
 export type UpdateClientContactInput = {
   celular?: InputMaybe<Scalars['String']>;
@@ -2904,6 +3718,7 @@ export type UpdateCotizacionDetalleInput = {
 
 export type UpdateCotizacionInput = {
   ciudadCliente?: InputMaybe<Scalars['String']>;
+  deleteProyect?: InputMaybe<Scalars['Boolean']>;
   descripcion?: InputMaybe<Scalars['String']>;
   emailCliente?: InputMaybe<Scalars['String']>;
   fecha?: InputMaybe<Scalars['DateTime']>;
@@ -2932,6 +3747,20 @@ export type UpdateDummyInput = {
   thirdField?: InputMaybe<Scalars['Float']>;
 };
 
+export type UpdateEmailInput = {
+  address?: InputMaybe<Scalars['String']>;
+  cellId?: InputMaybe<Scalars['ID']>;
+  id: Scalars['ID'];
+};
+
+export type UpdateFichaTecnicaInput = {
+  description?: InputMaybe<Scalars['String']>;
+  fileId?: InputMaybe<Scalars['ID']>;
+  id: Scalars['ID'];
+  referencia?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<FichaTecnicaEnum>;
+};
+
 export type UpdateFletesInput = {
   backComision?: InputMaybe<Scalars['Float']>;
   carrier?: InputMaybe<Scalars['String']>;
@@ -2946,9 +3775,11 @@ export type UpdateFletesInput = {
 };
 
 export type UpdateGroupInput = {
+  cellIds?: InputMaybe<Array<Scalars['ID']>>;
+  descripcion?: InputMaybe<Scalars['String']>;
   id: Scalars['ID'];
-  name?: InputMaybe<Scalars['String']>;
-  notificationConfigId?: InputMaybe<Scalars['ID']>;
+  nombre?: InputMaybe<Scalars['String']>;
+  workerId?: InputMaybe<Scalars['String']>;
 };
 
 export type UpdateMarcaInput = {
@@ -3107,10 +3938,38 @@ export type UpdateRoleInput = {
   name?: InputMaybe<Scalars['String']>;
 };
 
+export type UpdateSessionInput = {
+  description?: InputMaybe<Scalars['String']>;
+  id: Scalars['ID'];
+  name?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<SesionEmun>;
+  userId?: InputMaybe<Scalars['String']>;
+};
+
 export type UpdateStatusInput = {
   id: Scalars['String'];
   status: StatusVisitEnum;
   token: Scalars['String'];
+};
+
+export type UpdateStockInput = {
+  cantidadActual?: InputMaybe<Scalars['Float']>;
+  clase?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  isDeleted?: InputMaybe<Scalars['Boolean']>;
+  nombreClase?: InputMaybe<Scalars['String']>;
+  nombreReferencia?: InputMaybe<Scalars['String']>;
+  referencia?: InputMaybe<Scalars['String']>;
+  stcMax?: InputMaybe<Scalars['Float']>;
+  stcMin?: InputMaybe<Scalars['Float']>;
+};
+
+export type UpdateSubClassInput = {
+  classId?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']>;
+  id: Scalars['ID'];
+  name?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<SubClassStatus>;
 };
 
 export type UpdateTaskCoomentInput = {
@@ -3128,9 +3987,13 @@ export type UpdateTaskCoomentInput = {
 };
 
 export type UpdateTaskInput = {
+  /** ID del proyecto asignado a la tarea (optional) */
+  cotizacionId?: InputMaybe<Scalars['String']>;
   id: Scalars['ID'];
   /** Saber si viene o no del admin(opcional) */
   isAdmin?: InputMaybe<Scalars['Boolean']>;
+  /** ID del proyecto asignado a la tarea (optional) */
+  proyectoId?: InputMaybe<Scalars['String']>;
   /** Fecha de vencimiento de la tarea */
   taskDateExpiration?: InputMaybe<Scalars['DateTime']>;
   /** Descripción de la tarea (opcional) */
@@ -3314,6 +4177,15 @@ export type VentasPorVendedorDepartamento = {
   venta: Scalars['Float'];
 };
 
+export type VentasTrabajadorCliente = {
+  __typename?: 'VentasTrabajadorCliente';
+  nit?: Maybe<Scalars['String']>;
+  nombreCliente?: Maybe<Scalars['String']>;
+  total?: Maybe<Scalars['Float']>;
+  vendedor?: Maybe<Scalars['String']>;
+  venta?: Maybe<Scalars['Float']>;
+};
+
 export enum VerificationTypes {
   Email = 'Email',
   Phone = 'Phone'
@@ -3384,6 +4256,126 @@ export enum VisitTypeStatusEnum {
   Active = 'ACTIVE',
   Inactive = 'INACTIVE'
 }
+
+export type WsBatch = {
+  __typename?: 'WsBatch';
+  createdAt: Scalars['DateTime'];
+  createdByUserAt?: Maybe<User>;
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  descripcion?: Maybe<Scalars['String']>;
+  detalles?: Maybe<Array<WsBatchDetail>>;
+  error?: Maybe<Scalars['String']>;
+  estado: WsBatchStatus;
+  file?: Maybe<FileInfo>;
+  fileHtml?: Maybe<FileInfo>;
+  group?: Maybe<WsGroup>;
+  id: Scalars['ID'];
+  message: Scalars['String'];
+  nombre: Scalars['String'];
+  type: TypeBundleEnum;
+  updatedAt: Scalars['DateTime'];
+  variables?: Maybe<Array<KeyValuePair>>;
+};
+
+export type WsBatchDetail = {
+  __typename?: 'WsBatchDetail';
+  celular: WsCell;
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  error?: Maybe<Scalars['String']>;
+  estado: WsBatchDetailStatus;
+  id: Scalars['ID'];
+  lote: WsBatch;
+  updatedAt: Scalars['DateTime'];
+};
+
+export enum WsBatchDetailStatus {
+  Entregado = 'ENTREGADO',
+  Enviado = 'ENVIADO',
+  Fallido = 'FALLIDO',
+  NoEntregado = 'NO_ENTREGADO',
+  Pendiente = 'PENDIENTE'
+}
+
+export enum WsBatchStatus {
+  Completado = 'COMPLETADO',
+  EnProceso = 'EN_PROCESO',
+  Fallido = 'FALLIDO',
+  Pausado = 'PAUSADO',
+  Pendiente = 'PENDIENTE'
+}
+
+export type WsCell = {
+  __typename?: 'WsCell';
+  apellido?: Maybe<Scalars['String']>;
+  asesor?: Maybe<User>;
+  asistente?: Maybe<User>;
+  cellClasses?: Maybe<Array<CellClass>>;
+  celular: Scalars['String'];
+  city?: Maybe<City>;
+  ciudad?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  direccion?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  emails?: Maybe<Array<WsEmail>>;
+  empresa?: Maybe<Scalars['String']>;
+  fullName: Scalars['String'];
+  id: Scalars['ID'];
+  nit?: Maybe<Scalars['String']>;
+  nombre?: Maybe<Scalars['String']>;
+  region: Scalars['String'];
+  status: CellStatusEmun;
+  tipoCliente?: Maybe<TypeClientEnum>;
+  type?: Maybe<CellTpeStatusEmun>;
+  updatedAt: Scalars['DateTime'];
+  verify?: Maybe<Scalars['Boolean']>;
+  wsGroupCells?: Maybe<Array<WsGroupCell>>;
+};
+
+export type WsEmail = {
+  __typename?: 'WsEmail';
+  address: Scalars['String'];
+  cell: WsCell;
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  id: Scalars['ID'];
+  updatedAt: Scalars['DateTime'];
+};
+
+export type WsGroup = {
+  __typename?: 'WsGroup';
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  descripcion?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  nombre: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+  worker?: Maybe<User>;
+  wsGroupCells?: Maybe<Array<WsGroupCell>>;
+};
+
+export type WsGroupCell = {
+  __typename?: 'WsGroupCell';
+  cell: WsCell;
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  group: WsGroup;
+  id: Scalars['ID'];
+  updatedAt: Scalars['DateTime'];
+};
+
+export type WsSesion = {
+  __typename?: 'WsSesion';
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  status: SesionEmun;
+  updatedAt: Scalars['DateTime'];
+  user?: Maybe<User>;
+};
 
 export type WssRecipient = {
   document?: InputMaybe<Scalars['String']>;
@@ -3848,6 +4840,37 @@ export type CreateProyectoReferenciaMutationVariables = Exact<{
 
 
 export type CreateProyectoReferenciaMutation = { __typename?: 'Mutation', createProyectoReferencia: { __typename?: 'ProyectoReferencia', id: string } };
+
+export type StocksQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type StocksQuery = { __typename?: 'Query', stocks: Array<{ __typename?: 'Stock', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, referencia: string, nombreReferencia: string, clase: string, nombreClase: string, cantidadActual: number, stcMin: number, isDeleted?: boolean | null, stcMax: number, fichaTecnica?: { __typename?: 'FileInfo', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, fileName: string, fileExtension: string, fileMode: FileModes, fileMongoId?: string | null, chunkSize?: number | null, fileUrl?: string | null, url: string } | null }> };
+
+export type CreateStockMutationVariables = Exact<{
+  createInput: CreateStockInput;
+}>;
+
+
+export type CreateStockMutation = { __typename?: 'Mutation', createStock: { __typename?: 'Stock', id: string } };
+
+export type UpdateStockMutationVariables = Exact<{
+  updateInput: UpdateStockInput;
+}>;
+
+
+export type UpdateStockMutation = { __typename?: 'Mutation', updateStock: { __typename?: 'Stock', id: string } };
+
+export type UpdateToStockMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UpdateToStockMutation = { __typename?: 'Mutation', updateToStock: { __typename?: 'ResponseDto', success: boolean, message: string } };
+
+export type RemoveStockMutationVariables = Exact<{
+  removeStockId: Scalars['ID'];
+}>;
+
+
+export type RemoveStockMutation = { __typename?: 'Mutation', removeStock: { __typename?: 'Stock', id: string } };
 
 export type TasksQueryVariables = Exact<{
   orderBy?: InputMaybe<Array<FindTaskTypeOrderBy> | FindTaskTypeOrderBy>;
@@ -7172,6 +8195,196 @@ export function useCreateProyectoReferenciaMutation(baseOptions?: Apollo.Mutatio
 export type CreateProyectoReferenciaMutationHookResult = ReturnType<typeof useCreateProyectoReferenciaMutation>;
 export type CreateProyectoReferenciaMutationResult = Apollo.MutationResult<CreateProyectoReferenciaMutation>;
 export type CreateProyectoReferenciaMutationOptions = Apollo.BaseMutationOptions<CreateProyectoReferenciaMutation, CreateProyectoReferenciaMutationVariables>;
+export const StocksDocument = gql`
+    query Stocks {
+  stocks {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    referencia
+    nombreReferencia
+    clase
+    nombreClase
+    cantidadActual
+    stcMin
+    isDeleted
+    stcMax
+    fichaTecnica {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      fileName
+      fileExtension
+      fileMode
+      fileMongoId
+      chunkSize
+      fileUrl
+      url
+    }
+  }
+}
+    `;
+
+/**
+ * __useStocksQuery__
+ *
+ * To run a query within a React component, call `useStocksQuery` and pass it any options that fit your needs.
+ * When your component renders, `useStocksQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useStocksQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useStocksQuery(baseOptions?: Apollo.QueryHookOptions<StocksQuery, StocksQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<StocksQuery, StocksQueryVariables>(StocksDocument, options);
+      }
+export function useStocksLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<StocksQuery, StocksQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<StocksQuery, StocksQueryVariables>(StocksDocument, options);
+        }
+export type StocksQueryHookResult = ReturnType<typeof useStocksQuery>;
+export type StocksLazyQueryHookResult = ReturnType<typeof useStocksLazyQuery>;
+export type StocksQueryResult = Apollo.QueryResult<StocksQuery, StocksQueryVariables>;
+export const CreateStockDocument = gql`
+    mutation CreateStock($createInput: CreateStockInput!) {
+  createStock(createInput: $createInput) {
+    id
+  }
+}
+    `;
+export type CreateStockMutationFn = Apollo.MutationFunction<CreateStockMutation, CreateStockMutationVariables>;
+
+/**
+ * __useCreateStockMutation__
+ *
+ * To run a mutation, you first call `useCreateStockMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateStockMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createStockMutation, { data, loading, error }] = useCreateStockMutation({
+ *   variables: {
+ *      createInput: // value for 'createInput'
+ *   },
+ * });
+ */
+export function useCreateStockMutation(baseOptions?: Apollo.MutationHookOptions<CreateStockMutation, CreateStockMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateStockMutation, CreateStockMutationVariables>(CreateStockDocument, options);
+      }
+export type CreateStockMutationHookResult = ReturnType<typeof useCreateStockMutation>;
+export type CreateStockMutationResult = Apollo.MutationResult<CreateStockMutation>;
+export type CreateStockMutationOptions = Apollo.BaseMutationOptions<CreateStockMutation, CreateStockMutationVariables>;
+export const UpdateStockDocument = gql`
+    mutation UpdateStock($updateInput: UpdateStockInput!) {
+  updateStock(updateInput: $updateInput) {
+    id
+  }
+}
+    `;
+export type UpdateStockMutationFn = Apollo.MutationFunction<UpdateStockMutation, UpdateStockMutationVariables>;
+
+/**
+ * __useUpdateStockMutation__
+ *
+ * To run a mutation, you first call `useUpdateStockMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateStockMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateStockMutation, { data, loading, error }] = useUpdateStockMutation({
+ *   variables: {
+ *      updateInput: // value for 'updateInput'
+ *   },
+ * });
+ */
+export function useUpdateStockMutation(baseOptions?: Apollo.MutationHookOptions<UpdateStockMutation, UpdateStockMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateStockMutation, UpdateStockMutationVariables>(UpdateStockDocument, options);
+      }
+export type UpdateStockMutationHookResult = ReturnType<typeof useUpdateStockMutation>;
+export type UpdateStockMutationResult = Apollo.MutationResult<UpdateStockMutation>;
+export type UpdateStockMutationOptions = Apollo.BaseMutationOptions<UpdateStockMutation, UpdateStockMutationVariables>;
+export const UpdateToStockDocument = gql`
+    mutation UpdateToStock {
+  updateToStock {
+    success
+    message
+  }
+}
+    `;
+export type UpdateToStockMutationFn = Apollo.MutationFunction<UpdateToStockMutation, UpdateToStockMutationVariables>;
+
+/**
+ * __useUpdateToStockMutation__
+ *
+ * To run a mutation, you first call `useUpdateToStockMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateToStockMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateToStockMutation, { data, loading, error }] = useUpdateToStockMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useUpdateToStockMutation(baseOptions?: Apollo.MutationHookOptions<UpdateToStockMutation, UpdateToStockMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateToStockMutation, UpdateToStockMutationVariables>(UpdateToStockDocument, options);
+      }
+export type UpdateToStockMutationHookResult = ReturnType<typeof useUpdateToStockMutation>;
+export type UpdateToStockMutationResult = Apollo.MutationResult<UpdateToStockMutation>;
+export type UpdateToStockMutationOptions = Apollo.BaseMutationOptions<UpdateToStockMutation, UpdateToStockMutationVariables>;
+export const RemoveStockDocument = gql`
+    mutation RemoveStock($removeStockId: ID!) {
+  removeStock(id: $removeStockId) {
+    id
+  }
+}
+    `;
+export type RemoveStockMutationFn = Apollo.MutationFunction<RemoveStockMutation, RemoveStockMutationVariables>;
+
+/**
+ * __useRemoveStockMutation__
+ *
+ * To run a mutation, you first call `useRemoveStockMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveStockMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeStockMutation, { data, loading, error }] = useRemoveStockMutation({
+ *   variables: {
+ *      removeStockId: // value for 'removeStockId'
+ *   },
+ * });
+ */
+export function useRemoveStockMutation(baseOptions?: Apollo.MutationHookOptions<RemoveStockMutation, RemoveStockMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemoveStockMutation, RemoveStockMutationVariables>(RemoveStockDocument, options);
+      }
+export type RemoveStockMutationHookResult = ReturnType<typeof useRemoveStockMutation>;
+export type RemoveStockMutationResult = Apollo.MutationResult<RemoveStockMutation>;
+export type RemoveStockMutationOptions = Apollo.BaseMutationOptions<RemoveStockMutation, RemoveStockMutationVariables>;
 export const TasksDocument = gql`
     query Tasks($orderBy: [FindTaskTypeOrderBy!], $where: FindTaskTypeWhere, $pagination: Pagination) {
   tasks(orderBy: $orderBy, where: $where, pagination: $pagination) {

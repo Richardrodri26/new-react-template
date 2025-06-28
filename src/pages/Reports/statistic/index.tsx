@@ -51,6 +51,9 @@ const VentasCharts: React.FC = () => {
       numero_mes: string;
     }[]
   >([]);
+  const [topClientes, setTopClientes] = useState<
+    { nit: string; nombre_cliente: string; total: string; venta: string }[]
+  >([]);
 
   // Obtener datos de la API
   useEffect(() => {
@@ -69,6 +72,9 @@ const VentasCharts: React.FC = () => {
         );
         const data3 = await res3.json();
         setVentasAnioActual(data3);
+        const res4 = await fetch(`${import.meta.env.VITE_APP_GRAPH}ventas/top-clientes`);
+        const data4 = await res4.json();
+        setTopClientes(data4);
       } catch (error) {
         console.error("Error obteniendo los datos", error);
       }
@@ -143,6 +149,33 @@ const VentasCharts: React.FC = () => {
       },
     },
   };
+  const dataTopClientes = {
+    labels: topClientes.map((c, index) => `${index + 1} - ` +c.nombre_cliente),
+    datasets: [
+      {
+        label: "Ventas por Cliente",
+        data: topClientes.map((c) => (+c.venta)),
+        backgroundColor: "rgba(255, 206, 86, 0.5)",
+      },
+    ],
+  };
+  const optionsTopClientes = {
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: function (tooltipItem: any) {
+            const venta = topClientes[tooltipItem.dataIndex].venta;
+            return `Venta: ${formatCurrency(+venta)}`;
+          },
+        },
+      },
+    },
+    scales: {
+      x: {
+        display: false, // 👈 Oculta las etiquetas del eje X
+      },
+    },
+  };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
@@ -163,6 +196,12 @@ const VentasCharts: React.FC = () => {
         <h2 className="text-lg font-bold text-center mb-3">Ventas Año Actual</h2>
         <Bar data={dataActual} options={options} />
       </div>
+      {/* Gráfico 4: Top Clientes por Venta */}
+      <div className="bg-white p-4 rounded-xl shadow">
+        <h2 className="text-lg font-bold text-center mb-3">Top 20 Clientes por Venta</h2>
+        <Bar data={dataTopClientes} options={optionsTopClientes} />
+      </div>
+
     </div>
   );
 };
