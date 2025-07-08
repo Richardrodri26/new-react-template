@@ -26,6 +26,7 @@ type InputFormBasicType = {
   disabled?: boolean
   type?: string
   onChange?: (value: string) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
 };
 
 interface InputFormInterface extends InputFormBasicType { }
@@ -38,6 +39,7 @@ export const InputForm = ({
   className,
   type = "text", 
   disabled = false,
+  onBlur = () => { /* Default no-op */ },
 }: InputFormInterface) => {
   const { control } = useFormContext();
 
@@ -49,7 +51,12 @@ export const InputForm = ({
         <FormItem className={cn("w-full flex-1", className)}>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Input placeholder={placeholder} {...field} type={type} disabled={disabled}/>
+            <Input placeholder={placeholder} {...field} type={type} disabled={disabled}
+              onBlur={(e) => {
+                field.onBlur();  // esto mantiene la funcionalidad de react-hook-form
+                onBlur?.(e);     // esto ejecuta tu lógica personalizada, si la hay
+              }}
+            />
           </FormControl>
           <FormDescription>{description}</FormDescription>
           <FormMessage />

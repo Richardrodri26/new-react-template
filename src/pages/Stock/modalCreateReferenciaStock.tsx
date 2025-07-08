@@ -3,6 +3,9 @@ import { InputForm } from '@/composables';
 import { useCreateStockMutation } from '@/domain/graphql';
 import { ToastyErrorGraph } from '@/lib/utils';
 import axios from 'axios';
+import { set } from 'lodash';
+import { useEffect, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 import Modal from 'react-modal';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -14,6 +17,7 @@ const createSchema = z.object({
     cantidadActual: z.string().optional(),
     stcMax: z.string().optional(),
     stcMin: z.string().optional(),
+    clase: z.string().optional(),
 });
 
 type CreateSchemaType = z.infer<typeof createSchema>;
@@ -36,33 +40,71 @@ interface ReferenciaStock {
 export const ModalCreateReferenciaStock = ({ isOpen, onClose, nombreClase, refesh }: ModalCreateReferenciaStockProps) => {
     if(!isOpen || !nombreClase) return null;
     const [createStock] = useCreateStockMutation();
+    const [verificando, setVerificando] = useState(false);
+    const [referenciaInfo, setReferenciaInfo] = useState<ReferenciaStock | null>(null);
+    const [defaultValues, setDefaultValues] = useState<CreateSchemaType>({
+        referencia: "",
+        nombreClase: nombreClase,
+        nombreReferencia: "",
+        cantidadActual: "",
+        stcMax: "",
+        stcMin: "",
+        clase: ""
+    });
+    // const { setValue } = useFormContext<CreateSchemaType>();
+
+    useEffect(() => {
+        if (referenciaInfo) {
+            setDefaultValues({
+                referencia: referenciaInfo.Referencia,
+                nombreClase: referenciaInfo.NombreClase,
+                nombreReferencia: referenciaInfo.NombreReferencia,
+                cantidadActual: referenciaInfo.CantidadActual.toString(),
+                stcMax: referenciaInfo.STCMAX.toString(),
+                stcMin: referenciaInfo.STCMIN.toString(),
+                clase: referenciaInfo.Clase
+            })
+        }
+    }, [referenciaInfo]);
+
+    const verificarReferencia = async (referencia: string) => {
+        const toastId = toast.loading("Verificando Referencia de Stock...");
+        try {
+            const url = `${import.meta.env.VITE_APP_MICRO_GRAPH}ventas/referencia/verify/${referencia}`;
+            const { data } = await axios.get<ReferenciaStock>(url);
+
+            if (!data || data.Referencia === "") {
+                toast.error("Referencia de Stock no encontrada", { id: toastId });
+                setReferenciaInfo(null);
+            } else if (nombreClase && data.NombreClase !== nombreClase) {
+                toast.error(`La clase de la referencia no coincide con la clase seleccionada es de tipo ${data.NombreClase}`, { id: toastId });
+                setReferenciaInfo(null);
+            } else {
+                setReferenciaInfo(data);
+            }
+        } catch (error) {
+            toast.error("Error al verificar la referencia", {id: toastId });
+            setReferenciaInfo(null);
+        } finally {
+            setVerificando(false);
+        }
+    };
 
     const onSubmit = async (data: CreateSchemaType) => {
-        
-        const toastId = toast.loading("Estamos buscando la referencia de stock, espere un momento...");
-        const url = `${import.meta.env.VITE_APP_MICRO_GRAPH}ventas/referencia/verify/${data.referencia}`;
-        const { data:  dataReferencia} = await axios.get<ReferenciaStock>(url);
+        if (!referenciaInfo) {
+            toast.error("Debe verificar una referencia válida antes de continuar");
+            return;
+        }
 
-        if (!dataReferencia) {
-            toast.error("Referencia de Stock no encontrada", { id: toastId });
-            return;
-        }
-        if (dataReferencia.Referencia === "") {
-            toast.error("Referencia de Stock no puede estar vacía", { id: toastId });
-            return;
-        }
-        if(nombreClase && dataReferencia.NombreClase !== nombreClase) {
-            toast.error("La clase de la referencia no coincide con la clase seleccionada", { id: toastId });
-            return; 
-        }
+        const toastId = toast.loading("Creando Referencia de Stock...");
+
         try {
-            toast.loading("Creando Referencia de Stock...", { id: toastId });
             const response = await createStock({
                 variables: {
                     createInput: {
                         referencia: data.referencia,
-                        nombreClase: dataReferencia.NombreClase,
-                        clase: dataReferencia.Clase,
+                        nombreClase: referenciaInfo.NombreClase,
+                        clase: referenciaInfo.Clase,
                         nombreReferencia: data.nombreReferencia,
                         cantidadActual: data.cantidadActual ? Number(data.cantidadActual) : 0,
                         stcMax: data.stcMax ? Number(data.stcMax) : 0,
@@ -75,12 +117,12 @@ export const ModalCreateReferenciaStock = ({ isOpen, onClose, nombreClase, refes
                 toast.success("Referencia de Stock creada correctamente", { id: toastId });
                 onClose();
                 refesh?.();
-            } else if (response.errors) {
+            } else {
                 toast.error("Error al crear la Referencia de Stock", { id: toastId });
             }
         } catch (error) {
             ToastyErrorGraph(error as any);
-            toast.dismiss(toastId)
+            toast.dismiss(toastId);
         }
     };
 
@@ -94,10 +136,15 @@ export const ModalCreateReferenciaStock = ({ isOpen, onClose, nombreClase, refes
             // className="bg-white p-6 max-w-lg mx-auto mt-20 rounded shadow-lg"
         >
             <h2 className="text-center text-lg font-bold mb-4">Crear Referencia Stock</h2>
-            <BasicFormProviderZod submit={onSubmit} schema={createSchema} defaultValue={{
-                nombreClase: nombreClase}}>
+            <BasicFormProviderZod submit={onSubmit} schema={createSchema} defaultValue={defaultValues}>
                 <div className="grid grid-cols-2 gap-4 mb-4">
-                    <InputForm name="referencia" label="Referencia" />
+                    <InputForm name="referencia" label="Referencia"      
+                    onBlur={async (e) => {
+                        const referencia = e.target.value;
+                        if (referencia.trim()) {
+                            await verificarReferencia(referencia.trim());
+                        }
+                    }}/>
                     <InputForm name="nombreReferencia" label="Nombre Referencia" />
                     <InputForm name="nombreClase" label="Nombre Clase" disabled={true}/>
                     <InputForm name="clase" label="Clase" disabled={true}/>
