@@ -110,8 +110,11 @@ const FacturasTable: React.FC = memo(() => {
               <th className="x-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Presupuesto en %</th>
               <th className="x-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Utilidad Real</th>
               <th className="x-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Comisión (%)</th>
-              <th className="x-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Comisión</th>
-              <th className="x-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subsidio rodamiento</th>
+              <th className="x-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Comisión AV</th>
+              <th className="x-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rodamiento AV</th>
+              <th className="x-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Meta vsita</th>
+              <th className="x-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Comisión DV</th>
+              <th className="x-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rodamiento DV</th>
             </tr>
           </thead>
           {loadingTable && (
@@ -127,26 +130,27 @@ const FacturasTable: React.FC = memo(() => {
             const { user, facturasValide, totalizado, externo, presupuesto } = usuario;
             return (
               <tbody key={index}>
-                {externo ? (
+                {externo || user?.typeWoker == 'interno' ? (
                   <tr className="text-left">
                     <td className="px-6 py-4 whitespace-nowrap">{user ? user?.name + ' ' + user?.lastName : "Usuario desconocido"}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(totalizado.totalVendido)}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(externo.totalVentasGrupo)}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(externo?.totalVentasGrupo || 0)}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(presupuesto?.PRESUPUESTO || 0)}</td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="w-full h-4 bg-gray-200 rounded-md">
                         <div
                           className={`h-full ${calculatePercentageColor(
-                            (externo?.totalVentasGrupo / (presupuesto?.PRESUPUESTO)) * 100 || 0
+                            ((externo?.totalVentasGrupo || 0) / (presupuesto?.PRESUPUESTO || 0)) * 100 || 0
                           )} rounded-md`}
-                          style={{ width: `${((externo?.totalVentasGrupo / (presupuesto?.PRESUPUESTO)) * 100 || 0) > 100 ? 100 :((externo?.totalVentasGrupo / (presupuesto?.PRESUPUESTO)) * 100 || 0) }%` }}
+                          style={{ width: `${(((externo?.totalVentasGrupo || 0) / (presupuesto?.PRESUPUESTO || 0)) * 100 || 0) > 100 ? 100 :(((externo?.totalVentasGrupo || 0) / (presupuesto?.PRESUPUESTO || 0)) * 100 || 0) }%` }}
                         ></div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">{(externo.utilidadRealPorcentaje?.toFixed(2))}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{(externo.comisionTable)}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(externo.comision)}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{0}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{(externo?.utilidadRealPorcentaje?.toFixed(2) || 0)}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{(externo?.comisionTable || 0)}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(externo?.comision || 0)}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">0</td>
+                    <td className="px-6 py-4 whitespace-nowrap">0</td>
                   </tr>
                 ) : (
                   <tr className="text-left">
@@ -154,6 +158,7 @@ const FacturasTable: React.FC = memo(() => {
                     <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(totalizado.totalVendido)}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(totalizado.totalVendido)}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(presupuesto?.PRESUPUESTO || 0)}</td>
+                    {/* @ts-ignore */}
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="w-full h-4 bg-gray-200 rounded-md">
                         <div
@@ -165,9 +170,16 @@ const FacturasTable: React.FC = memo(() => {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">{(totalizado.utilidadPorcentaje?.toFixed(2))}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{(totalizado.comisionTable)}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(totalizado.totalComision)}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{(user?.typeWoker == 'freelance' ? user.valueFreelance + "%" : totalizado.comisionTable)}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{user?.typeWoker == 'freelance' ? formatCurrency((totalizado.utilidad *  (user?.valueFreelance || 0)) / 100) : formatCurrency(totalizado.totalComision)}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(totalizado.totalRodamiento)}</td>
+                    {/* @ts-ignore */}
+                    <td className="px-6 py-4 whitespace-nowrap">{(totalizado?.porcentajeRealizado?.toFixed(2) || 0) +  "% de " + (user?.valueMinVisit || 0) + "% "}</td>
+                    {/* @ts-ignore */}
+                    <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(totalizado.totalComisionAb)}</td>
+                    {/* @ts-ignore */}
+                    <td className="px-6 py-4 whitespace-nowrap">{formatCurrency(totalizado.totalRodamientoAV)}</td>
+                    
                   </tr>
                 )}
               </tbody>
