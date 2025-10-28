@@ -7,6 +7,7 @@ import { formatCurrency } from "./marcasVenta";
 import { Loader } from "@/pages/Commissions";
 import { calculatePercentageColor } from "..";
 import { CotizacionData } from "./cotizacionData";
+import VentasTiendaTable from "./VentasTiendaTable";
 
 function convertirANumero(valor: string | null) {
   if(!valor) return 0;
@@ -174,7 +175,8 @@ const FacturasTable: React.FC = memo(() => {
           })}
         </table>
       </div>
-      <CotizacionData />
+      <CotizacionData /> <br />
+      <VentasTiendaTable />
     </div>
   );
 });
