@@ -13,6 +13,7 @@ const API_BASE_URL = `${import.meta.env.VITE_APP_GRAPH}fletes/ventasAgrupadasXme
 const ResumenCards:  React.FC<ResumenCardsProps> = () => {
   const [precioDolar, setPrecioDolar] = useState<number | null>(null);
   const [totalVentas, setTotalVentas] = useState<number | null>(null);
+  const [totalVentasTienda, setTotalVentasTienda] = useState<number | null>(null);
   const [utilidad, setUtilidad] = useState<number | null>(null);
   const [porcentajeUtilidad, setPorcentajeUtilidad] = useState<number | null>(
     null
@@ -44,7 +45,7 @@ const ResumenCards:  React.FC<ResumenCardsProps> = () => {
 
         setTotalVentas(mesData?.venta || 0);
         setUtilidad(mesData?.utilidad_porcentaje || 0)
-
+        setTotalVentasTienda(mesData?.venta_tienda)
         // const resUtilidad = await fetch(`${API_BASE_URL}/utilidad`);
         // const dataUtilidad = await resUtilidad.json();
         // setPorcentajeUtilidad(dataUtilidad.porcentaje);
@@ -78,7 +79,7 @@ const ResumenCards:  React.FC<ResumenCardsProps> = () => {
   // }, [refetch]);
   
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-6">
+    <div className="grid grid-cols-1 md:grid-cols-5 gap-4 p-6">
       {/* Card 1: Precio del Dólar */}
       <div className="bg-white p-4 rounded-xl shadow flex items-center">
         <DollarSign className="text-blue-500 w-10 h-10 mr-4" />
@@ -105,7 +106,13 @@ const ResumenCards:  React.FC<ResumenCardsProps> = () => {
           <p className="text-xl font-bold">{totalVentas ? `${formatCurrency(+totalVentas)}` : "Cargando..."}</p>
         </div>
       </div>
-
+      <div className="bg-white p-4 rounded-xl shadow flex items-center">
+        <ShoppingCart className="text-yellow-500 w-10 h-10 mr-4" />
+        <div>
+          <h3 className="text-gray-600 text-sm">Ventas del Mes (tienda)</h3>
+          <p className="text-xl font-bold">{totalVentas ? `${formatCurrency(Number(totalVentasTienda ?? 0))}` : "Cargando..."}</p>
+        </div>
+      </div>
       {/* Card 4: Porcentaje de Utilidad */}
       <div className="bg-white p-4 rounded-xl shadow flex items-center">
         <Percent className="text-red-500 w-10 h-10 mr-4" />
