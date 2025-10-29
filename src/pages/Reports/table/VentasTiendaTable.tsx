@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { formatCurrency } from "./marcasVenta";
 
 interface VentaTienda {
   nombre_mes: string;
@@ -93,25 +94,25 @@ const VentasTiendaTable: React.FC = () => {
                       {row.nombre_mes}
                     </td>
                     <td className="px-4 py-2 text-right text-gray-700">
-                      {row.venta.toLocaleString()}
+                      {formatCurrency(Number(row.venta ?? 0))}
                     </td>
                     <td className="px-4 py-2 text-right text-gray-700">
-                      {row.costo_tienda.toLocaleString()}
+                      {formatCurrency(Number(row.costo_tienda ?? 0))}
                     </td>
                     <td className="px-4 py-2 text-right text-gray-700">
-                      {row.oip_tienda.toLocaleString()}
+                      {formatCurrency(Number(row.oip_tienda ?? 0))}
                     </td>
                     <td className="px-4 py-2 text-right text-gray-700">
-                      {row.flete_tienda.toLocaleString()}
+                      {formatCurrency(Number(row.flete_tienda ?? 0))}
                     </td>
                     <td className="px-4 py-2 text-right text-gray-700">
-                      {row.back_tienda.toLocaleString()}
+                      {formatCurrency(Number(row.back_tienda ?? 0))}
                     </td>
                     <td className="px-4 py-2 text-right text-green-600 font-semibold">
-                      {row.utilidad_tienda.toLocaleString()}
+                      {formatCurrency(Number(row.utilidad_tienda ?? 0))}
                     </td>
                     <td className="px-4 py-2 text-right text-blue-600 font-semibold">
-                      {row.valor_a_pagar.toLocaleString()}
+                      {formatCurrency(Number(row.valor_a_pagar ?? 0))}
                     </td>
                     <td className="px-4 py-2 text-right text-gray-700">
                       {row.utilidad_porcentaje_tienda}% 
