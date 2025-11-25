@@ -25,6 +25,8 @@ query Users($orderBy: [FindUsersOrderBy!], $where: FindUsersWhere, $pagination: 
     emailVerification
     type
     valueTransport
+    valueFreelance
+    valueMinVisit
     typeWoker
     subordinates {
       id

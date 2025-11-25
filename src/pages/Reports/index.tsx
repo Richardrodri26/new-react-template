@@ -14,7 +14,7 @@ import { GridPendingVisit } from './table/PendingTable';
 import { useFindUtilidadRealQuery } from '@/domain/graphql';
 import PresupuestoTable from './table/presupuesto';
 import VentasTable from './table/marcasVenta';
-import { BarChart, BarChart2, Brain, Map, Percent, ShoppingCart, Users } from 'lucide-react';
+import { BarChart, BarChart2, Brain, Map, Percent, PersonStandingIcon, ShoppingCart, Users } from 'lucide-react';
 import VentasCharts from './statistic';
 import ResumenCards from './components/ResumenCards';
 import EstadisticasVentas from './statistic/zona-vendedor';
@@ -22,6 +22,7 @@ import TablaIVA from './table/ivaIdeaBimestre';
 import FacturasTable from './table/comisionTotal';
 import Contabilidad from '../excel';
 import TaskTableWorker from './table/taskTable';
+import { ViTrabajador } from './VITRABAJADOR';
 
 const ReportsPage: React.FC = () => {
   const [visitData, setVisitData] = useState([]);
@@ -243,6 +244,7 @@ const ReportsPage: React.FC = () => {
     { id: "statisc", label: "Estadistica", icon: BarChart2},
     { id: "zona", label: "Zona", icon: Map},
     { id: "iva", label: "BI.", icon: Brain},
+    { id: "viTrabajador", label: "BI TRABAJADOR.", icon: PersonStandingIcon},
   ];
   
   return (
@@ -271,6 +273,7 @@ const ReportsPage: React.FC = () => {
       {activeTab === "statisc" && <AnaliticaTabs/>}
       {activeTab === "zona" && <EstadisticasVentas/>}
       {activeTab === "iva" && <IvaIdealBiMestre/>}
+      {activeTab === "viTrabajador" && <ViTrabajador/>}
     </>
   );
 };

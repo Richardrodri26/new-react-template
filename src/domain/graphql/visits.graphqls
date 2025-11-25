@@ -240,3 +240,10 @@ mutation CreateVisitComent($createInput: CreateVisitComentInput!) {
     id
   }
 }
+
+query VisitasPorVendedor($year: Float!, $workerNumber: String!) {
+  visitasPorVendedor(year: $year, workerNumber: $workerNumber) {
+    numero_mes
+    visitas
+  }
+}

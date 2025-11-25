@@ -7,6 +7,7 @@ import { ComisionByUserPage } from "@/pages/Fletes/comisionByUser";
 import MapaApp from "@/pages/Mapa";
 import { CommissionsConfigPage } from "@/pages/Parameters/comision";
 import ReportsPage from "@/pages/Reports";
+import { BiTrabajadorIndex } from "@/pages/Reports/VITRABAJADOR/BiTrabajadorIndex";
 import { StockPage } from "@/pages/Stock";
 import { VisitDetailPage } from "@/pages/Visits/Detalle";
 import { LoagerPage } from "@/pages/auth/looager";
@@ -139,6 +140,10 @@ export const appRouter = createBrowserRouter([
       {
         path: 'viewProyecto/:id',
         element: <IndexProyectView />
+      },
+      {
+        path: "bi-trabajador/:trabajadorId/:id",
+        element: <BiTrabajadorIndex />
       }
     ]
   },

@@ -8,6 +8,7 @@ interface Factura {
   InvoiceLine: string;
   BilltoName: string;
   BilltoCity: string;
+  "BillToSt-Prov": string;
   BilltoCountry: string;
   ShiptoName: string;
   ShiptoAddress: string;
@@ -53,7 +54,7 @@ const TablaFacturas: React.FC = () => {
       }
 
       // Realizar la solicitud HTTP
-      const url = `http://intranet.cytech.net.co:3003/brute-force/getReportPosInv?ano=${ano}&mes=${mes}&trm=${trm}`;
+      const url = `https://intranet.cytech.net.co:3003/brute-force/getReportPosInv?ano=${ano}&mes=${mes}&trm=${trm}`;
       const response = await fetch(url);
 
       if (!response.ok) {
