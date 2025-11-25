@@ -9,7 +9,7 @@ import { calculatePercentageColor } from "..";
 import { CotizacionData } from "./cotizacionData";
 import VentasTiendaTable from "./VentasTiendaTable";
 import { Data } from "@react-google-maps/api";
-import { VentasDataTable } from "./DataVentas";
+
 
 function convertirANumero(valor: string | null) {
   if(!valor) return 0;
