@@ -1,7 +1,7 @@
 // BiTrabajadorIndex.tsx
 import React, { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import { DollarSign, Users, ClipboardList, MapPin, Eye, Download } from "lucide-react";
+import { DollarSign, Users, ClipboardList, MapPin, Eye, Download, RefreshCw } from "lucide-react";
 import { useFindStatisticStatusProyectQuery, useVentasPorVendedorQuery, useVisitasPorVendedorQuery, VentasPorVendedorQuery, VisitasPorVendedorQuery } from "@/domain/graphql";
 import SalesByMonthChart from "./components/SalesByMonthChart";
 import axios from "axios";
@@ -188,14 +188,14 @@ export const BiTrabajadorIndex: React.FC = () => {
             <div>
               <h1 className="text-2xl font-semibold text-gray-900">{trabajador.nombre}</h1>
               <p className="text-sm text-gray-500">
-                Reporte BI · Trabajador ID:
-                <span className="font-mono text-xs ml-2">{params.trabajadorId ?? trabajador.id}</span>
+                Todos los datos corresponde al año 
+                <span className="font-mono text-xs ml-2">{new Date().getFullYear()}</span>
               </p>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <button className="inline-flex items-center gap-2 px-3 py-2 rounded-md border bg-white hover:shadow-sm text-sm">
-              <Download size={16} /> Exportar
+              <RefreshCw size={16} /> Actualizar
             </button>
             <div className="text-sm text-gray-500">Últ actualización • hoy</div>
           </div>

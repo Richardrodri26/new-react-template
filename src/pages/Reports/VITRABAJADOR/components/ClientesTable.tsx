@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { formatCurrency } from "../../table/marcasVenta";
+import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
 
 interface ClienteAPI {
   nit: string;
@@ -31,7 +33,7 @@ export const ClientesTable: React.FC<{
   const [clientes, setClientes] = useState<ClienteAPI[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  const navigate = useNavigate();
   // Estados para filtros por columna
   const [filters, setFilters] = useState({
     nombre: "",
@@ -46,7 +48,7 @@ export const ClientesTable: React.FC<{
   const [page, setPage] = useState(1);
   const pageSize = 10;
 
-  const URL = `${import.meta.env.VITE_APP_GRAPH}visit/clientes/${vendedor}`;
+  const URL = `${import.meta.env.VITE_APP_GRAPH}visit/clientes/${vendedor}/${dayjs().startOf('year').format('YYYY-MM-DD')}/${dayjs().endOf('year').format('YYYY-MM-DD')}`;
 
   // Fetch
   const fetchClientes = async () => {
@@ -117,7 +119,9 @@ export const ClientesTable: React.FC<{
     const start = (page - 1) * pageSize;
     return filtered.slice(start, start + pageSize);
   }, [filtered, page]);
-
+  const onNavigate = (to: string) => {
+    navigate(to);
+  };
   if (loading) return <div className="p-4">Cargando clientes...</div>;
   if (error) return <div className="p-4 text-red-600">{error}</div>;
 
@@ -237,7 +241,8 @@ export const ClientesTable: React.FC<{
                   <td className="px-3 py-2">
                     <div className="flex gap-2">
                       {/* <button className="border px-3 py-1 rounded">Ver</button> */}
-                      <button className="bg-indigo-600 text-white px-3 py-1 rounded">
+                      <button className="bg-indigo-600 text-white px-3 py-1 rounded" 
+                        onClick={() => onNavigate(`/dashboard/bi-trabajador-client/${c.nit}`)}>
                         Ver
                       </button>
                     </div>
