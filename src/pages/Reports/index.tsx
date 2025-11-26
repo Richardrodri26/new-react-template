@@ -263,7 +263,7 @@ const ReportsPage: React.FC = () => {
             }`}
           >
             <Icon className="w-5 h-5" />
-            <span>{label}</span>
+            <span>{label.length > 5 ? label.slice(0,5) + '...' : label}</span>
           </button>
         ))}
       </div>
