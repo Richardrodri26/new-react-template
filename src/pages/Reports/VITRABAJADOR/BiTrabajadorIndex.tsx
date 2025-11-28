@@ -2,12 +2,13 @@
 import React, { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { DollarSign, Users, ClipboardList, MapPin, Eye, Download, RefreshCw } from "lucide-react";
-import { useFindStatisticStatusProyectQuery, useVentasPorVendedorQuery, useVisitasPorVendedorQuery, VentasPorVendedorQuery, VisitasPorVendedorQuery } from "@/domain/graphql";
+import { useFindStatisticStatusProyectQuery, usePresupuestoVentaPorUsuarioQuery, useVentasPorVendedorQuery, useVisitasPorVendedorQuery, VentasPorVendedorQuery, VisitasPorVendedorQuery } from "@/domain/graphql";
 import SalesByMonthChart from "./components/SalesByMonthChart";
 import axios from "axios";
 import VisitsYearChart from "./components/VisitsYearChart";
 import { ProjectStatusCards } from "./components/ProjectStatusCards";
 import { ClientesTable } from "./components/ClientesTable";
+import MonthlyTarget from "./components/PresupuestoTarget";
 
 /**
  * TIPOS
@@ -138,6 +139,14 @@ const ProfileMini: React.FC<{ trabajador: Trabajador; totalVendidoFormatted: str
  */
 export const BiTrabajadorIndex: React.FC = () => {
   const params = useParams<{ trabajadorId: string; clienteId: string; id: string }>();
+  if(!params.id) return null
+  const {data: dataUser, loading: loadingPuser} = usePresupuestoVentaPorUsuarioQuery({
+    variables: {
+      userId: params.id
+    }
+  })
+  const name = dataUser?.presupuestoVentaPorUsuario?.user?.fullName || ''
+
   // Por ahora uso mockData; aquí podrías fetch(`/api/trabajadores/${params.trabajadorId}`)
   const trabajador: Trabajador = sampleTrabajador;
   const { data, loading } = useVentasPorVendedorQuery({
@@ -159,17 +168,12 @@ export const BiTrabajadorIndex: React.FC = () => {
   // Datos derivados
   const totalVendidoFormatted = formatCurrency(data?.ventasPorVendedor.reduce((s, v) => s + v.venta, 0) || 0    );
 
-  const clientesPorVisita = useMemo(() => {
-    return trabajador.clientes.map(c => {
-      const visitas = c.visitasHistoricas.filter(v => v.conVisita).length;
-      return { id: c.id, nombre: c.nombre, visitas, cotizaciones: c.cotizaciones, proyectos: c.proyectos, visitasHistoricas: c.visitasHistoricas };
-    });
-  }, [trabajador.clientes]);
   const [clientesVisitados, setClientesVisitados] = useState<number>(0);
   const [clientesNoVisitados, setClientesNoVisitados] = useState<number>(0);
+  const [clienteConCotizacion, setClienteConCotizacion] = useState<number>(0);
   const [totalClientes, setTotalClientes] = useState<number>(0);
   const totalProyectos = dataProyect?.findStatisticStatusProyect?.reduce((s, p) => s + p.cantidad, 0) || 0;
-  const totalCotizaciones = trabajador.clientes.reduce((s, c) => s + c.cotizaciones, 0);
+  const [totalCotizaciones, setTotalCotizacion] = useState<number>(0)
 
   // Ventas por mes: si tu API trae series, reemplaza SalesByMonthChart para usar datos reales
   // Total visitas anual (sumado sobre clientes)
@@ -183,10 +187,10 @@ export const BiTrabajadorIndex: React.FC = () => {
         <div className="flex items-center justify-between p-6 border-b">
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xl font-bold">
-                {trabajador.nombre.charAt(0)}
+                {name.charAt(0)}
             </div>
             <div>
-              <h1 className="text-2xl font-semibold text-gray-900">{trabajador.nombre}</h1>
+              <h1 className="text-2xl font-semibold text-gray-900">{name}</h1>
               <p className="text-sm text-gray-500">
                 Todos los datos corresponde al año 
                 <span className="font-mono text-xs ml-2">{new Date().getFullYear()}</span>
@@ -231,7 +235,7 @@ export const BiTrabajadorIndex: React.FC = () => {
               {/* Right mini panel showing totals and actions */}
               <div className="space-y-4">
                 <div className="p-4 bg-white rounded-lg shadow-sm">
-                  <h4 className="text-sm font-medium text-gray-900 mb-2">Estado de visitas</h4>
+                  <h4 className="text-sm font-medium text-gray-900 mb-2">Datos generales</h4>
                   <div className="flex items-center justify-between">
                     <div className="text-xs text-gray-500">Clientes visitados</div>
                     <div className="text-sm font-semibold">{clientesVisitados}</div>
@@ -240,7 +244,10 @@ export const BiTrabajadorIndex: React.FC = () => {
                     <div className="text-xs text-gray-500">Clientes no visitados</div>
                     <div className="text-sm font-semibold">{clientesNoVisitados}</div>
                   </div>
-
+                  <div className="mt-2 flex items-center justify-between">
+                    <div className="text-xs text-gray-500">Clientes con cotización</div>
+                    <div className="text-sm font-semibold">{clienteConCotizacion}</div>
+                  </div>
                   <div className="mt-3 border-t pt-3">
                     <div className="text-xs text-gray-500">Visitas totales (año)</div>
                     <div className="text-lg font-semibold text-gray-900">{totalVisitasAno}</div>
@@ -284,6 +291,12 @@ export const BiTrabajadorIndex: React.FC = () => {
         </aside>
 
         </div>
+        <div>
+          <MonthlyTarget 
+            data={dataUser}
+            loading={loadingPuser}
+          />
+        </div>
       </div>
       {/* Tabla / lista de clientes */}
       <div className="w-full overflow-x-auto">
@@ -291,6 +304,8 @@ export const BiTrabajadorIndex: React.FC = () => {
         vendedor={params.trabajadorId || ''} 
         setClientesNoVisitados={setClientesNoVisitados}  setClientesVisitados={setClientesVisitados}
         setTotalClientes={setTotalClientes}
+        setTotalCotizacion={setTotalCotizacion}
+        setClientesConCotizacion={setClienteConCotizacion}
         />
       </div>
     </div>

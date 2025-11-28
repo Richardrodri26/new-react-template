@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, User2, Loader2, AlertTriangle } from "lucide-react";
+import { formatCurrency } from "../../table/marcasVenta";
 
 interface ClienteInfo {
   nit: string;
@@ -19,7 +20,8 @@ const ClienteInfoCard: React.FC<Props> = ({ nit }) => {
   const [data, setData] = useState<ClienteInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
+  const searchParams = new URLSearchParams(window.location.search);
+  const value = searchParams.get("value");
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -79,7 +81,7 @@ const ClienteInfoCard: React.FC<Props> = ({ nit }) => {
 
         <div>
           <h2 className="font-semibold text-gray-900 leading-tight">
-            {data.nombre}
+            {data.nombre} - {value ? formatCurrency(Number(value)) : '$0'}
           </h2>
           <p className="text-xs text-gray-500">NIT: {data.nit}</p>
         </div>

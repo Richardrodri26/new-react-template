@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import ListaClasesCliente from "./components/ClienteClaseCard";
 import ClienteInfoCard from "./components/ClienteInfoCard";
 import CotizacionTable from "./components/tableCotizacion";
+import { TargetInfoClientSeller } from "./components/TargetInfoClientSeller";
 
 const BiTrabajadorClientIndex = () => {
     const params = useParams<{ clienteId: string }>();
@@ -15,6 +16,7 @@ const BiTrabajadorClientIndex = () => {
     return (
         <div className="p-6 bg-gray-100 min-h-screen">
             <ClienteInfoCard nit={clienteId} /><br />
+            <TargetInfoClientSeller nit={clienteId} /> <br />
             <ListaClasesCliente id={clienteId} /> <br />
             <CotizacionTable nit={clienteId} />
         </div>

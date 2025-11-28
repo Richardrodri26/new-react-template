@@ -151,6 +151,7 @@ export type Client = {
   address?: Maybe<Scalars['String']>;
   celular: Scalars['String'];
   city?: Maybe<City>;
+  contact?: Maybe<Array<ClientContact>>;
   country?: Maybe<Country>;
   createdAt: Scalars['DateTime'];
   deletedAt?: Maybe<Scalars['DateTime']>;
@@ -2785,6 +2786,7 @@ export type PresupuestoVsVenta = {
   diaActual: Scalars['Int'];
   presupuestoActual: Scalars['Float'];
   presupuestoAnterior: Scalars['Float'];
+  user?: Maybe<User>;
   userId: Scalars['String'];
   ventaAcumuladaActual: Scalars['Float'];
   ventaAcumuladaAnterior: Scalars['Float'];
@@ -3030,6 +3032,7 @@ export type Query = {
   findAllVisitDashboard: VisitDashboardModel;
   findBundleInStop?: Maybe<WsBatch>;
   findOne: UserKey;
+  findOneClientNumberDocument?: Maybe<Client>;
   findOneFacturaClienteByCode: FindOneFacturaClienteByCode;
   findOneReferencia?: Maybe<FichaTecnica>;
   findSeachCotizacion: Scalars['Boolean'];
@@ -3508,6 +3511,11 @@ export type QueryFindAllPaymentArgs = {
 
 export type QueryFindOneArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryFindOneClientNumberDocumentArgs = {
+  nit: Scalars['String'];
 };
 
 
@@ -5452,6 +5460,13 @@ export type VisitComentsQueryVariables = Exact<{
 
 export type VisitComentsQuery = { __typename?: 'Query', visitComents: Array<{ __typename?: 'VisitComent', status?: VisitComentStatusEnum | null, type: VisitComentTypeEnum, id: string, description: string, createdAt: any, date?: any | null, user: { __typename?: 'User', name?: string | null }, visit: { __typename?: 'Visit', id: string, client: { __typename?: 'Client', name: string } } }> };
 
+export type FindOneClientNumberDocumentQueryVariables = Exact<{
+  nit: Scalars['String'];
+}>;
+
+
+export type FindOneClientNumberDocumentQuery = { __typename?: 'Query', findOneClientNumberDocument?: { __typename?: 'Client', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, numberDocument: string, email: string, telefono?: string | null, address?: string | null, descripcion?: string | null, type?: TypeClientEnum | null, vertical?: string | null, celular: string, contact?: Array<{ __typename?: 'ClientContact', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name: string, celular: string, email: string, position: string, telefono?: string | null }> | null } | null };
+
 export type ClientContactsQueryVariables = Exact<{
   orderBy?: InputMaybe<Array<FindClientContactOrderBy> | FindClientContactOrderBy>;
   pagination?: InputMaybe<Pagination>;
@@ -5674,6 +5689,13 @@ export type CreateAllPresupuestoToMonthMutationVariables = Exact<{ [key: string]
 
 export type CreateAllPresupuestoToMonthMutation = { __typename?: 'Mutation', createAllPresupuestoToMonth: boolean };
 
+export type PresupuestoVentaPorUsuarioQueryVariables = Exact<{
+  userId: Scalars['String'];
+}>;
+
+
+export type PresupuestoVentaPorUsuarioQuery = { __typename?: 'Query', presupuestoVentaPorUsuario?: { __typename?: 'PresupuestoVsVenta', userId: string, presupuestoActual: number, presupuestoAnterior: number, ventaAcumuladaActual: number, ventaHoyActual: number, ventaAcumuladaHastaHoy: number, diaActual: number, ventaAcumuladaAnterior: number, ventaMismoDiaAnterior: number, ventaAcumuladaHastaMismoDiaAnterior: number, cumplimientoHoyActual: number, cumplimientoAcumuladoHastaHoy: number, cumplimientoAcumuladoActual: number, comparacionVentaHoy: string, comparacionVentaAcumulada: string, comparacionCumplimientoHoy: string, comparacionCumplimientoAcumulado: string, user?: { __typename?: 'User', fullName: string } | null } | null };
+
 export type CreateProyectoMutationVariables = Exact<{
   createInput: CreateProyectosInput;
 }>;
@@ -5869,7 +5891,7 @@ export type UsersQueryVariables = Exact<{
 }>;
 
 
-export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name?: string | null, middleName?: string | null, lastName?: string | null, secondSurname?: string | null, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, dateIssue?: any | null, legalRepresentativeIdentificationType?: UserDocumentTypes | null, legalRepresentativeIdentificationNumber?: string | null, phoneCountryCode?: string | null, phoneNumber?: string | null, address?: string | null, hasRural?: boolean | null, confirmationCode?: string | null, position?: string | null, status: UserStatusTypes, phoneVerification: boolean, emailVerification: boolean, type: UserTypes, valueTransport?: number | null, typeWoker?: TypeWorker | null, fullName: string, subordinates?: Array<{ __typename?: 'User', id: string, fullName: string, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null }> | null, city?: { __typename?: 'City', id: string, name: string } | null, department?: { __typename?: 'Department', id: string, name: string } | null, country?: { __typename?: 'Country', id: string, name: string } | null, userRoles: Array<{ __typename?: 'Role', id: string, name: string }>, userRolesFx: Array<{ __typename?: 'RoleFx', id: string }> }>, usersCount: { __typename?: 'MetadataPagination', currentPage?: number | null, itemsPerPage?: number | null, totalItems?: number | null, totalPages?: number | null } };
+export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, createdAt: any, updatedAt: any, deletedAt?: any | null, name?: string | null, middleName?: string | null, lastName?: string | null, secondSurname?: string | null, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null, dateIssue?: any | null, legalRepresentativeIdentificationType?: UserDocumentTypes | null, legalRepresentativeIdentificationNumber?: string | null, phoneCountryCode?: string | null, phoneNumber?: string | null, address?: string | null, hasRural?: boolean | null, confirmationCode?: string | null, position?: string | null, status: UserStatusTypes, phoneVerification: boolean, emailVerification: boolean, type: UserTypes, valueTransport?: number | null, valueFreelance?: number | null, valueMinVisit?: number | null, typeWoker?: TypeWorker | null, fullName: string, subordinates?: Array<{ __typename?: 'User', id: string, fullName: string, email: string, identificationType?: UserDocumentTypes | null, identificationNumber?: string | null }> | null, city?: { __typename?: 'City', id: string, name: string } | null, department?: { __typename?: 'Department', id: string, name: string } | null, country?: { __typename?: 'Country', id: string, name: string } | null, userRoles: Array<{ __typename?: 'Role', id: string, name: string }>, userRolesFx: Array<{ __typename?: 'RoleFx', id: string }> }>, usersCount: { __typename?: 'MetadataPagination', currentPage?: number | null, itemsPerPage?: number | null, totalItems?: number | null, totalPages?: number | null } };
 
 export type CreateUserMutationVariables = Exact<{
   createInput: CreateUserInput;
@@ -6579,6 +6601,64 @@ export function useVisitComentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type VisitComentsQueryHookResult = ReturnType<typeof useVisitComentsQuery>;
 export type VisitComentsLazyQueryHookResult = ReturnType<typeof useVisitComentsLazyQuery>;
 export type VisitComentsQueryResult = Apollo.QueryResult<VisitComentsQuery, VisitComentsQueryVariables>;
+export const FindOneClientNumberDocumentDocument = gql`
+    query FindOneClientNumberDocument($nit: String!) {
+  findOneClientNumberDocument(nit: $nit) {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    name
+    numberDocument
+    email
+    telefono
+    address
+    descripcion
+    type
+    vertical
+    celular
+    contact {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      name
+      celular
+      email
+      position
+      telefono
+    }
+  }
+}
+    `;
+
+/**
+ * __useFindOneClientNumberDocumentQuery__
+ *
+ * To run a query within a React component, call `useFindOneClientNumberDocumentQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindOneClientNumberDocumentQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindOneClientNumberDocumentQuery({
+ *   variables: {
+ *      nit: // value for 'nit'
+ *   },
+ * });
+ */
+export function useFindOneClientNumberDocumentQuery(baseOptions: Apollo.QueryHookOptions<FindOneClientNumberDocumentQuery, FindOneClientNumberDocumentQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindOneClientNumberDocumentQuery, FindOneClientNumberDocumentQueryVariables>(FindOneClientNumberDocumentDocument, options);
+      }
+export function useFindOneClientNumberDocumentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindOneClientNumberDocumentQuery, FindOneClientNumberDocumentQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindOneClientNumberDocumentQuery, FindOneClientNumberDocumentQueryVariables>(FindOneClientNumberDocumentDocument, options);
+        }
+export type FindOneClientNumberDocumentQueryHookResult = ReturnType<typeof useFindOneClientNumberDocumentQuery>;
+export type FindOneClientNumberDocumentLazyQueryHookResult = ReturnType<typeof useFindOneClientNumberDocumentLazyQuery>;
+export type FindOneClientNumberDocumentQueryResult = Apollo.QueryResult<FindOneClientNumberDocumentQuery, FindOneClientNumberDocumentQueryVariables>;
 export const ClientContactsDocument = gql`
     query ClientContacts($orderBy: [FindClientContactOrderBy!], $pagination: Pagination, $where: FindClientContactWhere) {
   clientContacts(orderBy: $orderBy, pagination: $pagination, where: $where) {
@@ -7887,6 +7967,60 @@ export function useCreateAllPresupuestoToMonthMutation(baseOptions?: Apollo.Muta
 export type CreateAllPresupuestoToMonthMutationHookResult = ReturnType<typeof useCreateAllPresupuestoToMonthMutation>;
 export type CreateAllPresupuestoToMonthMutationResult = Apollo.MutationResult<CreateAllPresupuestoToMonthMutation>;
 export type CreateAllPresupuestoToMonthMutationOptions = Apollo.BaseMutationOptions<CreateAllPresupuestoToMonthMutation, CreateAllPresupuestoToMonthMutationVariables>;
+export const PresupuestoVentaPorUsuarioDocument = gql`
+    query PresupuestoVentaPorUsuario($userId: String!) {
+  presupuestoVentaPorUsuario(userId: $userId) {
+    userId
+    presupuestoActual
+    presupuestoAnterior
+    ventaAcumuladaActual
+    ventaHoyActual
+    ventaAcumuladaHastaHoy
+    diaActual
+    ventaAcumuladaAnterior
+    ventaMismoDiaAnterior
+    ventaAcumuladaHastaMismoDiaAnterior
+    cumplimientoHoyActual
+    cumplimientoAcumuladoHastaHoy
+    cumplimientoAcumuladoActual
+    comparacionVentaHoy
+    comparacionVentaAcumulada
+    comparacionCumplimientoHoy
+    comparacionCumplimientoAcumulado
+    user {
+      fullName
+    }
+  }
+}
+    `;
+
+/**
+ * __usePresupuestoVentaPorUsuarioQuery__
+ *
+ * To run a query within a React component, call `usePresupuestoVentaPorUsuarioQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePresupuestoVentaPorUsuarioQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePresupuestoVentaPorUsuarioQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function usePresupuestoVentaPorUsuarioQuery(baseOptions: Apollo.QueryHookOptions<PresupuestoVentaPorUsuarioQuery, PresupuestoVentaPorUsuarioQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PresupuestoVentaPorUsuarioQuery, PresupuestoVentaPorUsuarioQueryVariables>(PresupuestoVentaPorUsuarioDocument, options);
+      }
+export function usePresupuestoVentaPorUsuarioLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PresupuestoVentaPorUsuarioQuery, PresupuestoVentaPorUsuarioQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PresupuestoVentaPorUsuarioQuery, PresupuestoVentaPorUsuarioQueryVariables>(PresupuestoVentaPorUsuarioDocument, options);
+        }
+export type PresupuestoVentaPorUsuarioQueryHookResult = ReturnType<typeof usePresupuestoVentaPorUsuarioQuery>;
+export type PresupuestoVentaPorUsuarioLazyQueryHookResult = ReturnType<typeof usePresupuestoVentaPorUsuarioLazyQuery>;
+export type PresupuestoVentaPorUsuarioQueryResult = Apollo.QueryResult<PresupuestoVentaPorUsuarioQuery, PresupuestoVentaPorUsuarioQueryVariables>;
 export const CreateProyectoDocument = gql`
     mutation CreateProyecto($createInput: CreateProyectosInput!) {
   createProyecto(createInput: $createInput) {
@@ -9517,6 +9651,8 @@ export const UsersDocument = gql`
     emailVerification
     type
     valueTransport
+    valueFreelance
+    valueMinVisit
     typeWoker
     subordinates {
       id

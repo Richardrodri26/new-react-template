@@ -38,3 +38,28 @@ query Presupuestos($orderBy: [FindPresupuestoOrderBy!], $where: FindPresupuestoW
 mutation CreateAllPresupuestoToMonth {
   createAllPresupuestoToMonth
 }
+
+query PresupuestoVentaPorUsuario($userId: String!) {
+  presupuestoVentaPorUsuario(userId: $userId) {
+    userId
+    presupuestoActual
+    presupuestoAnterior
+    ventaAcumuladaActual
+    ventaHoyActual
+    ventaAcumuladaHastaHoy
+    diaActual
+    ventaAcumuladaAnterior
+    ventaMismoDiaAnterior
+    ventaAcumuladaHastaMismoDiaAnterior
+    cumplimientoHoyActual
+    cumplimientoAcumuladoHastaHoy
+    cumplimientoAcumuladoActual
+    comparacionVentaHoy
+    comparacionVentaAcumulada
+    comparacionCumplimientoHoy
+    comparacionCumplimientoAcumulado
+    user {
+      fullName
+    }
+  }
+}

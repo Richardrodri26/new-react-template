@@ -6,6 +6,7 @@ import { appRouter } from './router'
 import { ApolloProvider } from '@apollo/client';
 import { AlertRoot } from './composables/AlertRoot'
 import { Toaster } from './components/ui/sonner'
+import ScrollToTop from './components/Utils/ScrollToTop'
 
 
 function App() {
@@ -14,7 +15,6 @@ function App() {
     <>
       <QueryClientProvider client={queryClient}>
         <ApolloProvider client={apolloClient}>
-
           <RouterProvider router={appRouter} />
           <AlertRoot />
           <Toaster richColors theme='light' />

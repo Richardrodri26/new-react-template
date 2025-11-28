@@ -29,7 +29,9 @@ export const ClientesTable: React.FC<{
   setClientesVisitados?: (count: number) => void;
   setClientesNoVisitados?: (count: number) => void;
   setTotalClientes?: (count: number) => void;
-}> = ({ vendedor, setClientesNoVisitados, setClientesVisitados, setTotalClientes }) => {
+  setTotalCotizacion?: (count: number) => void;
+  setClientesConCotizacion?: (count: number) => void;
+}> = ({ vendedor, setClientesNoVisitados, setClientesVisitados, setTotalClientes, setTotalCotizacion, setClientesConCotizacion }) => {
   const [clientes, setClientes] = useState<ClienteAPI[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -58,7 +60,12 @@ export const ClientesTable: React.FC<{
       setClientes(data);
       setClientesVisitados && setClientesVisitados(data.filter(c => c.visitado).length);
       setClientesNoVisitados && setClientesNoVisitados(data.filter(c => !c.visitado).length);
+      setClientesConCotizacion && setClientesConCotizacion(data.filter(c => c.cantidad_cotizaciones).length);
       setTotalClientes && setTotalClientes(data.length);
+      if(setTotalCotizacion){
+        const totalCotizaciones = data.reduce((s, v) => s + v.cantidad_cotizaciones, 0) || 0
+        setTotalCotizacion(totalCotizaciones)
+      }
     } catch (err) {
       setError("Error al cargar los clientes.");
       console.error(err);
@@ -242,7 +249,7 @@ export const ClientesTable: React.FC<{
                     <div className="flex gap-2">
                       {/* <button className="border px-3 py-1 rounded">Ver</button> */}
                       <button className="bg-indigo-600 text-white px-3 py-1 rounded" 
-                        onClick={() => onNavigate(`/dashboard/bi-trabajador-client/${c.nit}`)}>
+                        onClick={() => onNavigate(`/dashboard/bi-trabajador-client/${c.nit}?value=${c.valor_facturado}`)}>
                         Ver
                       </button>
                     </div>
