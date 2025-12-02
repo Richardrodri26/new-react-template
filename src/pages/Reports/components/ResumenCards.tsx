@@ -5,12 +5,12 @@ import "dayjs/locale/es";
 import { formatCurrency } from "../table/marcasVenta";
 import { useFindAllFacturaClienteQuery } from "@/domain/graphql";
 interface ResumenCardsProps {
-  utilidad: number;
+  ventasHoy?: number;
 }
 // API Base
 const API_BASE_URL = `${import.meta.env.VITE_APP_GRAPH}fletes/ventasAgrupadasXmes`;
 
-const ResumenCards:  React.FC<ResumenCardsProps> = () => {
+const ResumenCards:  React.FC<ResumenCardsProps> = ({ventasHoy = 0}) => {
   const [precioDolar, setPrecioDolar] = useState<number | null>(null);
   const [totalVentas, setTotalVentas] = useState<number | null>(null);
   const [totalVentasTienda, setTotalVentasTienda] = useState<number | null>(null);
@@ -79,7 +79,7 @@ const ResumenCards:  React.FC<ResumenCardsProps> = () => {
   // }, [refetch]);
   
   return (
-    <div className="grid grid-cols-1 md:grid-cols-5 gap-4 p-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-6">
       {/* Card 1: Precio del Dólar */}
       <div className="bg-white p-4 rounded-xl shadow flex items-center">
         <DollarSign className="text-blue-500 w-10 h-10 mr-4" />
@@ -97,7 +97,13 @@ const ResumenCards:  React.FC<ResumenCardsProps> = () => {
           <p className="text-xl font-bold">{dayjs().locale("es").format("dddd, D [de] MMMM YYYY")}</p>
         </div>
       </div>
-
+      <div className="bg-white p-4 rounded-xl shadow flex items-center">
+        <ShoppingCart className="text-yellow-500 w-10 h-10 mr-4" />
+        <div>
+          <h3 className="text-gray-600 text-sm">Ventas de hoy</h3>
+          <p className="text-xl font-bold">{formatCurrency(+ventasHoy)}</p>
+        </div>
+      </div>
       {/* Card 3: Total Ventas del Mes */}
       <div className="bg-white p-4 rounded-xl shadow flex items-center">
         <ShoppingCart className="text-yellow-500 w-10 h-10 mr-4" />

@@ -246,11 +246,24 @@ const ReportsPage: React.FC = () => {
     { id: "iva", label: "BI.", icon: Brain},
     { id: "viTrabajador", label: "BI TRABAJADOR.", icon: PersonStandingIcon},
   ];
+
+  const [ventasHoy, setVentasHoy] = useState(0);
+  const ventasHoyQuery = async () => {
+    const mesActual = new Date().getMonth() + 1; // Mes actual (1-12)
+    const diaActual = new Date().getDate(); // Dia actual (1-31)
+    const url = `${import.meta.env.VITE_APP_GRAPH}ventas/obtenerVentasDiariasGeneral/${mesActual}`;
+    const response = await axios.get(url);
+    setVentasHoy(response.data.find((item: any) => item.dia == diaActual)?.venta);
+  }
+  useEffect(() => {
+    ventasHoyQuery();
+  }, []);
+
   
   return (
     <>
       <ReportsHeader/>
-      <ResumenCards utilidad={utilidad} />
+      <ResumenCards ventasHoy={ventasHoy} />
       <div className="flex items-end gap-1 bg-gray-100 p-1 rounded-t-lg">
         {tabs.map(({ id, label, icon: Icon }) => (
           <button
