@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/es";
 import { formatCurrency } from "../table/marcasVenta";
 import { useFindAllFacturaClienteQuery } from "@/domain/graphql";
+import { useNavigate } from "react-router-dom";
 interface ResumenCardsProps {
   ventasHoy?: number;
 }
@@ -11,6 +12,7 @@ interface ResumenCardsProps {
 const API_BASE_URL = `${import.meta.env.VITE_APP_GRAPH}fletes/ventasAgrupadasXmes`;
 
 const ResumenCards:  React.FC<ResumenCardsProps> = ({ventasHoy = 0}) => {
+  const navigate = useNavigate();
   const [precioDolar, setPrecioDolar] = useState<number | null>(null);
   const [totalVentas, setTotalVentas] = useState<number | null>(null);
   const [totalVentasTienda, setTotalVentasTienda] = useState<number | null>(null);
@@ -77,7 +79,11 @@ const ResumenCards:  React.FC<ResumenCardsProps> = ({ventasHoy = 0}) => {
   
   //   return () => clearInterval(interval); // Limpieza del intervalo
   // }, [refetch]);
-  
+  const onClickNav = () => {
+    const fechaInicio = dayjs().startOf('date').format('YYYY-MM-DD');
+    const fechaFin = dayjs().endOf('date').format('YYYY-MM-DD');
+    navigate(`/dashboard/fletes?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`);
+  }
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-6">
       {/* Card 1: Precio del Dólar */}
@@ -97,7 +103,7 @@ const ResumenCards:  React.FC<ResumenCardsProps> = ({ventasHoy = 0}) => {
           <p className="text-xl font-bold">{dayjs().locale("es").format("dddd, D [de] MMMM YYYY")}</p>
         </div>
       </div>
-      <div className="bg-white p-4 rounded-xl shadow flex items-center">
+      <div className="bg-white p-4 rounded-xl shadow flex items-center cursor-pointer" onClick={onClickNav}>
         <ShoppingCart className="text-yellow-500 w-10 h-10 mr-4" />
         <div>
           <h3 className="text-gray-600 text-sm">Ventas de hoy</h3>

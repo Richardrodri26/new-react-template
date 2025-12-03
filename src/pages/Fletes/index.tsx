@@ -22,6 +22,8 @@ import {
   BackpackIcon,
   Backpack,
   Expand,
+  DockIcon,
+  Edit,
 } from "lucide-react";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "@/components/ui/modal";
 import { FletesWithDocument, FindOneFacturaClienteByCode, Fletes, useCreateFletesMutation, useFindAllFacturaClienteQuery, useFindOneFacturaClienteByCodeLazyQuery, useUpdateFletesMutation } from "@/domain/graphql";
@@ -31,6 +33,7 @@ import { ToastyErrorGraph } from "@/lib/utils";
 import { Select } from "@/components/ui/select";
 import SelectInput from "@mui/material/Select/SelectInput";
 import { number } from "yup";
+import { ModalDetalleFactura } from "./admin/ModalDetailsFactura";
 
 interface Factura {
   id: string;
@@ -67,8 +70,14 @@ const convertirACantidad = (str: string)  =>{
 }
 
 export const FletesPage: React.FC = () => {
+  const params = new URLSearchParams(window.location.search);
+
+  const fechaInicioParams = params.get("fechaInicio");
+  const fechaFinParams = params.get("fechaFin");
   const [facturaSeleccionada, setFacturaSeleccionada] = useState<FletesWithDocument | null>(null);
+  const [facturaNumber, setFacturaNumber] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [isDetalleOpen, setIsDetalleOpen] = useState(false);
   const [refetchLoading, setrefetchLoading] = useState(false);
   const [formData, setFormData] = useState({
     valueFlete: 0,
@@ -84,13 +93,13 @@ export const FletesPage: React.FC = () => {
   });
   const [filtro, setFiltro] = useState<string>("");
   const [filtroSeleccionado, setFiltroSeleccionado] = useState(""); // Para el select
-  const [fechaInicio, setFechaInicio] = useState(dayjs().startOf('month').format('YYYY-MM-DD'));
-  const [fechaFin, setFechaFin] = useState(dayjs().endOf('month').format('YYYY-MM-DD'));
+  const [fechaInicio, setFechaInicio] = useState(fechaInicioParams ? fechaInicioParams : dayjs().startOf('month').format('YYYY-MM-DD'));
+  const [fechaFin, setFechaFin] = useState(fechaFinParams ? fechaFinParams : dayjs().endOf('month').format('YYYY-MM-DD'));
   const [dataFletes, setDataFletes] = useState<FindOneFacturaClienteByCode | undefined>(undefined); // Estado para el costo de envío
   const {data, loading, refetch} = useFindAllFacturaClienteQuery({
     variables: {
       input: {
-        tem_fecha_desde: fechaInicio,
+        tem_fecha_desde:  fechaInicio,
         tem_fecha_hasta: fechaFin
       }
     }
@@ -245,6 +254,11 @@ export const FletesPage: React.FC = () => {
       [field]: e.target.value,
     }));
   };
+  const handleOpenDetalle = (factura: string) => {
+    setFacturaNumber(factura);
+    setIsDetalleOpen(true);
+  };
+
   const temValcos = Number(facturaSeleccionada?.TEM_VALCOS);
   const oip = Number(formData.oip);
   const backComision = Number(formData.backComision);
@@ -339,6 +353,13 @@ export const FletesPage: React.FC = () => {
             </span>
         </p>
 
+        {/* total ventas */}
+        <p className="text-lg font-semibold text-gray-700">
+            Total de ventas: 
+            <span className="text-blue-600 font-bold">
+               {formatCurrency(data?.findAllFacturaCliente?.reduce((s, v) => s + Number(v.TEM_VENTA), 0) || 0)}
+            </span>
+        </p><br />
         {/* Listado de Facturas */}
         <div className="grid grid-cols-1 gap-4">
           
@@ -351,13 +372,28 @@ export const FletesPage: React.FC = () => {
             <div
               key={factura.TEM_NUMDOC}
               className="bg-white p-6 rounded-lg shadow-lg relative transition-transform transform hover:scale-105 hover:z-10"
-            >
-              <button
-                onClick={() => handleOpenModal(factura)}
-                className="absolute top-4 right-4 bg-blue-600 text-white p-2 rounded-full"
-              >
-                <Eye size={20} />
-              </button>
+                          >
+              <div className="absolute top-4 right-4 flex gap-3">
+                {/* Botón actualizar */}
+                <button
+                  title="Actualizar Costo de Envío"
+                  onClick={() => handleOpenModal(factura)}
+                  className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition"
+                >
+                  <Edit size={20} />
+                </button>
+
+                {/* Botón detalle */}
+                <button
+                  title="Ver detalle de la factura"
+                  onClick={() => handleOpenDetalle(factura.TEM_NUMDOC || '')}
+                  className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition"
+                >
+                  <Eye size={20} />
+                </button>
+              </div>
+
+
               <h2 className="text-xl font-semibold mb-4">{factura.TEM_PREFIJ + '-' +  factura.TEM_NUMDOC}</h2>
               <h3 className="text-xl font-semibold mb-4">{!!factura?.valueFlete ? 'SI TIENE' : 'NO TIENE'}</h3>
               
@@ -406,6 +442,12 @@ export const FletesPage: React.FC = () => {
             </div>
           ))}
         </div>
+        <ModalDetalleFactura
+          isOpen={isDetalleOpen}
+          onClose={() => setIsDetalleOpen(false)}
+          factura={facturaNumber}
+        />
+
         <Modal isOpen={isOpen} onClose={handleClose}>
           <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-500 bg-opacity-50">
             <div className="w-11/12 max-w-4xl h-3/4 bg-white shadow-lg rounded-lg overflow-y-auto">

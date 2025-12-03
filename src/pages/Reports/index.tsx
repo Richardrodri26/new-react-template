@@ -23,6 +23,7 @@ import FacturasTable from './table/comisionTotal';
 import Contabilidad from '../excel';
 import TaskTableWorker from './table/taskTable';
 import { ViTrabajador } from './VITRABAJADOR';
+import { BotonDescargarExcel } from '@/components/Form/ButtonDescargarExcel';
 
 const ReportsPage: React.FC = () => {
   const [visitData, setVisitData] = useState([]);
@@ -264,6 +265,9 @@ const ReportsPage: React.FC = () => {
     <>
       <ReportsHeader/>
       <ResumenCards ventasHoy={ventasHoy} />
+      <div className="flex items-center justify-start gap-2 mt-4">
+        <BotonDescargarExcel />
+      </div>
       <div className="flex items-end gap-1 bg-gray-100 p-1 rounded-t-lg">
         {tabs.map(({ id, label, icon: Icon }) => (
           <button
