@@ -1,8 +1,4 @@
-import {
-  X,
-  Package,
-  Hash,
-} from "lucide-react";
+import { X, Package, Hash } from "lucide-react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { formatCurrency } from "@/pages/Reports/table/marcasVenta";
@@ -20,11 +16,10 @@ interface VentaDetalle {
   stock: number;
 }
 
-const truncateDescription = (text: string, maxWords = 30) => {
-  const words = text.split(" ");
-  return text.length > maxWords
-    ? text.slice(0, maxWords) + "..."
-    : text;
+// 🔹 Truncar descripción a máximo 30 caracteres
+const truncateText = (text: string, max = 30) => {
+  if (!text) return "";
+  return text.length > max ? text.slice(0, max) + "..." : text;
 };
 
 export const ModalDetalleFactura = ({
@@ -63,78 +58,76 @@ export const ModalDetalleFactura = ({
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[999]">
-      <div className="bg-white shadow-xl w-[90%] max-w-4xl rounded-xl overflow-hidden animate-fadeIn">
+      <div className="bg-white shadow-xl w-[90%] max-w-5xl rounded-xl overflow-hidden animate-fadeIn">
 
         {/* HEADER */}
-        <div className="flex justify-between items-center px-5 py-4 border-b bg-blue-600 text-white">
-          <h2 className="text-xl font-bold flex items-center gap-2">
-            <Package size={22} /> Detalle de Factura
+        <div className="flex justify-between items-center px-5 py-3 border-b bg-blue-600 text-white">
+          <h2 className="text-lg font-bold flex items-center gap-2">
+            <Package size={20} /> Detalle de Factura
           </h2>
           <button onClick={onClose}>
-            <X size={26} className="hover:text-gray-200" />
+            <X size={24} className="hover:text-gray-200" />
           </button>
         </div>
 
         {/* BODY */}
-        <div className="p-6 max-h-[70vh] overflow-y-auto">
+        <div className="p-4 max-h-[70vh] overflow-y-auto text-sm">
 
           {loading ? (
-            <p className="text-center text-gray-500 py-4">Cargando detalles...</p>
+            <p className="text-center text-gray-500 py-3">Cargando detalles...</p>
           ) : detalle.length === 0 ? (
-            <p className="text-center text-gray-500 py-4">No hay detalle disponible.</p>
+            <p className="text-center text-gray-500 py-3">No hay detalle disponible.</p>
           ) : (
-            <div className="space-y-3">
-              {detalle.map((item, idx) => (
-                <div
-                  key={idx}
-                  className="flex items-center justify-between gap-4 border p-3 rounded-lg shadow-sm hover:shadow-md transition bg-gray-50"
-                >
-                  {/* IZQUIERDA: referencia + descripción */}
-                  <div className="w-2/5">
-                    <div className="font-semibold flex items-center gap-2 text-blue-600">
-                      <Hash size={18} /> {item.referencia}
-                    </div>
-                    <p className="text-gray-700 text-sm">
-                      {truncateDescription(item.nombre_referencia, 30)}
-                    </p>
-                  </div>
+            <div className="overflow-x-auto">
+              <table className="min-w-full border border-gray-200 rounded-lg overflow-hidden">
+                <thead className="bg-gray-100 text-gray-700 text-left">
+                  <tr>
+                    <th className="p-2 border">Ref</th>
+                    <th className="p-2 border">Descripción</th>
+                    <th className="p-2 border text-center">Cant.</th>
+                    <th className="p-2 border text-center">Valor</th>
+                    <th className="p-2 border text-center">Costo</th>
+                    <th className="p-2 border text-center">Stock</th>
+                  </tr>
+                </thead>
 
-                  {/* DERECHA: datos en una línea */}
-                  <div className="flex-1 grid grid-cols-4 gap-4 text-sm">
+                <tbody>
+                  {detalle.map((item, idx) => (
+                    <tr
+                      key={idx}
+                      className="hover:bg-gray-50 transition"
+                    >
+                      <td className="p-2 border font-semibold text-blue-700 flex items-center gap-1">
+                        <Hash size={14} />
+                        {item.referencia}
+                      </td>
 
-                    <div className="flex flex-col">
-                      <span className="font-semibold text-gray-800">Cant.</span>
-                      <span className="text-gray-700">{item.cantidad}</span>
-                    </div>
+                      <td className="p-2 border text-gray-700">
+                        {truncateText(item.nombre_referencia, 30)}
+                      </td>
 
-                    <div className="flex flex-col">
-                      <span className="font-semibold text-gray-800">Valor</span>
-                      <span className="text-gray-700">
+                      <td className="p-2 border text-center">{item.cantidad}</td>
+
+                      <td className="p-2 border text-center">
                         {formatCurrency(item.valor)}
-                      </span>
-                    </div>
+                      </td>
 
-                    <div className="flex flex-col">
-                      <span className="font-semibold text-gray-800">Stock</span>
-                      <span className="text-gray-700">{item.stock}</span>
-                    </div>
-
-                    <div className="flex flex-col">
-                      <span className="font-semibold text-gray-800">Costo</span>
-                      <span className="text-gray-700">
+                      <td className="p-2 border text-center">
                         {formatCurrency(item.costo)}
-                      </span>
-                    </div>
+                      </td>
 
-                  </div>
-                </div>
-              ))}
+                      <td className="p-2 border text-center">{item.stock}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
+
         </div>
 
         {/* FOOTER */}
-        <div className="px-6 py-4 border-t bg-gray-50 flex justify-end gap-3">
+        <div className="px-5 py-3 border-t bg-gray-50 flex justify-end">
           <button
             onClick={onClose}
             className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
@@ -142,6 +135,7 @@ export const ModalDetalleFactura = ({
             Cerrar
           </button>
         </div>
+
       </div>
     </div>
   );

@@ -213,10 +213,10 @@ const ReportsPage: React.FC = () => {
       </>
     )
   }
-  const AnaliticaTabs = () => {
+  const AnaliticaTabs = ({ventasDiariasMes}: {ventasDiariasMes: any[]}) => {
     return (
       <>
-       <VentasCharts/>
+       <VentasCharts ventasDiariasMes={ventasDiariasMes}/>
       </>
     )
   }
@@ -249,12 +249,14 @@ const ReportsPage: React.FC = () => {
   ];
 
   const [ventasHoy, setVentasHoy] = useState(0);
+  const [ventasDiariasMes, setVentasDiariasMes] = useState<any[]>([]);
   const ventasHoyQuery = async () => {
     const mesActual = new Date().getMonth() + 1; // Mes actual (1-12)
     const diaActual = new Date().getDate(); // Dia actual (1-31)
     const url = `${import.meta.env.VITE_APP_GRAPH}ventas/obtenerVentasDiariasGeneral/${mesActual}`;
     const response = await axios.get(url);
     setVentasHoy(response.data.find((item: any) => item.dia == diaActual)?.venta);
+    setVentasDiariasMes(response.data);
   }
   useEffect(() => {
     ventasHoyQuery();
@@ -287,7 +289,7 @@ const ReportsPage: React.FC = () => {
       {activeTab === "progress" && <FacturasTable />}
       {activeTab === "seller" && <SellerTabas />}
       {activeTab === "brands" && <VentasXmarcasTabs/>}
-      {activeTab === "statisc" && <AnaliticaTabs/>}
+      {activeTab === "statisc" && <AnaliticaTabs  ventasDiariasMes={ventasDiariasMes}/>}
       {activeTab === "zona" && <EstadisticasVentas/>}
       {activeTab === "iva" && <IvaIdealBiMestre/>}
       {activeTab === "viTrabajador" && <ViTrabajador/>}

@@ -28,8 +28,16 @@ ChartJS.register(
 );
 
 const API_BASE_URL = `${import.meta.env.VITE_APP_MICRO_GRAPH}ventas`;
-
-const VentasCharts: React.FC = () => {
+// interface 
+interface VentasDiarias {
+  dia: number;
+  mes: number;
+  venta: number;
+  costo: number;
+  utilidad: number;
+  utilidad_porcentaje: number;
+}
+const VentasCharts = ({ventasDiariasMes}: {ventasDiariasMes: VentasDiarias[]}) => {
   const [ventasAnterioresMismoMes, setVentasAnterioresMismoMes] = useState<
     { ANO: string; TOTAL: number }[]
   >([]);
@@ -54,7 +62,6 @@ const VentasCharts: React.FC = () => {
   const [topClientes, setTopClientes] = useState<
     { nit: string; nombre_cliente: string; total: string; venta: string }[]
   >([]);
-
   // Obtener datos de la API
   useEffect(() => {
     const fetchData = async () => {
@@ -129,6 +136,16 @@ const VentasCharts: React.FC = () => {
       },
     ],
   };
+  const dataMes = {
+    labels: ventasDiariasMes.map((v) => `(${v.dia})`),
+    datasets: [
+      {
+        label: "Ventas Mes",
+        data: ventasDiariasMes.map((v) => (v.venta)),
+        backgroundColor: "rgba(255, 99, 132, 0.5)",
+      },
+    ],
+  };
 
   const options = {
     responsive: true,
@@ -177,6 +194,24 @@ const VentasCharts: React.FC = () => {
     },
   };
 
+  const dataMesOptions = {
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: function (tooltipItem: any) {
+            const venta = ventasDiariasMes[tooltipItem.dataIndex].venta;
+            return `Venta: ${formatCurrency(+venta)}`;
+          },
+        },
+      },
+    },
+    scales: {
+      x: {
+        display: false, // 👈 Oculta las etiquetas del eje X
+      },
+    },
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
       {/* Gráfico 1: Ventas Años Anteriores (Mismo Mes) */}
@@ -201,7 +236,11 @@ const VentasCharts: React.FC = () => {
         <h2 className="text-lg font-bold text-center mb-3">Top 20 Clientes por Venta</h2>
         <Bar data={dataTopClientes} options={optionsTopClientes} />
       </div>
-
+      {/* Gráfico 5: Ventas Mes */}
+      <div className="bg-white p-4 rounded-xl shadow">
+        <h2 className="text-lg font-bold text-center mb-3">Ventas Mes</h2>
+        <Bar data={dataMes} options={dataMesOptions} />
+      </div>
     </div>
   );
 };
