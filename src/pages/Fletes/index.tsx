@@ -1,20 +1,15 @@
+// --- INICIO DEL CÓDIGO (TODO IGUAL, SOLO AGREGO ORDENACIÓN) ---
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { toast } from "sonner";
 import {
   Search,
-  Calendar,
-  User,
-  Clipboard,
-  DollarSign,
-  Percent,
   Eye,
   Edit,
 } from "lucide-react";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "@/components/ui/modal";
 import {
   FletesWithDocument,
-  FindOneFacturaClienteByCode,
   useCreateFletesMutation,
   useFindAllFacturaClienteQuery,
   useFindOneFacturaClienteByCodeLazyQuery,
@@ -23,7 +18,7 @@ import {
 import { Loader } from "../Commissions";
 import { ToastyErrorGraph } from "@/lib/utils";
 import { ModalDetalleFactura } from "./admin/ModalDetailsFactura";
-
+import VentasItemPage from "./admin/VentasItemPage";
 
 const formatCurrency = (amount: number | string | null | undefined): string => {
   if (!amount) return "0";
@@ -33,7 +28,6 @@ const formatCurrency = (amount: number | string | null | undefined): string => {
     currency: "COP",
   }).format(numericAmount);
 };
-
 
 export const FletesPage: React.FC = () => {
   const params = new URLSearchParams(window.location.search);
@@ -219,19 +213,62 @@ export const FletesPage: React.FC = () => {
     setIsDetalleOpen(true);
   };
 
+  // -----------------------------------------------------------
+  // ORDENACIÓN (NUEVO)
+  // -----------------------------------------------------------
+  const [sortConfig, setSortConfig] = useState<{ key: string; direction: "asc" | "desc" }>({
+    key: "",
+    direction: "asc",
+  });
+
+  const handleSort = (key: string) => {
+    setSortConfig(prev => ({
+      key,
+      direction: prev.key === key && prev.direction === "asc" ? "desc" : "asc",
+    }));
+  };
+
+  const registros = data?.findAllFacturaCliente || [];
+
+  const sortedRegistros = React.useMemo(() => {
+    let sorted = [...registros];
+    if (sortConfig.key) {
+      sorted.sort((a: any, b: any) => {
+        const x = a[sortConfig.key];
+        const y = b[sortConfig.key];
+        if (x < y) return sortConfig.direction === "asc" ? -1 : 1;
+        if (x > y) return sortConfig.direction === "asc" ? 1 : -1;
+        return 0;
+      });
+    }
+    return sorted;
+  }, [registros, sortConfig]);
+
+  // -----------------------------------------------------------
+  // PAGINACIÓN CLIENTE
+  // -----------------------------------------------------------
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+
+  const totalRegistros = sortedRegistros.length;
+  const totalPaginas = Math.ceil(totalRegistros / limit);
+
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
+
+  const dataPaginada = sortedRegistros.slice(startIndex, endIndex);
+  // -----------------------------------------------------------
 
   return (
     <div className="w-full min-h-screen bg-gray-100 p-4">
       <div className="w-full mx-auto">
 
-        {/* ---------------- HEADER MINIMALISTA ---------------- */}
+        {/* HEADER */}
         <div className="flex flex-col gap-4 mb-4">
-
           <div className="flex items-center justify-between">
             <h1 className="text-xl font-semibold text-gray-700">Gestión de facturacción</h1>
           </div>
 
-          {/* BARRA DE FILTROS */}
           <div className="flex flex-wrap gap-3 items-end bg-white p-3 rounded-lg shadow-sm border">
 
             <div className="flex flex-col">
@@ -281,15 +318,31 @@ export const FletesPage: React.FC = () => {
               />
             </div>
 
+            {/* SELECT ITEMS POR PÁGINA */}
+            <div className="flex flex-col">
+              <label className="text-xs text-gray-600">Items por página</label>
+              <select
+                value={limit}
+                onChange={(e) => {
+                  setLimit(Number(e.target.value));
+                  setPage(1);
+                }}
+                className="border rounded-md px-2 py-1 text-sm"
+              >
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+            </div>
+
           </div>
         </div>
-        {/* ---------------- FIN HEADER ---------------- */}
-
 
         {/* CONTADORES */}
         <p className="text-sm font-semibold text-gray-600">
           Facturas encontradas:
-          <span className="text-blue-600"> {data?.findAllFacturaCliente.length || 0}</span>
+          <span className="text-blue-600"> {totalRegistros}</span>
         </p>
 
         <p className="text-sm font-semibold text-gray-600 mb-4">
@@ -297,29 +350,53 @@ export const FletesPage: React.FC = () => {
           <span className="text-blue-600">
             {" "}
             {formatCurrency(
-              data?.findAllFacturaCliente?.reduce(
-                (s, v) => s + Number(v.TEM_VENTA),
-                0
-              ) || 0
+              registros.reduce((s, v) => s + Number(v.TEM_VENTA), 0)
             )}
           </span>
         </p>
-
 
         {/* TABLA */}
         <div className="w-full bg-white shadow-md rounded-lg overflow-hidden border">
           <table className="w-full border-collapse text-sm">
             <thead className="bg-blue-600 text-white text-xs">
               <tr>
-                <th className="p-2">Factura</th>
-                <th className="p-2">Fecha</th>
-                <th className="p-2">Cliente</th>
-                <th className="p-2">Vendedor</th>
-                <th className="p-2">Ciudad</th>
-                <th className="p-2 text-right">Venta</th>
-                <th className="p-2 text-right">Costo</th>
-                <th className="p-2 text-right">Utilidad</th>
-                <th className="p-2 text-right">Flete</th>
+
+                <th className="p-2 cursor-pointer" onClick={() => handleSort("TEM_NUMDOC")}>
+                  Factura {sortConfig.key === "TEM_NUMDOC" && (sortConfig.direction === "asc" ? "▲" : "▼")}
+                </th>
+
+                <th className="p-2 cursor-pointer" onClick={() => handleSort("TEM_FECHA")}>
+                  Fecha {sortConfig.key === "TEM_FECHA" && (sortConfig.direction === "asc" ? "▲" : "▼")}
+                </th>
+
+                <th className="p-2 cursor-pointer" onClick={() => handleSort("TEM_NOMCLI")}>
+                  Cliente {sortConfig.key === "TEM_NOMCLI" && (sortConfig.direction === "asc" ? "▲" : "▼")}
+                </th>
+
+                <th className="p-2 cursor-pointer" onClick={() => handleSort("TEM_VENDED")}>
+                  Vendedor {sortConfig.key === "TEM_VENDED" && (sortConfig.direction === "asc" ? "▲" : "▼")}
+                </th>
+
+                <th className="p-2 cursor-pointer" onClick={() => handleSort("CLI_CIUDAD")}>
+                  Ciudad {sortConfig.key === "CLI_CIUDAD" && (sortConfig.direction === "asc" ? "▲" : "▼")}
+                </th>
+
+                <th className="p-2 text-right cursor-pointer" onClick={() => handleSort("TEM_VENTA")}>
+                  Venta {sortConfig.key === "TEM_VENTA" && (sortConfig.direction === "asc" ? "▲" : "▼")}
+                </th>
+
+                <th className="p-2 text-right cursor-pointer" onClick={() => handleSort("TEM_VALCOS")}>
+                  Costo {sortConfig.key === "TEM_VALCOS" && (sortConfig.direction === "asc" ? "▲" : "▼")}
+                </th>
+
+                <th className="p-2 text-right cursor-pointer" onClick={() => handleSort("TEM_UTILIDAD")}>
+                  Utilidad {sortConfig.key === "TEM_UTILIDAD" && (sortConfig.direction === "asc" ? "▲" : "▼")}
+                </th>
+
+                <th className="p-2 text-right cursor-pointer" onClick={() => handleSort("valueFlete")}>
+                  Flete {sortConfig.key === "valueFlete" && (sortConfig.direction === "asc" ? "▲" : "▼")}
+                </th>
+
                 <th className="p-2 text-center">Acciones</th>
               </tr>
             </thead>
@@ -332,7 +409,7 @@ export const FletesPage: React.FC = () => {
                   </td>
                 </tr>
               ) : (
-                data?.findAllFacturaCliente.map((factura) => (
+                dataPaginada.map((factura) => (
                   <tr
                     key={factura.TEM_NUMDOC}
                     className="border-b hover:bg-blue-50 transition"
@@ -385,6 +462,42 @@ export const FletesPage: React.FC = () => {
           </table>
         </div>
 
+        {/* PAGINADOR CLIENTE */}
+        <div className="flex justify-between items-center mt-4">
+          <p className="text-sm text-gray-600">
+            Página {page} de {totalPaginas}
+          </p>
+
+          <div className="flex gap-1">
+            <button
+              disabled={page === 1}
+              onClick={() => setPage(page - 1)}
+              className="px-3 py-1 border rounded disabled:opacity-50"
+            >
+              Anterior
+            </button>
+
+            {[...Array(totalPaginas).keys()].map((p) => (
+              <button
+                key={p}
+                onClick={() => setPage(p + 1)}
+                className={`px-3 py-1 border rounded 
+                  ${page === p + 1 ? "bg-blue-600 text-white" : ""}`}
+              >
+                {p + 1}
+              </button>
+            ))}
+
+            <button
+              disabled={page === totalPaginas}
+              onClick={() => setPage(page + 1)}
+              className="px-3 py-1 border rounded disabled:opacity-50"
+            >
+              Siguiente
+            </button>
+          </div>
+        </div>
+
 
         {/* MODAL DETALLE */}
         <ModalDetalleFactura
@@ -392,7 +505,6 @@ export const FletesPage: React.FC = () => {
           onClose={() => setIsDetalleOpen(false)}
           factura={facturaNumber}
         />
-
 
         {/* MODAL EDITAR */}
         <Modal isOpen={isOpen} onClose={handleClose}>
@@ -537,6 +649,9 @@ export const FletesPage: React.FC = () => {
           </div>
         </Modal>
 
+      </div>
+      <div className="w-full mx-auto">
+        <VentasItemPage />
       </div>
     </div>
   );
