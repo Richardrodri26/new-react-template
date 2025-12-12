@@ -1,5 +1,6 @@
 import { Eye } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
+import { ModalUltimasCompras } from "./ModalUltimasComprast";
 
 interface VentaItem {
   referencia: string;
@@ -11,7 +12,7 @@ interface VentaItem {
 export const VentasItemPage: React.FC = () => {
   const [data, setData] = useState<VentaItem[]>([]);
   const [loading, setLoading] = useState(true);
-
+  const [referencia, setReferencia] = useState<string | null>(null);
   // -----------------------------------------------------------
   // FETCH DATA
   // -----------------------------------------------------------
@@ -85,7 +86,8 @@ export const VentasItemPage: React.FC = () => {
   const dataPaginada = sortedData.slice(startIndex, endIndex);
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleOpenModal = (factura: string) => {
+  const handleOpenModal = (referencia: string) => {
+    setReferencia(referencia)
     setIsOpen(true);
   };
 
@@ -223,7 +225,11 @@ export const VentasItemPage: React.FC = () => {
               {p + 1}
             </button>
           ))}
-
+            <ModalUltimasCompras
+              isOpen={isOpen}
+              onClose={() => setIsOpen(false)}
+              referencia={referencia}
+            />
           <button
             disabled={page === totalPaginas}
             onClick={() => setPage(page + 1)}

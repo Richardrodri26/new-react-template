@@ -24,6 +24,7 @@ import Contabilidad from '../excel';
 import TaskTableWorker from './table/taskTable';
 import { ViTrabajador } from './VITRABAJADOR';
 import { BotonDescargarExcel } from '@/components/Form/ButtonDescargarExcel';
+import TablaVentasProveedor from './table/TablaVentasProvedor';
 
 const ReportsPage: React.FC = () => {
   const [visitData, setVisitData] = useState([]);
@@ -226,6 +227,10 @@ const ReportsPage: React.FC = () => {
         <div className="px-4 py-5 sm:p-6">
           <h2 className="text-lg font-medium text-gray-900 mb-4">Ventas por Marca</h2>
           <VentasTable />
+        </div>
+        <div className="px-4 py-5 sm:p-6">
+          <h2 className="text-lg font-medium text-gray-900 mb-4">Ventas por Proveedor</h2>
+          <TablaVentasProveedor />
         </div>
       </div>
     )
