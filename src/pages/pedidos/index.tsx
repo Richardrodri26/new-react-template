@@ -36,6 +36,12 @@ interface PedidoData {
     PED_ENVIADO: boolean;
 }
 
+interface FacturaTotales {
+    facturaPending: number;
+    totalFacturaPending: number;
+    covifacturaPending: number;
+}
+
 export const PedidosPage = () => {
     const { id } = useParams<{ id: string }>();
     const [pedido, setPedido] = useState<PedidoData | null>(null);
@@ -43,6 +49,8 @@ export const PedidosPage = () => {
     const [error, setError] = useState<string | null>(null);
     const [approving, setApproving] = useState(false);
     const [approved, setApproved] = useState(false);
+    const [facturas, setFacturas] = useState<FacturaTotales | null>(null);
+    const [loadingFacturas, setLoadingFacturas] = useState(true);
 
     useEffect(() => {
         if (!id) {
@@ -70,18 +78,44 @@ export const PedidosPage = () => {
         fetchPedido();
     }, [id]);
 
+    useEffect(() => {
+        if (!pedido?.PED_CEDULA) {
+            setFacturas(null);
+            setLoadingFacturas(false);
+            return;
+        }
+
+        const fetchFacturas = async () => {
+            try {
+                setLoadingFacturas(true);
+                const nit = pedido.PED_CEDULA;
+                const response = await fetch(`https://intranet.cytech.net.co:3002/covifactura/totales/${nit}`);
+                if (!response.ok) throw new Error("No se pudo cargar las facturas");
+                const data = await response.json();
+                setFacturas(data);
+            } catch (err) {
+                console.error("Error cargando facturas:", err);
+                setFacturas(null);
+            } finally {
+                setLoadingFacturas(false);
+            }
+        };
+
+        fetchFacturas();
+    }, [pedido?.PED_CEDULA]);
+
     const handleAprobar = async () => {
         if (!id) return;
         try {
             setApproving(true);
             const response = await fetch(`https://intranet.cytech.net.co:3003/pedidos/${id}/aprobar`, {
-                method: "POST"
+                method: "PATCH"
             });
             if (!response.ok) throw new Error("No se pudo aprobar el pedido");
             setApproved(true);
             setPedido(prev => prev ? { ...prev, PED_APROBADO: true } : null);
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Error al aprobar");
+            toast.error(err instanceof Error ? err.message : "Error al aprobar");
         } finally {
             setApproving(false);
         }
@@ -235,6 +269,37 @@ export const PedidosPage = () => {
                                 </div>
                             </div>
                         </div>
+
+                        {/* Facturas Pendientes */}
+                        {loadingFacturas ? (
+                            <div className="mb-8 p-6 bg-slate-100 rounded-lg text-center">
+                                <Loader2 className="w-6 h-6 animate-spin text-blue-600 mx-auto mb-2" />
+                                <p className="text-slate-600 text-sm">Cargando información de facturas...</p>
+                            </div>
+                        ) : facturas ? (
+                            <div className="mb-8">
+                                <h2 className="text-2xl font-bold text-slate-900 mb-6 pb-4 border-b-2 border-orange-100">
+                                    📑 Facturas Pendientes
+                                </h2>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-6 rounded-lg border-2 border-orange-200 shadow-md">
+                                        <p className="text-sm font-semibold text-slate-600 uppercase tracking-wide">Cantidad Facturas</p>
+                                        <p className="text-4xl font-bold text-orange-600 mt-3">{facturas.facturaPending}</p>
+                                        <p className="text-xs text-orange-700 mt-2">pendientes por pagar</p>
+                                    </div>
+                                    <div className="bg-gradient-to-br from-red-50 to-red-100 p-6 rounded-lg border-2 border-red-200 shadow-md">
+                                        <p className="text-sm font-semibold text-slate-600 uppercase tracking-wide">Valor Total Facturado</p>
+                                        <p className="text-2xl font-bold text-red-600 mt-3">{formatCurrency(facturas.totalFacturaPending)}</p>
+                                        <p className="text-xs text-red-700 mt-2">monto pendiente</p>
+                                    </div>
+                                    <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-lg border-2 border-purple-200 shadow-md">
+                                        <p className="text-sm font-semibold text-slate-600 uppercase tracking-wide">CoviFacturas Pendientes</p>
+                                        <p className="text-4xl font-bold text-purple-600 mt-3">{facturas.covifacturaPending}</p>
+                                        <p className="text-xs text-purple-700 mt-2">en proceso</p>
+                                    </div>
+                                </div>
+                            </div>
+                        ) : null}
 
                         {/* Observations */}
                         {pedido.PED_OBSERV && pedido.PED_OBSERV !== "." && (
