@@ -18,6 +18,7 @@ import CalendarPage2 from "@/pages/calendar2";
 import ReportInventoryCommscope from "@/pages/inventory/inventory";
 import TablaFacturas from "@/pages/inventory/inventoryPos";
 import { MarcaPoryectoPage } from "@/pages/marcaProyecto";
+import { PedidosPage } from "@/pages/pedidos";
 import { PresupuestoPage } from "@/pages/presupuesto";
 import { ProyectoPage } from "@/pages/proyectos";
 import IndexProyectView from "@/pages/proyectos/indexProyect";
@@ -33,6 +34,10 @@ export const appRouter = createBrowserRouter([
     path: "/",
     element: <LoginPage />,
 
+  },
+  {
+    path: "/pedido/:id",
+    element: <PedidosPage />,
   },
   {
     path: "/looger/:token",
