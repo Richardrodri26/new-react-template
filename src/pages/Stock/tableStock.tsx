@@ -222,24 +222,29 @@ export const StockTable: React.FC = () => {
       </div>
 
       {!selectedClase ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-6">
-          {Object.keys(groupedStocks).map((nombreClase) => (
-            <div
-              key={nombreClase}
-              onClick={() => {
-                setFilters((prev) => ({ ...prev, nombreClase }));
-                setSelectedClase(nombreClase);
-              }}
-              className="cursor-pointer flex items-center gap-2 bg-gray-100 p-4 rounded-md hover:bg-gray-200 transition"
-            >
-              <Folder className="text-blue-500" />
-              <span className="text-gray-800 font-semibold">{nombreClase}</span>
-              <span className="text-gray-500 text-sm ml-auto">
-                ({groupedStocks[nombreClase].length})
-              </span>
-            </div>
-          ))}
-        </div>
+        <>
+          <div className="flex justify-end mb-4">
+            <Button onClick={openModal}>+ Crear Nueva Referencia</Button>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-6">
+            {Object.keys(groupedStocks).map((nombreClase) => (
+              <div
+                key={nombreClase}
+                onClick={() => {
+                  setFilters((prev) => ({ ...prev, nombreClase }));
+                  setSelectedClase(nombreClase);
+                }}
+                className="cursor-pointer flex items-center gap-2 bg-gray-100 p-4 rounded-md hover:bg-gray-200 transition"
+              >
+                <Folder className="text-blue-500" />
+                <span className="text-gray-800 font-semibold">{nombreClase}</span>
+                <span className="text-gray-500 text-sm ml-auto">
+                  ({groupedStocks[nombreClase].length})
+                </span>
+              </div>
+            ))}
+          </div>
+        </>
       ) : (
         <>
           <div className="mb-4">
