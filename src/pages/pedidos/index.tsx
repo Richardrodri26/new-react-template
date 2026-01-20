@@ -122,6 +122,18 @@ export const PedidosPage = () => {
     };
 
     const handleRechazar = () => {
+        if(!id) return;
+        try {
+            setRechazando(true);
+            const response = await fetch(`https://intranet.cytech.net.co:3003/pedidos/${id}/rechazar`, {
+                method: "PATCH"
+            });
+            if (!response.ok) throw new Error("No se pudo rechazar el pedido");
+            setRechazado(true);
+            setPedido(prev => prev ? { ...prev, PED_APROBADO: false } : null);
+        } catch (err) {
+            toast.error(err instanceof Error ? err.message : "Error al rechazar");
+        }
         toast.error("Función de rechazo a implementar");
     };
 
