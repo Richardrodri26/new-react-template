@@ -48,6 +48,8 @@ export const PedidosPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [approving, setApproving] = useState(false);
+    const [rechazado, setRechazado] = useState(false);
+    const [loadingRechazo, setLoadingRechazo] = useState(false);
     const [approved, setApproved] = useState(false);
     const [facturas, setFacturas] = useState<FacturaTotales | null>(null);
     const [loadingFacturas, setLoadingFacturas] = useState(true);
@@ -121,10 +123,10 @@ export const PedidosPage = () => {
         }
     };
 
-    const handleRechazar = () => {
+    const handleRechazar = async () => {
         if(!id) return;
         try {
-            setRechazando(true);
+            setLoadingRechazo(true);
             const response = await fetch(`https://intranet.cytech.net.co:3003/pedidos/${id}/rechazar`, {
                 method: "PATCH"
             });
@@ -133,6 +135,9 @@ export const PedidosPage = () => {
             setPedido(prev => prev ? { ...prev, PED_APROBADO: false } : null);
         } catch (err) {
             toast.error(err instanceof Error ? err.message : "Error al rechazar");
+        }
+        finally {
+            setLoadingRechazo(false);
         }
         toast.error("Función de rechazo a implementar");
     };
@@ -387,10 +392,20 @@ export const PedidosPage = () => {
                             size="lg"
                             variant="outline"
                             onClick={handleRechazar}
+                            disabled={loadingRechazo}
                             className="border-2 border-red-500 text-red-600 hover:bg-red-50 font-bold py-6 px-8 rounded-lg transition-all duration-300 transform hover:scale-105"
                         >
                             <XCircle className="w-5 h-5 mr-2" />
-                            Rechazar Pedido
+                            {
+                                loadingRechazo ? (
+                                    <>
+                                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                                        Rechazando...
+                                    </>
+                                ) : (
+                                    "Rechazar Pedido"
+                                )
+                            }
                         </Button>
                     </div>
                 )}
@@ -399,6 +414,13 @@ export const PedidosPage = () => {
                     <Card className="p-6 text-center bg-gradient-to-r from-green-50 to-blue-50 border-green-200">
                         <CheckCircle2 className="w-12 h-12 text-green-600 mx-auto mb-4" />
                         <p className="text-lg font-bold text-slate-900">Este pedido ya ha sido aprobado</p>
+                        <p className="text-slate-600 mt-2">No se pueden realizar más acciones sobre este pedido</p>
+                    </Card>
+                )}
+                {rechazado && (
+                    <Card className="p-6 text-center bg-gradient-to-r from-red-50 to-blue-50 border-red-200">
+                        <XCircle className="w-12 h-12 text-red-600 mx-auto mb-4" />
+                        <p className="text-lg font-bold text-slate-900">Este pedido ya ha sido rechazado</p>
                         <p className="text-slate-600 mt-2">No se pueden realizar más acciones sobre este pedido</p>
                     </Card>
                 )}
