@@ -20,6 +20,7 @@ import { Button } from '@/components/ui/button';
 import { ModalCreateReferenciaStock } from './modalCreateReferenciaStock';
 import { useModal } from '@/hooks/useModal';
 import StockVsVentas from './modalStatist';
+import * as XLSX from 'xlsx';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -86,10 +87,7 @@ export const StockTable: React.FC = () => {
       });
   }, [stocks, filters, estadoFilter]);
 
-  const paginatedStocks = useMemo(() => {
-    const start = currentPage * ITEMS_PER_PAGE;
-    return filteredStocks.slice(start, start + ITEMS_PER_PAGE);
-  }, [filteredStocks, currentPage]);
+  const paginatedStocks = filteredStocks
 
   const totalPages = Math.ceil(filteredStocks.length / ITEMS_PER_PAGE);
 
@@ -177,6 +175,71 @@ export const StockTable: React.FC = () => {
     setReferencia(referencia);
     openModals();
   };
+  const descargarExcelPocoStock = () => {
+    try {
+      if (!filteredStocks.length) {
+        throw new Error('No hay stocks para descargar');
+      }
+      if(!selectedClase) {
+        throw new Error('Debes seleccionar una clase para descargar');
+      }
+      const data = filteredStocks.filter((stock) => stock.cantidadActual <= stock.stcMin || stock.cantidadActual === 0);
+
+   const dataExcel = data.map((stock) => ({
+    "Referencia": stock.referencia,
+    "Nombre Referencia": stock.nombreReferencia,
+    "Clase": stock.clase,
+    "Nombre Clase": stock.nombreClase,
+    "Cantidad Actual": stock.cantidadActual,
+    "Stock Mínimo": stock.stcMin,
+    "Stock Máximo": stock.stcMax,
+    "Ficha Técnica": stock.fichaTecnica?.url || '',
+  }));
+
+
+      const worksheet = XLSX.utils.json_to_sheet(dataExcel);
+
+      // 🔥 Aplicar estilo a encabezados
+      const range = XLSX.utils.decode_range(worksheet['!ref'] || '');
+
+      for (let col = range.s.c; col <= range.e.c; col++) {
+        const cellAddress = XLSX.utils.encode_cell({ r: 0, c: col });
+
+        if (!worksheet[cellAddress]) continue;
+
+        worksheet[cellAddress].s = {
+          fill: {
+            fgColor: { rgb: "1F4E78" } // Azul oscuro
+          },
+          font: {
+            bold: true,
+            color: { rgb: "FFFFFF" }
+          },
+          alignment: {
+            horizontal: "center"
+          }
+        };
+      }
+
+      // 🔥 Auto ancho columnas
+      const colWidths = Object.keys(dataExcel[0]).map((key) => {
+        const maxLength = Math.max(
+          key.length,
+          // @ts-ignore
+          ...dataExcel.map(row => (row[key]?.toString().length || 0))
+        );
+        return { wch: maxLength + 2 };
+      });
+
+      worksheet['!cols'] = colWidths;
+
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Stock');
+      XLSX.writeFile(workbook, `stock-${selectedClase}.xlsx`);
+    } catch (error) {
+      ToastyErrorGraph(error as any);
+    }
+  };
 
   if (loading) return <div className="text-center p-4">Cargando...</div>;
 
@@ -219,6 +282,9 @@ export const StockTable: React.FC = () => {
           <option value="amarillo">Bajo stock</option>
           <option value="verde">Bien de stock</option>
         </select>
+      </div>
+      <div className="mb-4">
+        <Button onClick={descargarExcelPocoStock}>Descargar Excel de bajo stock</Button>
       </div>
 
       {!selectedClase ? (
@@ -375,7 +441,7 @@ export const StockTable: React.FC = () => {
             </table>
           </div>
 
-          <div className="flex justify-between items-center mt-6">
+          {/* <div className="flex justify-between items-center mt-6">
             <button
               onClick={() => setCurrentPage((p) => Math.max(p - 1, 0))}
               disabled={currentPage === 0}
@@ -393,7 +459,7 @@ export const StockTable: React.FC = () => {
             >
               <ArrowRight className="w-5 h-5" />
             </button>
-          </div>
+          </div> */}
         </>
       )}
 

@@ -102,26 +102,54 @@ export const ModalCreateReferenciaStock = ({ isOpen, onClose, nombreClase, refes
             ...prev,
             nombreClase: nombreClase || ""
         }));
+        // Mostrar información según si hay clase seleccionada
+        if (!nombreClase) {
+            toast.info("Crear referencia sin grupo - La referencia debe ser verificada", {
+                description: "Ingresa una referencia para validarla",
+            });
+        }
     }, [nombreClase]);
 
     const verificarReferencia = async (referencia: string) => {
-        const toastId = toast.loading("Verificando Referencia de Stock...");
+        if (!referencia.trim()) {
+            toast.warning("Campo requerido", {
+                description: "Por favor ingresa una referencia",
+            });
+            return;
+        }
+
+        const toastId = toast.loading("Verificando Referencia de Stock...", {
+            description: "Buscando información en el servidor",
+        });
         try {
             const url = `${import.meta.env.VITE_APP_MICRO_GRAPH}ventas/referencia/verify/${referencia}`;
             const { data } = await axios.get<ReferenciaStock>(url);
 
             if (!data || data.Referencia === "") {
-                toast.error("Referencia de Stock no encontrada", { id: toastId });
+                toast.error("Referencia no encontrada", { 
+                    id: toastId,
+                    description: `La referencia "${referencia}" no existe en el sistema`,
+                });
                 setReferenciaInfo(null);
             } else if (nombreClase && data.NombreClase !== nombreClase) {
-                toast.error(`La referencia pertenece a la clase "${data.NombreClase}", no a "${nombreClase}"`, { id: toastId });
+                toast.error("Clase no coincide", { 
+                    id: toastId,
+                    description: `Esta referencia pertenece a "${data.NombreClase}", no a "${nombreClase}"`,
+                });
                 setReferenciaInfo(null);
             } else {
                 setReferenciaInfo(data);
-                toast.success("Referencia validada correctamente", { id: toastId });
+                toast.success("¡Referencia verificada!", { 
+                    id: toastId,
+                    description: `"${data.NombreReferencia}" - Clase: ${data.NombreClase}`,
+                });
             }
         } catch (error) {
-            toast.error("Error al verificar la referencia", {id: toastId });
+            console.error("Error al verificar:", error);
+            toast.error("Error en la verificación", {
+                id: toastId,
+                description: "No pudimos conectar con el servidor. Intenta nuevamente",
+            });
             setReferenciaInfo(null);
         } finally {
             setVerificando(false);
@@ -131,11 +159,23 @@ export const ModalCreateReferenciaStock = ({ isOpen, onClose, nombreClase, refes
     const onSubmit = async (data: CreateSchemaType) => {
         // Si no hay clase seleccionada, se requiere verificación previa
         if (!nombreClase && !referenciaInfo) {
-            toast.error("Debe verificar una referencia válida antes de continuar");
+            toast.warning("Referencia no verificada", {
+                description: "Debes verificar una referencia válida antes de continuar",
+            });
             return;
         }
 
-        const toastId = toast.loading("Creando Referencia de Stock...");
+        // Validar que el nombre de referencia esté completo
+        if (!data.nombreReferencia || data.nombreReferencia.trim() === "") {
+            toast.warning("Campo requerido", {
+                description: "El nombre de la referencia es obligatorio",
+            });
+            return;
+        }
+
+        const toastId = toast.loading("Creando Referencia de Stock...", {
+            description: "Procesando información...",
+        });
 
         try {
             const createInput = {
@@ -155,23 +195,36 @@ export const ModalCreateReferenciaStock = ({ isOpen, onClose, nombreClase, refes
             });
 
             if (response.data?.createStock) {
-                toast.success("Referencia de Stock creada correctamente", { id: toastId });
+                toast.success("¡Referencia creada exitosamente!", { 
+                    id: toastId,
+                    description: `${data.nombreReferencia} ha sido agregada al stock`,
+                });
                 onClose();
                 refesh?.();
                 setReferenciaInfo(null);
             } else {
-                toast.error("Error al crear la Referencia de Stock", { id: toastId });
+                toast.error("No se pudo crear la referencia", { 
+                    id: toastId,
+                    description: "Verifica los datos e intenta nuevamente",
+                });
             }
         } catch (error) {
-            ToastyErrorGraph(error as any);
+            console.error("Error al crear stock:", error);
             toast.dismiss(toastId);
+            ToastyErrorGraph(error as any);
         }
     };
 
     return (
         <Modal
             isOpen={isOpen}
-            onRequestClose={onClose}
+            onRequestClose={() => {
+                toast.info("Modal cerrado", {
+                    description: "Los cambios no guardados han sido descartados",
+                });
+                setReferenciaInfo(null);
+                onClose();
+            }}
             contentLabel="Crear Referencia de Stock"
             ariaHideApp={false}
             overlayClassName="fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 z-50"
@@ -184,7 +237,10 @@ export const ModalCreateReferenciaStock = ({ isOpen, onClose, nombreClase, refes
                 <div className="flex justify-between items-center">
                     <ButtonForm>Crear</ButtonForm>
                     <button
-                        onClick={onClose}
+                        onClick={() => {
+                            setReferenciaInfo(null);
+                            onClose();
+                        }}
                         className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md"
                     >
                         Cerrar
