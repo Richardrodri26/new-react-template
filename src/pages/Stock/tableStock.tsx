@@ -21,6 +21,7 @@ import { ModalCreateReferenciaStock } from './modalCreateReferenciaStock';
 import { useModal } from '@/hooks/useModal';
 import StockVsVentas from './modalStatist';
 import * as XLSX from 'xlsx';
+import AcomprarModal from './acomprarModal';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -30,6 +31,8 @@ export const StockTable: React.FC = () => {
   const [updateStockAll] = useUpdateToStockMutation();
   const [loadingStock, setLoadingStock] = useState(false);
   const { isOpen, closeModal, openModal } = useModal();
+  const { isOpen: isOpenA, closeModal: closeModalA, openModal: openModalA } = useModal();
+
   const {
     isOpen: isOpenS,
     closeModal: closeModals,
@@ -465,6 +468,8 @@ export const StockTable: React.FC = () => {
 
       <ModalCreateReferenciaStock isOpen={isOpen} onClose={closeModal} refesh={refetch} nombreClase={selectedClase} />
       <StockVsVentas isOpen={isOpenS} onClose={closeModals} referencia={referencia} key={referencia} />
+      <AcomprarModal isOpen={isOpenA} onClose={closeModalA}/>
+
     </div>
   );
 };
