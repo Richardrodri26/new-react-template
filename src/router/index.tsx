@@ -19,6 +19,7 @@ import ReportInventoryCommscope from "@/pages/inventory/inventory";
 import TablaFacturas from "@/pages/inventory/inventoryPos";
 import { MarcaPoryectoPage } from "@/pages/marcaProyecto";
 import { PedidosPage } from "@/pages/pedidos";
+import { PedidosListPage } from "@/pages/pedidos/list";
 import { PresupuestoPage } from "@/pages/presupuesto";
 import { ProyectoPage } from "@/pages/proyectos";
 import IndexProyectView from "@/pages/proyectos/indexProyect";
@@ -114,6 +115,10 @@ export const appRouter = createBrowserRouter([
       {
         path: 'stock',
         element:<StockPage />
+      },
+      {
+        path: "pedidos",
+        element: <PedidosListPage />,
       },
       {
         path: 'mapaApp',
