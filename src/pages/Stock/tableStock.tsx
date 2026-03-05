@@ -8,7 +8,6 @@ import {
 import React, { useState, KeyboardEvent, useMemo } from 'react';
 import {
   ArrowLeft,
-  ArrowRight,
   BarChart2,
   FileText,
   Trash2,
@@ -54,6 +53,29 @@ export const StockTable: React.FC = () => {
   });
 
   const [selectedClase, setSelectedClase] = useState<string | null>(null);
+  const [columnFilters, setColumnFilters] = useState({
+    referencia: '',
+    nombreReferencia: '',
+    clase: '',
+    nombreClase: '',
+    cantidadActual: '',
+    stcMin: '',
+    stcMax: '',
+  });
+  const [sortConfig, setSortConfig] = useState<{
+    key:
+      | 'referencia'
+      | 'nombreReferencia'
+      | 'clase'
+      | 'nombreClase'
+      | 'cantidadActual'
+      | 'stcMin'
+      | 'stcMax';
+    direction: 'desc' | 'asc';
+  }>({
+    key: 'cantidadActual',
+    direction: 'desc',
+  });
 
   const [currentPage, setCurrentPage] = useState(0);
 
@@ -87,12 +109,68 @@ export const StockTable: React.FC = () => {
         if (estadoFilter === 'amarillo') return stock.cantidadActual > 0 && stock.cantidadActual <= stock.stcMin;
         if (estadoFilter === 'verde') return stock.cantidadActual > stock.stcMin;
         return true;
-      });
-  }, [stocks, filters, estadoFilter]);
+      })
+      .filter((stock) => {
+        const columnsMatch = {
+          referencia: stock.referencia.toLowerCase().includes(columnFilters.referencia.toLowerCase()),
+          nombreReferencia: stock.nombreReferencia.toLowerCase().includes(columnFilters.nombreReferencia.toLowerCase()),
+          clase: stock.clase.toLowerCase().includes(columnFilters.clase.toLowerCase()),
+          nombreClase: stock.nombreClase.toLowerCase().includes(columnFilters.nombreClase.toLowerCase()),
+          cantidadActual: stock.cantidadActual.toString().includes(columnFilters.cantidadActual.trim()),
+          stcMin: stock.stcMin.toString().includes(columnFilters.stcMin.trim()),
+          stcMax: stock.stcMax.toString().includes(columnFilters.stcMax.trim()),
+        };
 
-  const paginatedStocks = filteredStocks
+        return Object.values(columnsMatch).every(Boolean);
+      });
+  }, [stocks, filters, estadoFilter, columnFilters]);
+
+  const sortedStocks = useMemo(() => {
+    const ordered = [...filteredStocks];
+    ordered.sort((a, b) => {
+      const key = sortConfig.key;
+      const isNumeric = key === 'cantidadActual' || key === 'stcMin' || key === 'stcMax';
+
+      if (isNumeric) {
+        const aValue = a[key] as number;
+        const bValue = b[key] as number;
+        return sortConfig.direction === 'desc' ? bValue - aValue : aValue - bValue;
+      }
+
+      const aValue = String(a[key] ?? '').toLowerCase();
+      const bValue = String(b[key] ?? '').toLowerCase();
+      return sortConfig.direction === 'desc'
+        ? bValue.localeCompare(aValue)
+        : aValue.localeCompare(bValue);
+    });
+
+    return ordered;
+  }, [filteredStocks, sortConfig]);
+
+  const paginatedStocks = sortedStocks
 
   const totalPages = Math.ceil(filteredStocks.length / ITEMS_PER_PAGE);
+
+  const toggleSort = (
+    key:
+      | 'referencia'
+      | 'nombreReferencia'
+      | 'clase'
+      | 'nombreClase'
+      | 'cantidadActual'
+      | 'stcMin'
+      | 'stcMax'
+  ) => {
+    setSortConfig((prev) => {
+      if (prev.key !== key) {
+        return { key, direction: 'desc' };
+      }
+      return {
+        key,
+        direction: prev.direction === 'desc' ? 'asc' : 'desc',
+      };
+    });
+  };
 
   const startEdit = (
     id: string,
@@ -321,7 +399,16 @@ export const StockTable: React.FC = () => {
               onClick={() => {
                 setSelectedClase(null);
                 setFilters((prev) => ({ ...prev, nombreClase: '' }));
-                setEstadoFilter('todos');
+                  setEstadoFilter('todos');
+                setColumnFilters({
+                  referencia: '',
+                  nombreReferencia: '',
+                  clase: '',
+                  nombreClase: '',
+                  cantidadActual: '',
+                  stcMin: '',
+                  stcMax: '',
+                });
                 setCurrentPage(0);
                 setEditing(null);
                 setReferencia('');
@@ -347,15 +434,96 @@ export const StockTable: React.FC = () => {
             <table className="min-w-full table-auto text-sm text-left text-gray-700">
               <thead className="bg-gray-100 text-gray-600 uppercase text-xs">
                 <tr>
-                  <th className="px-4 py-3">Referencia</th>
-                  <th className="px-4 py-3">Nombre</th>
-                  <th className="px-4 py-3">Clase</th>
-                  <th className="px-4 py-3">Nombre Clase</th>
-                  <th className="px-4 py-3">Stock Actual</th>
-                  <th className="px-4 py-3">STC Min</th>
-                  <th className="px-4 py-3">STC Max</th>
+                  <th className="px-4 py-3 cursor-pointer" onClick={() => toggleSort('referencia')}>
+                    Referencia {sortConfig.key === 'referencia' ? (sortConfig.direction === 'desc' ? '▼' : '▲') : ''}
+                  </th>
+                  <th className="px-4 py-3 cursor-pointer" onClick={() => toggleSort('nombreReferencia')}>
+                    Nombre {sortConfig.key === 'nombreReferencia' ? (sortConfig.direction === 'desc' ? '▼' : '▲') : ''}
+                  </th>
+                  <th className="px-4 py-3 cursor-pointer" onClick={() => toggleSort('clase')}>
+                    Clase {sortConfig.key === 'clase' ? (sortConfig.direction === 'desc' ? '▼' : '▲') : ''}
+                  </th>
+                  <th className="px-4 py-3 cursor-pointer" onClick={() => toggleSort('nombreClase')}>
+                    Nombre Clase {sortConfig.key === 'nombreClase' ? (sortConfig.direction === 'desc' ? '▼' : '▲') : ''}
+                  </th>
+                  <th className="px-4 py-3 cursor-pointer" onClick={() => toggleSort('cantidadActual')}>
+                    Stock Actual {sortConfig.key === 'cantidadActual' ? (sortConfig.direction === 'desc' ? '▼' : '▲') : ''}
+                  </th>
+                  <th className="px-4 py-3 cursor-pointer" onClick={() => toggleSort('stcMin')}>
+                    STC Min {sortConfig.key === 'stcMin' ? (sortConfig.direction === 'desc' ? '▼' : '▲') : ''}
+                  </th>
+                  <th className="px-4 py-3 cursor-pointer" onClick={() => toggleSort('stcMax')}>
+                    STC Max {sortConfig.key === 'stcMax' ? (sortConfig.direction === 'desc' ? '▼' : '▲') : ''}
+                  </th>
                   <th className="px-4 py-3 text-center">Ficha Tecnica</th>
                   <th className="px-4 py-3 text-center">Acciones</th>
+                </tr>
+                <tr className="bg-white normal-case">
+                  <th className="px-2 py-2">
+                    <input
+                      type="text"
+                      placeholder="Filtrar referencia"
+                      value={columnFilters.referencia}
+                      onChange={(e) => setColumnFilters((prev) => ({ ...prev, referencia: e.target.value }))}
+                      className="w-full border border-gray-300 px-2 py-1 rounded focus:ring-2 focus:ring-blue-500 text-xs"
+                    />
+                  </th>
+                  <th className="px-2 py-2">
+                    <input
+                      type="text"
+                      placeholder="Filtrar nombre"
+                      value={columnFilters.nombreReferencia}
+                      onChange={(e) => setColumnFilters((prev) => ({ ...prev, nombreReferencia: e.target.value }))}
+                      className="w-full border border-gray-300 px-2 py-1 rounded focus:ring-2 focus:ring-blue-500 text-xs"
+                    />
+                  </th>
+                  <th className="px-2 py-2">
+                    <input
+                      type="text"
+                      placeholder="Filtrar clase"
+                      value={columnFilters.clase}
+                      onChange={(e) => setColumnFilters((prev) => ({ ...prev, clase: e.target.value }))}
+                      className="w-full border border-gray-300 px-2 py-1 rounded focus:ring-2 focus:ring-blue-500 text-xs"
+                    />
+                  </th>
+                  <th className="px-2 py-2">
+                    <input
+                      type="text"
+                      placeholder="Filtrar nombre clase"
+                      value={columnFilters.nombreClase}
+                      onChange={(e) => setColumnFilters((prev) => ({ ...prev, nombreClase: e.target.value }))}
+                      className="w-full border border-gray-300 px-2 py-1 rounded focus:ring-2 focus:ring-blue-500 text-xs"
+                    />
+                  </th>
+                  <th className="px-2 py-2">
+                    <input
+                      type="text"
+                      placeholder="Filtrar stock"
+                      value={columnFilters.cantidadActual}
+                      onChange={(e) => setColumnFilters((prev) => ({ ...prev, cantidadActual: e.target.value }))}
+                      className="w-full border border-gray-300 px-2 py-1 rounded focus:ring-2 focus:ring-blue-500 text-xs"
+                    />
+                  </th>
+                  <th className="px-2 py-2">
+                    <input
+                      type="text"
+                      placeholder="Filtrar min"
+                      value={columnFilters.stcMin}
+                      onChange={(e) => setColumnFilters((prev) => ({ ...prev, stcMin: e.target.value }))}
+                      className="w-full border border-gray-300 px-2 py-1 rounded focus:ring-2 focus:ring-blue-500 text-xs"
+                    />
+                  </th>
+                  <th className="px-2 py-2">
+                    <input
+                      type="text"
+                      placeholder="Filtrar max"
+                      value={columnFilters.stcMax}
+                      onChange={(e) => setColumnFilters((prev) => ({ ...prev, stcMax: e.target.value }))}
+                      className="w-full border border-gray-300 px-2 py-1 rounded focus:ring-2 focus:ring-blue-500 text-xs"
+                    />
+                  </th>
+                  <th className="px-2 py-2"></th>
+                  <th className="px-2 py-2"></th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
