@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { DollarSign, Calendar, ShoppingCart, Percent } from "lucide-react";
+import { DollarSign, Calendar, ShoppingCart, Percent, Car } from "lucide-react";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 import { formatCurrency } from "../table/marcasVenta";
@@ -15,7 +15,7 @@ const ResumenCards:  React.FC<ResumenCardsProps> = ({ventasHoy = 0}) => {
   const navigate = useNavigate();
   const [precioDolar, setPrecioDolar] = useState<number | null>(null);
   const [totalVentas, setTotalVentas] = useState<number | null>(null);
-  const [totalVentasTienda, setTotalVentasTienda] = useState<number | null>(null);
+  const [totalFlete, setTotalFlete] = useState<number | null>(null);
   const [utilidad, setUtilidad] = useState<number | null>(null);
   const [porcentajeUtilidad, setPorcentajeUtilidad] = useState<number | null>(
     null
@@ -38,7 +38,9 @@ const ResumenCards:  React.FC<ResumenCardsProps> = ({ventasHoy = 0}) => {
         const resDolar = await fetch(`https://www.datos.gov.co/resource/mcec-87by.json?vigenciahasta=${dayjs().format('YYYY-MM-DD')}`);
         const dataDolar = await resDolar.json();
         setPrecioDolar(dataDolar?.[0]?.valor || 0);
-
+        const resFelete = await fetch(`${import.meta.env.VITE_APP_MICRO_GRAPH}ventas/obtener-flete-mes`);
+        const dataFelete = await resFelete.json();
+        const total = dataFelete.reduce((acc: any, flete: any) => acc + flete.valor, 0);
         // Datos desde la API de ventas
         const resVentas = await fetch(`${API_BASE_URL}`);
         const dataVentas = await resVentas.json();
@@ -47,7 +49,7 @@ const ResumenCards:  React.FC<ResumenCardsProps> = ({ventasHoy = 0}) => {
 
         setTotalVentas(mesData?.venta || 0);
         setUtilidad(mesData?.utilidad_porcentaje || 0)
-        setTotalVentasTienda(mesData?.venta_tienda)
+        setTotalFlete(total);
         // const resUtilidad = await fetch(`${API_BASE_URL}/utilidad`);
         // const dataUtilidad = await resUtilidad.json();
         // setPorcentajeUtilidad(dataUtilidad.porcentaje);
@@ -119,10 +121,10 @@ const ResumenCards:  React.FC<ResumenCardsProps> = ({ventasHoy = 0}) => {
         </div>
       </div>
       <div className="bg-white p-4 rounded-xl shadow flex items-center">
-        <ShoppingCart className="text-yellow-500 w-10 h-10 mr-4" />
+        <Car className="text-yellow-500 w-10 h-10 mr-4" />
         <div>
-          <h3 className="text-gray-600 text-sm">Ventas del Mes (tienda)</h3>
-          <p className="text-xl font-bold">{totalVentas ? `${formatCurrency(Number(totalVentasTienda ?? 0))}` : "Cargando..."}</p>
+          <h3 className="text-gray-600 text-sm">Total Envio</h3>
+          <p className="text-xl font-bold">{totalFlete ? `${formatCurrency(Number(totalFlete ?? 0))}` : "Cargando..."}</p>
         </div>
       </div>
       {/* Card 4: Porcentaje de Utilidad */}
