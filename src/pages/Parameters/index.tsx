@@ -25,7 +25,6 @@ import { ComisionByUserPage } from "../Fletes/comisionByUser";
 import { TipoPoryectoPage } from "../typeProyect";
 import { MarcaPoryectoPage } from "../marcaProyecto";
 import { PresupuestoPage } from "../presupuesto";
-import { GroupsUtilidadTable } from "./GroupsUtilidadTable";
 
 // 1️⃣ Definir el tipo para los elementos de navegación
 interface NavLink {
@@ -45,7 +44,6 @@ const DashboardParameters: React.FC = () => {
         </div>
         <div className="mx-auto grid w-full max-w-6xl gap-4">
           <SettingsVisitTypes />
-          <GroupsUtilidadTable />
         </div>
       </main>
       <ParameterModals />

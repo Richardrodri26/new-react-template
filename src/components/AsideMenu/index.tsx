@@ -1,6 +1,6 @@
 import React, { Fragment, useRef, useState, useEffect } from 'react';
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
-import { Home, Users2, MapPinIcon, Settings, PanelLeft, PersonStanding, Calendar, Map, HandCoinsIcon, Car, Bolt, Archive, FileArchive, SwatchBook, ClipboardList } from "lucide-react";
+import { Home, Users2, MapPinIcon, Settings, PanelLeft, PersonStanding, Calendar, Map, HandCoinsIcon, Car, Bolt, Archive, FileArchive, SwatchBook, ClipboardList, ListTree } from "lucide-react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
@@ -61,6 +61,11 @@ const asideMenuItems: IAsideMenuItem[] = [
     title: "Pedidos",
     url: "/dashboard/pedidos",
     icon: <ClipboardList className="h-5 w-5" />
+  },
+  {
+    title: "Lista de precios",
+    url: "/dashboard/lista-precios",
+    icon: <ListTree className="h-5 w-5" />
   },
   {
     title: "Mapa",

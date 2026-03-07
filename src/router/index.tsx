@@ -24,6 +24,7 @@ import { PresupuestoPage } from "@/pages/presupuesto";
 import { ProyectoPage } from "@/pages/proyectos";
 import IndexProyectView from "@/pages/proyectos/indexProyect";
 import ViewProyecto from "@/pages/proyectos/viewProyect";
+import { ListaPreciosPage } from "@/pages/lista-precios";
 import {ConfirmEmailPage} from "@/pages/public/ConfirmEmail";
 import { ForgotPasswordPage } from "@/pages/public/ConfirmEmail/forgot-password";
 import {ResetPasswordPage} from "@/pages/public/ConfirmEmail/resetPassword";
@@ -143,6 +144,10 @@ export const appRouter = createBrowserRouter([
       {
         path: 'presupuesto',
         element: <PresupuestoPage />
+      },
+      {
+        path: "lista-precios",
+        element: <ListaPreciosPage />
       },
       {
         path: 'proyectos',

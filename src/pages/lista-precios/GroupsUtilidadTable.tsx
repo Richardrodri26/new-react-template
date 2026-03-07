@@ -3,14 +3,6 @@ import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 
 interface PriceGroup {
   id: string;
@@ -25,23 +17,20 @@ interface PriceGroup {
 
 type ActiveFilter = "all" | "active" | "inactive";
 
-const API_BASE_URL = "http://localhost:3002";
+const API_BASE_URL = (import.meta.env.VITE_APP_GRAPH || "http://localhost:3002").replace(/\/$/, "");
 
 export const GroupsUtilidadTable = () => {
   const [groups, setGroups] = useState<PriceGroup[]>([]);
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const [savingId, setSavingId] = useState<string | null>(null);
   const [filters, setFilters] = useState({
     groupCode: "",
     groupName: "",
     utilidad: "",
   });
   const [activeFilter, setActiveFilter] = useState<ActiveFilter>("all");
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedGroup, setSelectedGroup] = useState<PriceGroup | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [editUtilidad, setEditUtilidad] = useState("");
-  const [editActive, setEditActive] = useState(true);
 
   const loadGroups = async () => {
     try {
@@ -74,9 +63,7 @@ export const GroupsUtilidadTable = () => {
         String(group.groupName).toLowerCase().includes(filters.groupName.toLowerCase())
       )
       .filter((group) =>
-        filters.utilidad
-          ? group.utilidad.toString().includes(filters.utilidad.trim())
-          : true
+        filters.utilidad ? group.utilidad.toString().includes(filters.utilidad.trim()) : true
       )
       .filter((group) => {
         if (activeFilter === "active") return group.active;
@@ -86,32 +73,26 @@ export const GroupsUtilidadTable = () => {
       .sort((a, b) => a.groupCode.localeCompare(b.groupCode));
   }, [groups, filters, activeFilter]);
 
-  const openEditModal = (group: PriceGroup) => {
-    setSelectedGroup(group);
+  const startInlineEdit = (group: PriceGroup) => {
+    setEditingId(group.id);
     setEditUtilidad(group.utilidad.toString());
-    setEditActive(group.active);
-    setIsModalOpen(true);
   };
 
-  const closeEditModal = () => {
-    setIsModalOpen(false);
-    setSelectedGroup(null);
+  const cancelInlineEdit = () => {
+    setEditingId(null);
     setEditUtilidad("");
-    setEditActive(true);
   };
 
-  const onUpdateGroup = async () => {
-    if (!selectedGroup) return;
-
+  const saveInlineEdit = async (groupId: string) => {
     const utilidadValue = Number(editUtilidad);
     if (Number.isNaN(utilidadValue)) {
-      toast.error("La utilidad debe ser numérica.");
+      toast.error("La utilidad debe ser numerica.");
       return;
     }
 
     try {
-      setSaving(true);
-      const response = await fetch(`${API_BASE_URL}/lista-precio/admin/groups/${selectedGroup.id}`, {
+      setSavingId(groupId);
+      const response = await fetch(`${API_BASE_URL}/lista-precio/admin/groups/${groupId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -119,42 +100,41 @@ export const GroupsUtilidadTable = () => {
         },
         body: JSON.stringify({
           utilidad: utilidadValue,
-          active: editActive,
         }),
       });
 
       if (!response.ok) {
-        throw new Error("No fue posible actualizar el grupo.");
+        throw new Error("No fue posible actualizar la utilidad.");
       }
 
       setGroups((prev) =>
         prev.map((group) =>
-          group.id === selectedGroup.id
-            ? { ...group, utilidad: utilidadValue, active: editActive, updatedAt: new Date().toISOString() }
+          group.id === groupId
+            ? { ...group, utilidad: utilidadValue, updatedAt: new Date().toISOString() }
             : group
         )
       );
 
-      toast.success("Grupo actualizado correctamente.");
-      closeEditModal();
+      toast.success("Utilidad actualizada.");
+      cancelInlineEdit();
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Error actualizando el grupo.";
+      const message = error instanceof Error ? error.message : "Error actualizando la utilidad.";
       toast.error(message);
     } finally {
-      setSaving(false);
+      setSavingId(null);
     }
   };
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Grupos Lista Precio</CardTitle>
-        <CardDescription>Actualiza utilidad y estado activo desde un modal.</CardDescription>
+        <CardTitle>Grupos lista precio</CardTitle>
+        <CardDescription>Edita utilidad directamente en la tabla.</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4">
           <Input
-            placeholder="Buscar código"
+            placeholder="Buscar codigo"
             value={filters.groupCode}
             onChange={(e) => setFilters((prev) => ({ ...prev, groupCode: e.target.value }))}
           />
@@ -183,103 +163,92 @@ export const GroupsUtilidadTable = () => {
           <table className="w-full min-w-[900px]">
             <thead className="bg-muted/60 border-b">
               <tr>
-                <th className="text-left text-xs uppercase px-3 py-2">Código</th>
+                <th className="text-left text-xs uppercase px-3 py-2">Codigo</th>
                 <th className="text-left text-xs uppercase px-3 py-2">Grupo</th>
                 <th className="text-left text-xs uppercase px-3 py-2">Utilidad</th>
                 <th className="text-left text-xs uppercase px-3 py-2">Activo</th>
                 <th className="text-left text-xs uppercase px-3 py-2">Actualizado</th>
-                <th className="text-left text-xs uppercase px-3 py-2">Acción</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={6} className="text-center text-sm py-8">
+                  <td colSpan={5} className="text-center text-sm py-8">
                     Cargando grupos...
                   </td>
                 </tr>
               ) : filteredGroups.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="text-center text-sm py-8">
+                  <td colSpan={5} className="text-center text-sm py-8">
                     No hay grupos para los filtros seleccionados.
                   </td>
                 </tr>
               ) : (
-                filteredGroups.map((group) => (
-                  <tr key={group.id} className="border-b last:border-b-0">
-                    <td className="px-3 py-2 text-sm">{group.groupCode}</td>
-                    <td className="px-3 py-2 text-sm">{group.groupName}</td>
-                    <td className="px-3 py-2 text-sm">{group.utilidad}%</td>
-                    <td className="px-3 py-2 text-sm">{group.active ? "Sí" : "No"}</td>
-                    <td className="px-3 py-2 text-sm">
-                      {new Date(group.updatedAt).toLocaleString("es-CO")}
-                    </td>
-                    <td className="px-3 py-2 text-sm">
-                      <Button size="sm" variant="outline" onClick={() => openEditModal(group)}>
-                        Editar
-                      </Button>
-                    </td>
-                  </tr>
-                ))
+                filteredGroups.map((group) => {
+                  const isEditing = editingId === group.id;
+                  const isSaving = savingId === group.id;
+
+                  return (
+                    <tr key={group.id} className="border-b last:border-b-0">
+                      <td className="px-3 py-2 text-sm">{group.groupCode}</td>
+                      <td className="px-3 py-2 text-sm">{group.groupName}</td>
+                      <td className="px-3 py-2 text-sm">
+                        {isEditing ? (
+                          <div className="flex items-center gap-2">
+                            <Input
+                              autoFocus
+                              className="h-8 max-w-[120px]"
+                              type="number"
+                              value={editUtilidad}
+                              min={0}
+                              onChange={(e) => setEditUtilidad(e.target.value)}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                  saveInlineEdit(group.id);
+                                }
+                                if (e.key === "Escape") {
+                                  cancelInlineEdit();
+                                }
+                              }}
+                            />
+                            <Button
+                              size="sm"
+                              disabled={isSaving}
+                              onClick={() => saveInlineEdit(group.id)}
+                            >
+                              {isSaving ? "Guardando..." : "Guardar"}
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              disabled={isSaving}
+                              onClick={cancelInlineEdit}
+                            >
+                              Cancelar
+                            </Button>
+                          </div>
+                        ) : (
+                          <button
+                            type="button"
+                            className="underline underline-offset-2 hover:text-primary"
+                            onClick={() => startInlineEdit(group)}
+                          >
+                            {group.utilidad}%
+                          </button>
+                        )}
+                      </td>
+                      <td className="px-3 py-2 text-sm">{group.active ? "Si" : "No"}</td>
+                      <td className="px-3 py-2 text-sm">
+                        {new Date(group.updatedAt).toLocaleString("es-CO")}
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
         </div>
       </CardContent>
-
-      <Dialog
-        open={isModalOpen}
-        onOpenChange={(open) => {
-          if (!open) {
-            closeEditModal();
-            return;
-          }
-          setIsModalOpen(open);
-        }}
-      >
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Actualizar utilidad</DialogTitle>
-            <DialogDescription>
-              {selectedGroup
-                ? `${selectedGroup.groupCode} - ${selectedGroup.groupName}`
-                : "Edita la utilidad y estado del grupo."}
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium">Utilidad (%)</label>
-              <Input
-                type="number"
-                value={editUtilidad}
-                onChange={(e) => setEditUtilidad(e.target.value)}
-                min={0}
-              />
-            </div>
-            <div className="flex items-center gap-2">
-              <input
-                id="group-active"
-                type="checkbox"
-                checked={editActive}
-                onChange={(e) => setEditActive(e.target.checked)}
-              />
-              <label htmlFor="group-active" className="text-sm font-medium">
-                Activo
-              </label>
-            </div>
-          </div>
-
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={closeEditModal}>
-              Cancelar
-            </Button>
-            <Button type="button" onClick={onUpdateGroup} disabled={saving}>
-              {saving ? "Guardando..." : "Actualizar"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </Card>
   );
 };
